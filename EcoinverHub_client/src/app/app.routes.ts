@@ -1,9 +1,19 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
+import { LayoutComponent } from './components/layout/layout.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: '/home', pathMatch: 'full' },
+    { path: '', redirectTo: '/login', pathMatch: 'full' },
+
+
     { path: 'login', component: LoginComponent },
-    { path: 'home', component: HomeComponent }, // Placeholder for home component
+    {
+    path: '',
+    component: LayoutComponent,
+     children: [
+        { path: 'home', component: HomeComponent }, 
+     ]
+    
+    }
 ];

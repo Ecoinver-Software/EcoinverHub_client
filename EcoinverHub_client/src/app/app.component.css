@@ -1,0 +1,21 @@
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f3f4f6;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 16rem;
+  height: 100vh;
+  z-index: 40;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 16rem;
+  padding: 1rem;
+  background-color: red; /* Color temporal para ver si el área es visible */
+}
