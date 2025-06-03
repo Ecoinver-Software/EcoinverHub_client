@@ -1,4 +1,437 @@
-<div class="p-6 bg-white rounded-lg shadow">
-  <h1 class="text-2xl font-bold text-red-500">¡ESTE ES EL HOME COMPONENT!</h1>
-  <p class="text-lg mt-4">Si ves este texto, el router-outlet funciona.</p>
+<!-- dashboard.component.html -->
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+  <div class="w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 py-8 lg:py-12">
+    
+    <!-- Header optimizado -->
+    <div class="mb-12 lg:mb-16">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-4xl lg:text-5xl font-extralight text-gray-900 dark:text-white mb-3 tracking-tight">Ecoinver Cloud</h1>
+          <p class="text-lg text-gray-500 dark:text-gray-400 font-light">Hub de aplicaciones by Ecoinver</p>
+        </div>
+        <div class="hidden lg:flex items-center space-x-4">
+          <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+          <span class="text-sm text-gray-600 dark:text-gray-400">Sistema operativo</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid Layout Principal más amplio -->
+    <div class="grid grid-cols-1 xl:grid-cols-4 gap-6 lg:gap-8 xl:gap-10">
+      
+      <!-- Columna Izquierda - Calendario y Recursos -->
+      <div class="xl:col-span-1 space-y-6 lg:space-y-8">
+        
+        <!-- Mi Calendario con diseño mejorado -->
+        <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
+          <div class="p-6 lg:p-8 border-b border-gray-100 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Mi calendario</h3>
+              <button 
+                (click)="goToToday()"
+                class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all"
+                title="Ir a hoy">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <div class="p-6 lg:p-8">
+            <!-- Navegación del mes -->
+            <div class="flex items-center justify-between mb-8">
+              <button 
+                (click)="previousMonth()"
+                class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+              </button>
+              <h4 class="text-lg font-semibold text-gray-900 dark:text-white">{{ currentMonthName }} {{ currentYear }}</h4>
+              <button 
+                (click)="nextMonth()"
+                class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
+            
+            <!-- Headers de días de la semana -->
+            <div class="grid grid-cols-7 gap-2 mb-6">
+              <div 
+                *ngFor="let dayName of dayNames" 
+                class="text-sm font-semibold text-gray-500 dark:text-gray-400 text-center py-3">
+                {{ dayName }}
+              </div>
+            </div>
+            
+            <!-- Grid del calendario -->
+            <div class="grid grid-cols-7 gap-2">
+              <div 
+                *ngFor="let day of calendarDays"
+                [class]="getDayClasses(day)"
+                (click)="selectDate(day)"
+                [title]="day.hasEvents ? 'Tiene eventos: ' + day.events?.join(', ') : ''">
+                {{ day.day }}
+                
+                <!-- Indicador de eventos -->
+                <div *ngIf="day.hasEvents && day.isCurrentMonth" 
+                     class="absolute bottom-1 left-1/2 transform -translate-x-1/2">
+                  <div class="w-1.5 h-1.5 bg-orange-500 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Información del día seleccionado -->
+            <div *ngIf="selectedDate" class="mt-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+              <h5 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">Fecha seleccionada:</h5>
+              <p class="text-xs text-gray-600 dark:text-gray-400 mb-3">{{ getSelectedDateText() }}</p>
+              
+              <!-- Eventos del día seleccionado -->
+              <div *ngIf="getSelectedDayEvents().length > 0" class="mb-3">
+                <h6 class="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Eventos:</h6>
+                <div *ngFor="let event of getSelectedDayEvents()" 
+                     class="text-xs text-gray-600 dark:text-gray-400 mb-1 flex items-center">
+                  <div class="w-2 h-2 rounded-full mr-2"
+                       [ngClass]="{
+                         'bg-blue-500': event.type === 'meeting',
+                         'bg-red-500': event.type === 'deadline', 
+                         'bg-green-500': event.type === 'vacation',
+                         'bg-gray-500': event.type === 'other'
+                       }"></div>
+                  {{ event.title }}
+                </div>
+              </div>
+            </div>
+            
+            <!-- Botón solicitar ausencia -->
+            <button 
+              (click)="requestAbsence()"
+              [disabled]="!selectedDate"
+              class="w-full mt-8 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-white dark:to-gray-100 text-white dark:text-gray-900 py-4 px-6 rounded-xl text-sm font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+              + Solicitar ausencia
+            </button>
+          </div>
+        </div>
+
+        <!-- Recursos de interés mejorados -->
+        <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50">
+          <div class="p-6 lg:p-8 border-b border-gray-100 dark:border-gray-700">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Recursos de interés</h3>
+          </div>
+          <div class="p-6 lg:p-8 space-y-6">
+            <a href="#" class="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all duration-200 group p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50">
+              <div class="w-8 h-8 mr-4 flex-shrink-0 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"/>
+                </svg>
+              </div>
+              <span class="text-sm font-medium">Nuestra web</span>
+              <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </a>
+            <a href="#" class="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all duration-200 group p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50">
+              <div class="w-8 h-8 mr-4 flex-shrink-0 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <span class="text-sm font-medium">Vídeo uso inicial plataforma</span>
+              <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Central - Tablón de Anuncios (más ancha) -->
+      <div class="xl:col-span-2">
+        <!-- Header del tablón mejorado -->
+        <div class="flex items-center justify-between mb-10">
+          <h2 class="text-3xl font-extralight text-gray-900 dark:text-white">Tablón de anuncios</h2>
+          <a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 flex items-center group">
+            Ver todos
+            <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Anuncios mejorados -->
+        <div class="space-y-8">
+          
+          <!-- Anuncio destacado -->
+          <div class="bg-gradient-to-r from-red-50 to-red-100/50 dark:from-red-900/20 dark:to-red-800/20 border-l-4 border-red-500 rounded-r-2xl shadow-lg overflow-hidden">
+            <div class="p-8">
+              <div class="flex items-start space-x-6">
+                <div class="w-3 h-3 bg-red-500 rounded-full mt-2 animate-pulse"></div>
+                <div class="flex-1">
+                  <div class="flex items-center space-x-3 mb-2">
+                    <span class="bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200 text-xs font-semibold px-3 py-1 rounded-full">URGENTE</span>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">COMUNICADO IMPORTANTE</h3>
+                  </div>
+                  <div class="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400 mb-6">
+                    <div class="flex items-center space-x-3">
+                      <div class="w-8 h-8 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
+                        <span class="text-white font-semibold text-sm">LP</span>
+                      </div>
+                      <span class="font-medium">LAURA DIANA POPA</span>
+                    </div>
+                    <span>2 June, 2025</span>
+                  </div>
+                  <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 text-base">
+                    ¡Un año más, somos patrocinadores oficiales de El Ejido al Natural! 🌱
+                    <br><br>
+                    Lamentamos informar que la ruta de senderismo prevista para este próximo domingo 15 de mayo de 2025 ha sido cancelada debido a que no se ha alcanzado el número mínimo de 20 participantes requerido para la actividad.
+                  </p>
+                  <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-6 py-3 rounded-lg transition-colors shadow-md hover:shadow-lg">
+                    Ver detalles
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Anuncio normal -->
+          <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50">
+            <div class="p-8">
+              <div class="flex items-start space-x-6">
+                <div class="w-12 h-12 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <span class="text-blue-600 dark:text-blue-400 font-semibold text-lg">A</span>
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">COMUNICADO MANIPULADO - EL</h3>
+                  <div class="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400 mb-6">
+                    <div class="flex items-center space-x-3">
+                      <div class="w-8 h-8 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                        <span class="text-white font-semibold text-sm">JR</span>
+                      </div>
+                      <span class="font-medium">JUAN JOSÉ RO</span>
+                    </div>
+                    <span>2 June, 2025</span>
+                  </div>
+                  <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 text-base">
+                    Estimados compañeros,
+                    <br><br>
+                    Queremos recordaros cada mes los horarios entre las días 1 y 15, debido a que en esos días no se podrá entrar y asegurar la correcta.
+                  </p>
+                  <button class="text-blue-600 dark:text-blue-400 text-sm font-semibold hover:text-blue-700 dark:hover:text-blue-300 px-6 py-3 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                    Ver detalles
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección Pendiente de mí mejorada -->
+        <div class="mt-16">
+          <h3 class="text-2xl font-light text-gray-900 dark:text-white mb-8">Pendiente de mí</h3>
+          
+          <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50">
+            <div class="p-8">
+              <div class="space-y-8">
+                <!-- Notificaciones -->
+                <div>
+                  <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-5">Notificaciones</h4>
+                  <div class="flex items-center justify-between p-6 bg-gray-50/80 dark:bg-gray-700/50 rounded-xl">
+                    <div class="flex items-center space-x-4">
+                      <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                      </div>
+                      <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Todo al día - Sin notificaciones pendientes</span>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Mis tareas -->
+                <div>
+                  <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-5">Mis tareas</h4>
+                  <div class="text-center py-12 text-gray-500 dark:text-gray-400">
+                    <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full mx-auto mb-4 flex items-center justify-center">
+                      <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                    </div>
+                    <p class="text-base font-medium">Excelente trabajo</p>
+                    <p class="text-sm">No tienes tareas pendientes</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Derecha - Widgets mejorados -->
+      <div class="xl:col-span-1 space-y-6 lg:space-y-8">
+        
+        <!-- Próximas celebraciones -->
+        <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50">
+          <div class="p-6 lg:p-8 border-b border-gray-100 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Próximas celebraciones</h3>
+              <a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 flex items-center group">
+                <span class="mr-1">Ver</span>
+                <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="p-6 lg:p-8">
+            <div class="flex items-center space-x-4 mb-6">
+              <div class="w-14 h-14 bg-gradient-to-r from-yellow-100 to-yellow-200 dark:from-yellow-900/30 dark:to-yellow-800/30 rounded-xl flex items-center justify-center">
+                <svg class="w-7 h-7 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-900 dark:text-white">FIRMA LISTADO</span>
+                  </div>
+                  <div class="flex items-center space-x-3">
+                    <div class="w-7 h-7 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
+                      <span class="text-white font-semibold text-xs">JR</span>
+                    </div>
+                    <span class="text-sm text-gray-600 dark:text-gray-400 font-medium">JUAN JOSÉ RO</span>
+                  </div>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Ahora, 2025</p>
+                </div>
+              </div>
+            </div>
+            <div class="text-center text-gray-500 dark:text-gray-400 py-6">
+              <div class="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <p class="text-sm font-medium">No hay próximas celebraciones</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estado de mi equipo -->
+        <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50">
+          <div class="p-6 lg:p-8 border-b border-gray-100 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Estado de mi equipo</h3>
+              <a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 flex items-center group">
+                <span class="mr-1">Ver</span>
+                <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="p-6 lg:p-8 text-center">
+            <div class="w-20 h-20 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+              <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+            </div>
+            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Tu equipo aún no ha actualizado su estado</p>
+            <p class="text-xs text-gray-500 dark:text-gray-500 mt-2">Últimas 24 horas</p>
+          </div>
+        </div>
+
+        <!-- Próximos eventos -->
+        <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50">
+          <div class="p-6 lg:p-8 border-b border-gray-100 dark:border-gray-700">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Próximos eventos</h3>
+          </div>
+          <div class="p-6 lg:p-8 text-center">
+            <div class="w-20 h-20 bg-gradient-to-r from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+              <svg class="w-10 h-10 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">No hay próximos eventos programados</p>
+            <p class="text-xs text-gray-500 dark:text-gray-500 mt-2">Agenda actualizada</p>
+            <button class="mt-6 text-blue-600 dark:text-blue-400 text-sm font-semibold hover:text-blue-700 dark:hover:text-blue-300 px-4 py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+              + Crear evento
+            </button>
+          </div>
+        </div>
+
+        <!-- Widget adicional: Accesos rápidos -->
+        <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50">
+          <div class="p-6 lg:p-8 border-b border-gray-100 dark:border-gray-700">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Accesos rápidos</h3>
+          </div>
+          <div class="p-6 lg:p-8">
+            <div class="grid grid-cols-2 gap-4">
+              <button class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl hover:shadow-md transition-all duration-200 group">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                </div>
+                <span class="text-xs font-medium text-gray-700 dark:text-gray-300 text-center">Informes</span>
+              </button>
+              
+              <button class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl hover:shadow-md transition-all duration-200 group">
+                <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                  </svg>
+                </div>
+                <span class="text-xs font-medium text-gray-700 dark:text-gray-300 text-center">Nóminas</span>
+              </button>
+              
+              <button class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-xl hover:shadow-md transition-all duration-200 group">
+                <div class="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"/>
+                  </svg>
+                </div>
+                <span class="text-xs font-medium text-gray-700 dark:text-gray-300 text-center">Config.</span>
+              </button>
+              
+              <button class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl hover:shadow-md transition-all duration-200 group">
+                <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/>
+                  </svg>
+                </div>
+                <span class="text-xs font-medium text-gray-700 dark:text-gray-300 text-center">Soporte</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Footer minimalista -->
+    <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
+      <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+        <div class="flex items-center space-x-6">
+          <span>© 2025 Ecoinver Cloud</span>
+          <span>•</span>
+          <a href="#" class="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Ayuda</a>
+          <a href="#" class="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Privacidad</a>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-2">
+            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span>Sistema operativo</span>
+          </div>
+          <span>Versión 2.1.4</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
