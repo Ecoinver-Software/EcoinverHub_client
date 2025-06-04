@@ -11,7 +11,7 @@ interface App {
   category?: string;
   version?: string;
   author?: string;
-  isActive?: boolean;
+  status: 'production' | 'development' | 'coming-soon';
   tags?: string[];
   lastUpdated?: Date;
   url?: string;
@@ -22,7 +22,6 @@ interface AppHubConfig {
   subtitle?: string;
   apps: App[];
   showSearch?: boolean;
-  showFilters?: boolean;
   cardsPerRow?: number;
 }
 
@@ -52,60 +51,31 @@ interface AppHubConfig {
           </div>
         </div>
 
-        <!-- Search and Filters con estilo glassmorphism -->
-        <div *ngIf="config.showSearch || config.showFilters" class="mb-6 xs:mb-8 sm:mb-10">
-          <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-4 xs:p-5 sm:p-6 lg:p-8">
-            <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
-              
-              <!-- Search -->
-              <div *ngIf="config.showSearch" class="w-full md:w-1/2">
-                <div class="relative group">
-                  <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-green-500 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                  </div>
-                  <input 
-                    type="text" 
-                    [(ngModel)]="searchTerm"
-                    (input)="onSearchChange()"
-                    placeholder="Buscar aplicaciones..."
-                    class="w-full h-12 pl-12 pr-4 
-                           bg-green-50/30 border-2 border-green-200
-                           rounded-xl text-gray-800 placeholder-gray-400
-                           transition-all duration-300 ease-out
-                           focus:outline-none focus:border-green-500 focus:bg-white
-                           focus:shadow-lg focus:shadow-green-500/10
-                           hover:border-green-300 hover:bg-green-50"
-                  >
-                </div>
-              </div>
-
-              <!-- Filter -->
-              <div *ngIf="config.showFilters" class="w-full md:w-auto">
-                <select 
-                  [(ngModel)]="selectedFilter"
-                  (change)="onFilterChange()"
-                  class="w-full h-12 px-4 pr-8
-                         bg-green-50/30 border-2 border-green-200
-                         rounded-xl text-gray-800
-                         transition-all duration-300 ease-out
-                         focus:outline-none focus:border-green-500 focus:bg-white
-                         focus:shadow-lg focus:shadow-green-500/10
-                         hover:border-green-300 hover:bg-green-50"
-                >
-                  <option value="">Todas las categorías</option>
-                  <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
-                </select>
+        <!-- Separador decorativo entre apps y footer -->
+        <div class="mt-10 xs:mt-12 sm:mt-14 lg:mt-16 mb-6 xs:mb-8 sm:mb-10">
+          <div class="flex items-center justify-center">
+            <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
+            <div class="mx-4 xs:mx-6 sm:mx-8">
+              <div class="flex items-center space-x-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-200/50 dark:border-gray-700/50 shadow-sm">
+                <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+                <span class="text-xs xs:text-sm text-gray-600 dark:text-gray-400 font-medium">
+                  Ecosistema Ecoinver Cloud
+                </span>
+                <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
               </div>
             </div>
+            <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
           </div>
         </div>
 
         <!-- Apps Grid con estilo glassmorphism -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 xs:gap-5 sm:gap-6 lg:gap-8">
           <div 
-            *ngFor="let app of filteredApps" 
+            *ngFor="let app of filteredApps; let i = index" 
             class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden cursor-pointer group hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
             (click)="onAppClick(app)"
           >
@@ -122,10 +92,10 @@ interface AppHubConfig {
               <!-- Status Badge -->
               <div class="absolute top-3 right-3">
                 <span 
-                  [class]="app.isActive ? 'bg-green-100/90 text-green-800 border border-green-200' : 'bg-red-100/90 text-red-800 border border-red-200'"
+                  [class]="getStatusClasses(app.status)"
                   class="px-2 py-1 text-xs font-semibold rounded-full backdrop-blur-sm"
                 >
-                  {{ app.isActive ? 'Activa' : 'Inactiva' }}
+                  {{ getStatusText(app.status) }}
                 </span>
               </div>
               
@@ -139,11 +109,12 @@ interface AppHubConfig {
               <!-- Quick Action Button (appears on hover) -->
               <div class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                 <button 
-                  (click)="onAppInstall(app); $event.stopPropagation()"
-                  [disabled]="app.isActive"
-                  class="px-3 py-1.5 bg-white/90 hover:bg-white text-gray-800 text-xs font-semibold rounded-lg shadow-lg backdrop-blur-sm transition-all duration-200 disabled:bg-gray-200/90 disabled:text-gray-500"
+                  (click)="onAppAccess(app); $event.stopPropagation()"
+                  [disabled]="app.status === 'coming-soon'"
+                  [class]="getQuickActionClasses(app.status)"
+                  class="px-3 py-1.5 text-xs font-semibold rounded-lg shadow-lg backdrop-blur-sm transition-all duration-200"
                 >
-                  {{ app.isActive ? 'Instalada' : 'Instalar' }}
+                  {{ getActionText(app.status) }}
                 </button>
               </div>
             </div>
@@ -192,25 +163,18 @@ interface AppHubConfig {
               <!-- Action Buttons -->
               <div class="flex gap-2">
                 <button 
-                  (click)="onAppInstall(app); $event.stopPropagation()"
-                  [disabled]="app.isActive"
-                  class="flex-1 h-10 
-                         bg-gradient-to-r from-green-600 to-emerald-600
-                         hover:from-green-700 hover:to-emerald-700
-                         disabled:from-gray-300 disabled:to-gray-400
-                         text-white font-semibold rounded-xl text-sm
-                         shadow-lg shadow-green-500/25
-                         transition-all duration-300 ease-out
-                         hover:shadow-xl hover:shadow-green-500/40
-                         hover:scale-105 disabled:hover:scale-100
-                         focus:outline-none focus:ring-4 focus:ring-green-500/20
-                         disabled:cursor-not-allowed disabled:shadow-none
+                  (click)="onAppAccess(app); $event.stopPropagation()"
+                  [disabled]="app.status === 'coming-soon'"
+                  [class]="getMainButtonClasses(app.status)"
+                  class="flex-1 h-10 font-semibold rounded-xl text-sm
+                         shadow-lg transition-all duration-300 ease-out
+                         hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-500/20
                          overflow-hidden group/btn"
                 >
                   <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 
                               translate-x-[-100%] group-hover/btn:translate-x-[100%] 
                               transition-transform duration-700 ease-out"></div>
-                  <span class="relative">{{ app.isActive ? 'Instalada' : 'Instalar' }}</span>
+                  <span class="relative">{{ getActionText(app.status) }}</span>
                 </button>
                 
                 <button 
@@ -223,6 +187,27 @@ interface AppHubConfig {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Separador decorativo entre apps y footer -->
+        <div class="mt-10 xs:mt-12 sm:mt-14 lg:mt-16 mb-6 xs:mb-8 sm:mb-10">
+          <div class="flex items-center justify-center">
+            <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
+            <div class="mx-4 xs:mx-6 sm:mx-8">
+              <div class="flex items-center space-x-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-200/50 dark:border-gray-700/50 shadow-sm">
+                <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+                <span class="text-xs xs:text-sm text-gray-600 dark:text-gray-400 font-medium">
+                  Ecosistema Ecoinver Cloud
+                </span>
+                <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent"></div>
           </div>
         </div>
 
@@ -246,7 +231,7 @@ interface AppHubConfig {
         </div>
 
         <!-- Footer minimalista responsive -->
-        <div class="mt-10 xs:mt-12 sm:mt-14 lg:mt-16 pt-6 xs:pt-7 sm:pt-8 border-t border-gray-200 dark:border-gray-700">
+        <div class="pt-6 xs:pt-7 sm:pt-8 border-t border-gray-200 dark:border-gray-700">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 text-xs xs:text-sm text-gray-500 dark:text-gray-400">
             <div class="flex flex-col xs:flex-row xs:items-center space-y-2 xs:space-y-0 xs:space-x-6 text-center xs:text-left">
               <span>© 2025 Ecoinver Cloud</span>
@@ -294,156 +279,85 @@ export class AppHubComponent implements OnInit {
     subtitle: 'Descubre y gestiona todas tus aplicaciones desde un solo lugar',
     apps: [],
     showSearch: true,
-    showFilters: true,
     cardsPerRow: 4
   };
 
   @Output() appClicked = new EventEmitter<App>();
-  @Output() appInstalled = new EventEmitter<App>();
+  @Output() appAccessed = new EventEmitter<App>();
   @Output() searchChanged = new EventEmitter<string>();
-  @Output() filterChanged = new EventEmitter<string>();
 
   searchTerm: string = '';
-  selectedFilter: string = '';
   filteredApps: App[] = [];
-  categories: string[] = [];
 
-  // Datos mock para cuando no se proporcionan apps
-  private mockApps: App[] = [
+  // Apps disponibles en Ecoinver Cloud
+  private availableApps: App[] = [
     {
       id: '1',
-      name: 'GMAO Pro',
+      name: 'GMAO',
       description: 'Sistema de gestión de mantenimiento asistido por ordenador para optimizar recursos y maximizar la eficiencia operativa',
       imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=250&fit=crop&crop=center',
       category: 'Mantenimiento',
-      version: '3.2.1',
+      version: '1.0.0',
       author: 'Ecoinver Tech',
-      isActive: true,
+      status: 'development',
       tags: ['mantenimiento', 'gestión', 'eficiencia', 'preventivo'],
-      lastUpdated: new Date('2025-05-15'),
-      url: '/apps/gmao-pro'
+      lastUpdated: new Date('2025-06-04'),
+      url: '/gmao'
     },
     {
       id: '2',
-      name: 'Dashboard Energético',
-      description: 'Monitoreo en tiempo real del consumo y eficiencia energética empresarial con análisis predictivo avanzado',
-      imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop&crop=center',
-      category: 'Energía',
-      version: '2.8.4',
-      author: 'EcoTeam',
-      isActive: true,
-      tags: ['energía', 'sostenibilidad', 'monitoring', 'analytics'],
-      lastUpdated: new Date('2025-06-01'),
-      url: '/apps/dashboard-energetico'
+      name: 'Ecoinver Assistant',
+      description: 'Asistente de inteligencia artificial local para consultas y soporte técnico especializado',
+      imageUrl: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop&crop=center',
+      category: 'Inteligencia Artificial',
+      version: '2.1.0',
+      author: 'Ecoinver AI Team',
+      status: 'production',
+      tags: ['IA', 'asistente', 'consultas', 'soporte'],
+      lastUpdated: new Date('2025-06-03'),
+      url: '/assistant'
     },
     {
       id: '3',
-      name: 'Gestión de Residuos',
-      description: 'Control integral de residuos y cumplimiento de normativas ambientales con trazabilidad completa',
-      imageUrl: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400&h=250&fit=crop&crop=center',
-      category: 'Medio Ambiente',
-      version: '1.9.2',
-      author: 'GreenOps',
-      isActive: false,
-      tags: ['residuos', 'normativas', 'ambiente', 'trazabilidad'],
+      name: 'Cultive Cloud',
+      description: 'Plataforma integral de gestión agrícola con monitoreo IoT y análisis predictivo avanzado',
+      imageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&h=250&fit=crop&crop=center',
+      category: 'Agricultura',
+      version: '3.2.1',
+      author: 'Cultive Team',
+      status: 'production',
+      tags: ['agricultura', 'IoT', 'monitoreo', 'predictivo'],
       lastUpdated: new Date('2025-05-28'),
-      url: '/apps/gestion-residuos'
-    },
-    {
-      id: '4',
-      name: 'Portal del Empleado',
-      description: 'Plataforma centralizada para gestión de recursos humanos y comunicación interna bidireccional',
-      imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=250&fit=crop&crop=center',
-      category: 'Recursos Humanos',
-      version: '4.1.0',
-      author: 'HR Solutions',
-      isActive: true,
-      tags: ['empleados', 'comunicación', 'gestión', 'colaboración'],
-      lastUpdated: new Date('2025-06-03'),
-      url: '/apps/portal-empleado'
-    },
-    {
-      id: '5',
-      name: 'Auditorías Ambientales',
-      description: 'Herramienta para planificar, ejecutar y reportar auditorías de cumplimiento ambiental normativo',
-      imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=250&fit=crop&crop=center',
-      category: 'Cumplimiento',
-      version: '2.3.1',
-      author: 'ComplianceTeam',
-      isActive: true,
-      tags: ['auditorías', 'cumplimiento', 'reportes', 'normativas'],
-      lastUpdated: new Date('2025-05-20'),
-      url: '/apps/auditorias-ambientales'
-    },
-    {
-      id: '6',
-      name: 'Control de Calidad',
-      description: 'Sistema integral de control de calidad con seguimiento de métricas y KPIs operacionales',
-      imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=250&fit=crop&crop=center',
-      category: 'Calidad',
-      version: '1.7.3',
-      author: 'QualityTeam',
-      isActive: true,
-      tags: ['calidad', 'métricas', 'control', 'kpis'],
-      lastUpdated: new Date('2025-05-30'),
-      url: '/apps/control-calidad'
-    },
-    {
-      id: '7',
-      name: 'Inventario Inteligente',
-      description: 'Gestión avanzada de inventarios con predicción de demanda y optimización automática',
-      imageUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=250&fit=crop&crop=center',
-      category: 'Logística',
-      version: '3.1.2',
-      author: 'LogiTeam',
-      isActive: false,
-      tags: ['inventario', 'predicción', 'optimización', 'almacén'],
-      lastUpdated: new Date('2025-05-25'),
-      url: '/apps/inventario-inteligente'
-    },
-    {
-      id: '8',
-      name: 'Análisis Financiero',
-      description: 'Herramientas de análisis financiero con reportes automáticos y proyecciones de flujo de caja',
-      imageUrl: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=250&fit=crop&crop=center',
-      category: 'Finanzas',
-      version: '2.5.0',
-      author: 'FinanceTeam',
-      isActive: true,
-      tags: ['finanzas', 'análisis', 'reportes', 'proyecciones'],
-      lastUpdated: new Date('2025-06-02'),
-      url: '/apps/analisis-financiero'
+      url: '/cultive-cloud'
     }
+    // Aquí puedes agregar más aplicaciones cuando estén disponibles
+    // {
+    //   id: '4',
+    //   name: 'Nueva App',
+    //   description: 'Descripción de la nueva aplicación',
+    //   imageUrl: 'URL_DE_LA_IMAGEN',
+    //   category: 'Categoría',
+    //   version: '1.0.0',
+    //   author: 'Equipo Desarrollador',
+    //   status: 'development', // 'production' | 'development' | 'coming-soon'
+    //   tags: ['tag1', 'tag2'],
+    //   lastUpdated: new Date(),
+    //   url: '/nueva-app'
+    // }
   ];
 
   ngOnInit() {
-    // Si no hay apps configuradas, usar los datos mock
+    // Si no hay apps configuradas, usar las apps disponibles
     if (!this.config.apps || this.config.apps.length === 0) {
-      this.config.apps = this.mockApps;
+      this.config.apps = this.availableApps;
     }
     
     this.filteredApps = this.config.apps;
-    this.extractCategories();
-  }
-
-  private extractCategories() {
-    const categorySet = new Set<string>();
-    this.config.apps.forEach(app => {
-      if (app.category) {
-        categorySet.add(app.category);
-      }
-    });
-    this.categories = Array.from(categorySet);
   }
 
   onSearchChange() {
     this.filterApps();
     this.searchChanged.emit(this.searchTerm);
-  }
-
-  onFilterChange() {
-    this.filterApps();
-    this.filterChanged.emit(this.selectedFilter);
   }
 
   private filterApps() {
@@ -453,25 +367,102 @@ export class AppHubComponent implements OnInit {
         app.description.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         (app.tags && app.tags.some(tag => tag.toLowerCase().includes(this.searchTerm.toLowerCase())));
 
-      const matchesFilter = !this.selectedFilter || app.category === this.selectedFilter;
-
-      return matchesSearch && matchesFilter;
+      return matchesSearch;
     });
   }
 
   clearFilters() {
     this.searchTerm = '';
-    this.selectedFilter = '';
     this.filteredApps = this.config.apps;
     this.searchChanged.emit(this.searchTerm);
-    this.filterChanged.emit(this.selectedFilter);
   }
 
   onAppClick(app: App) {
     this.appClicked.emit(app);
   }
 
-  onAppInstall(app: App) {
-    this.appInstalled.emit(app);
+  onAppAccess(app: App) {
+    if (app.status === 'production' || app.status === 'development') {
+      this.appAccessed.emit(app);
+      // Si tiene URL, navegar directamente
+      if (app.url) {
+        window.open(app.url, '_blank');
+      }
+    }
+  }
+
+  // Métodos auxiliares para estadísticas
+  getProductionAppsCount(): number {
+    return this.config.apps.filter(app => app.status === 'production').length;
+  }
+
+  getDevelopmentAppsCount(): number {
+    return this.config.apps.filter(app => app.status === 'development').length;
+  }
+
+  // Métodos auxiliares para el styling basado en status
+  getStatusClasses(status: string): string {
+    switch (status) {
+      case 'production':
+        return 'bg-green-100/90 text-green-800 border border-green-200';
+      case 'development':
+        return 'bg-yellow-100/90 text-yellow-800 border border-yellow-200';
+      case 'coming-soon':
+        return 'bg-gray-100/90 text-gray-800 border border-gray-200';
+      default:
+        return 'bg-gray-100/90 text-gray-800 border border-gray-200';
+    }
+  }
+
+  getStatusText(status: string): string {
+    switch (status) {
+      case 'production':
+        return 'Disponible';
+      case 'development':
+        return 'En desarrollo';
+      case 'coming-soon':
+        return 'Próximamente';
+      default:
+        return 'Desconocido';
+    }
+  }
+
+  getActionText(status: string): string {
+    switch (status) {
+      case 'production':
+        return 'Entrar';
+      case 'development':
+        return 'Acceso beta';
+      case 'coming-soon':
+        return 'Próximamente';
+      default:
+        return 'No disponible';
+    }
+  }
+
+  getQuickActionClasses(status: string): string {
+    switch (status) {
+      case 'production':
+        return 'bg-green-500/90 hover:bg-green-600 text-white';
+      case 'development':
+        return 'bg-yellow-500/90 hover:bg-yellow-600 text-white';
+      case 'coming-soon':
+        return 'bg-gray-200/90 text-gray-500 cursor-not-allowed';
+      default:
+        return 'bg-gray-200/90 text-gray-500';
+    }
+  }
+
+  getMainButtonClasses(status: string): string {
+    switch (status) {
+      case 'production':
+        return 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-green-500/25 hover:shadow-green-500/40 hover:scale-105';
+      case 'development':
+        return 'bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white shadow-yellow-500/25 hover:shadow-yellow-500/40 hover:scale-105';
+      case 'coming-soon':
+        return 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none';
+      default:
+        return 'bg-gray-300 text-gray-500';
+    }
   }
 }
