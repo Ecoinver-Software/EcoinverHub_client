@@ -4,6 +4,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { AdminitracionComponent } from './components/adminitracion/adminitracion.component';
 import { AppHubComponent } from './components/apphub/apphub.component';
+import { PerfilComponent } from './components/perfil/perfil.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -16,7 +17,8 @@ export const routes: Routes = [
      children: [
         { path: 'home', component: HomeComponent }, 
         {path:'administracion', component:AdminitracionComponent},
-        { path: 'apphub', component: AppHubComponent}
+        { path: 'apphub', component: AppHubComponent},
+        { path: 'perfil', component: PerfilComponent}
      ]
     
     },
