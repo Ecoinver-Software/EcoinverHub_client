@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthServiceService {
-  url=environment.url + '/api/Auth';
+  url=environment.url + '/Auth';
   constructor(private http:HttpClient) { }
 
   login(usuario:User):Observable<{token:string,rol:string}>{
@@ -19,5 +19,7 @@ export class AuthServiceService {
   setToken(token:string){
     localStorage.setItem('jwt',token);
   }
-
+  getToken(){
+    localStorage.getItem('jwt');
+  }
 }
