@@ -15,6 +15,10 @@ export class UsuarioService {
     return this.http.get<Usuario[]>(this.url);
   }
   
+  getById(id:number):Observable<Usuario>{
+    return this.http.get<Usuario>(`${this.url}/${id}`);
+
+  }
   post(usuario:UsuarioPost):Observable<Usuario>{
    
     return this.http.post<Usuario>(this.url,usuario);

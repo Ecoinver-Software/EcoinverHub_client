@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../environment/environment';
 import { User } from '../types/User';
@@ -11,15 +11,29 @@ export class AuthServiceService {
   url=environment.url + '/Auth';
   constructor(private http:HttpClient) { }
 
-  login(usuario:User):Observable<{token:string,rol:string}>{
+  login(usuario:User):Observable<{token:string,id:number,rol:string}>{
     
-    return this.http.post<{token:string,rol:string}>(`${this.url}/login`, usuario);   
+    return this.http.post<{token:string, id:number,rol:string}>(`${this.url}/login`, usuario);   
     
   }
   setToken(token:string){
     localStorage.setItem('jwt',token);
   }
-  getToken(){
-    localStorage.getItem('jwt');
+  getToken(): string | null {
+  return localStorage.getItem('jwt');
+}
+
+  logout(): void {
+    localStorage.removeItem('jwt');
   }
+
+getProfile(): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    
+    return this.http.get(`${this.url}/profile`, { headers });
+  }
+
 }
