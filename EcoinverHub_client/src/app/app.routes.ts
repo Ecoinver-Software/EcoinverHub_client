@@ -12,15 +12,15 @@ export const routes: Routes = [
 
     { path: 'login', component: LoginComponent },
     {
-    path: '',
-    component: LayoutComponent,
-     children: [
-        { path: 'home', component: HomeComponent }, 
-        {path:'administracion', component:AdminitracionComponent},
-        { path: 'apphub', component: AppHubComponent},
-        { path: 'perfil', component: PerfilComponent}
-     ]
-    
+        path: '',
+        component: LayoutComponent,
+        children: [
+            { path: 'home', component: HomeComponent },
+            { path: 'administracion', component: AdminitracionComponent },
+            { path: 'apphub', component: AppHubComponent },
+            { path: 'perfil', component: PerfilComponent }
+        ]
+
     },
     { path: '**', redirectTo: 'login' }
 
