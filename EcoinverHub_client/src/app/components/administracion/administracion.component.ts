@@ -77,7 +77,9 @@ export class AdminitracionComponent implements OnInit {
   getPaginatedUsers(): Usuario[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
+    console.log('Hola mundo');
     return this.usuariosFiltrados.slice(startIndex, endIndex);
+    
   }
 
   // Ir a la página anterior
