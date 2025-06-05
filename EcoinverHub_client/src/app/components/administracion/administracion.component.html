@@ -23,9 +23,11 @@
         <div class="mb-8 border-b border-gray-200 dark:border-gray-700">
             <nav class="-mb-px flex space-x-8" aria-label="Tabs">
                 <!-- Tab Usuarios (Activo) -->
-                <button
-                    class="border-b-2 border-blue-500 py-2 px-1 text-sm font-medium text-blue-600 dark:text-blue-400"
-                    aria-current="page">
+                <button (click)="setActiveTab('usuarios')"
+                    [class]="activeTab === 'usuarios' ? 
+                    'border-b-2 border-blue-500 py-2 px-1 text-sm font-medium text-blue-600 dark:text-blue-400' : 
+                    'border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300'">
+
                     <div class="flex items-center space-x-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -36,8 +38,10 @@
                 </button>
 
                 <!-- Tab Roles -->
-                <button
-                    class="border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300">
+                <button (click)="setActiveTab('roles')"
+                    [class]="activeTab === 'roles' ? 
+                    'border-b-2 border-blue-500 py-2 px-1 text-sm font-medium text-blue-600 dark:text-blue-400' : 
+                    'border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300'">
                     <div class="flex items-center space-x-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -50,6 +54,7 @@
         </div>
 
         <!-- ========== USUARIOS TAB CONTENT ========== -->
+        @if(activeTab=='usuarios'){
         <div class="usuarios-tab">
 
             <!-- Header con botón crear usuario -->
@@ -58,27 +63,28 @@
                     <h2 class="text-2xl font-light text-gray-900 dark:text-white">Gestión de Usuarios</h2>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Administra los usuarios del sistema</p>
                 </div>
-                <button
+                <a href="#formulario1"
                     class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
                     <span>Nuevo Usuario</span>
-                </button>
+                </a>
+
             </div>
 
             <!-- Tabla de usuarios -->
             <div
                 class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
-
                 <!-- Header de la tabla -->
                 <div class="p-6 border-b border-gray-100 dark:border-gray-700">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Lista de Usuarios</h3>
                         <div class="flex items-center space-x-4">
                             <div class="relative">
-                                <input type="text" placeholder="Buscar usuarios..."
+                                <input type="text" placeholder="Buscar usuarios..." [(ngModel)]="buscar"
+                                    (input)="busqueda()"
                                     class="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24">
@@ -104,46 +110,44 @@
                                 <th
                                     class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Rol</th>
-                               
                                 <th
                                     class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-
-                            @for(usuario of usuarios;track usuario.id){
+                            @for(usuario of getPaginatedUsers(); track usuario.id) {
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center space-x-3">
                                         <div
                                             class="w-10 h-10 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
-                                            <span class="text-white font-semibold text-sm">JP</span>
+                                            <span class="text-white font-semibold text-sm">{{
+                                                usuario.userName.substring(0, 2).toUpperCase() }}</span>
                                         </div>
                                         <div>
-                                            <div class="font-medium text-gray-900 dark:text-white">{{usuario.userName}}</div>
-                                           
+                                            <div class="font-medium text-gray-900 dark:text-white">{{ usuario.userName
+                                                }}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{usuario.email}}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ usuario.email }}</td>
                                 <td class="px-6 py-4">
                                     <span
                                         class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200">
-                                        {{usuario.roles}}
+                                        {{ usuario.roles }}
                                     </span>
                                 </td>
-                               
                                 <td class="px-6 py-4">
                                     <div class="flex items-center space-x-2">
-                                        <button
+                                        <button (click)="abrirEditModal(usuario.id)"
                                             class="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                             </svg>
                                         </button>
-                                        <button
+                                        <button (click)="abrirDeleteModal(usuario.id)"
                                             class="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -154,16 +158,51 @@
                                 </td>
                             </tr>
                             }
-
-
-
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Paginación -->
+                <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                        <!-- Información de la paginación -->
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            Mostrando {{ (currentPage - 1) * itemsPerPage + 1 }} -
+                            {{ getCurrentPageEndIndex() }} de {{ usuarios.length }} usuarios
+                        </div>
+
+                        <!-- Controles de paginación -->
+                        <div class="flex items-center space-x-2">
+                            <!-- Botón anterior -->
+                            <button (click)="previousPage()" [disabled]="!hasPreviousPage()"
+                                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700">
+                                Anterior
+                            </button>
+
+                            <!-- Números de página -->
+                            <div class="flex space-x-1">
+                                @for(page of getPageNumbers(); track page) {
+                                <button (click)="goToPage(page)"
+                                    [class]="page === currentPage ? 
+                                'px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-md hover:bg-blue-700' : 
+                                'px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700'">
+                                    {{ page }}
+                                </button>
+                                }
+                            </div>
+
+                            <!-- Botón siguiente -->
+                            <button (click)="nextPage()" [disabled]="!hasNextPage()"
+                                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700">
+                                Siguiente
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- ========== FORMULARIO USUARIO ========== -->
-            <div
+            <div id="formulario1"
                 class="mt-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50">
 
                 <!-- Header del formulario -->
@@ -181,72 +220,82 @@
 
                 <!-- Campos del formulario -->
                 <div class="p-6">
-                    <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <form class="grid grid-cols-1 md:grid-cols-2 gap-6" [formGroup]="addUser" (submit)="crearUsuario()">
 
-                        <!-- Nombre completo -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nombre
-                                completo</label>
-                            <input type="text"
-                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Ingrese el nombre completo">
-                        </div>
+
 
                         <!-- Usuario -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nombre de
                                 usuario</label>
-                            <input type="text"
+                            <input formControlName="userName" type="text" name="userName"
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Ingrese el usuario">
+                            @if(addUser.get('userName')?.touched && addUser.get('userName')?.invalid){
+                            <span class="text-red-600">El nombre de usuario no debe de estar vacío</span>
+                            }
                         </div>
 
                         <!-- Email -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
-                            <input type="email"
+                            <input formControlName="email" type="email" name="email"
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="ejemplo@email.com">
+                            @if(addUser.get('email')?.touched && addUser.get('email')?.invalid){
+                            <span class="text-red-600">El email está vacio o es incorrecto</span>
+                            }
                         </div>
 
                         <!-- Contraseña -->
                         <div>
                             <label
                                 class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Contraseña</label>
-                            <input type="password"
+                            <input type="password" name="password" formControlName="password"
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Ingrese la contraseña">
+                            @if(addUser.get('password')?.touched && addUser.get('password')?.invalid){
+                            <span class="text-red-600">El campo contraseña no debe de estar vacío</span>
+                            }
                         </div>
 
                         <!-- Rol -->
-                        <div class="md:col-span-2">
+                        <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Rol</label>
-                            <select
+                            <select name="roleId" formControlName="roleId"
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <option value="">Seleccione un rol</option>
-                                <option value="1">Administrador</option>
-                                <option value="2">Editor</option>
-                                <option value="3">Usuario</option>
+                                <option value="" selected>Seleccione un rol</option>
+                                @for(rol of roles;track rol.id){
+
+                                <option [value]="rol.id">{{rol.name}}</option>
+
+                                }
+
                             </select>
+                            <div class="flex justify-end space-x-4 mt-6">
+                                <button
+                                    class="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    Cancelar
+                                </button>
+                                <button type="submit" [disabled]="addUser.invalid"
+                                    class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                    Guardar Usuario
+                                </button>
+                            </div>
                         </div>
+
                     </form>
 
-                    <!-- Botones de acción -->
-                    <div class="flex justify-end space-x-4 mt-6">
-                        <button
-                            class="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                            Cancelar
-                        </button>
-                        <button class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                            Guardar Usuario
-                        </button>
-                    </div>
+
                 </div>
             </div>
         </div>
 
+        }
+
         <!-- ========== ROLES TAB CONTENT ========== -->
-        <div class="roles-tab" style="display: none;">
+        @if(activeTab=='roles'){
+        <div class="roles-tab">
 
             <!-- Header con botón crear rol -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 space-y-4 sm:space-y-0">
@@ -256,7 +305,7 @@
                     </p>
                 </div>
                 <button
-                    class="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
+                    class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -460,13 +509,225 @@
                             Cancelar
                         </button>
                         <button
-                            class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                            class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
                             Guardar Rol
                         </button>
                     </div>
                 </div>
             </div>
         </div>
+        }
+
 
     </div>
+    @if(showEditModal) {
+    <div class="fixed inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div
+            class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-2xl max-w-2xl w-full mx-4 transform transition-all border border-gray-200/50 dark:border-gray-700/50">
+            <!-- Header del modal -->
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div
+                            class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Editar Usuario</h3>
+                    </div>
+                    <button (click)="closeEditModal()"
+                        class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contenido del modal -->
+            <div class="p-6">
+                <form [formGroup]="editUser" (submit)="updateUsuario()" class="space-y-6">
+                    <!-- Avatar y nombre -->
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div
+                            class="w-16 h-16 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-semibold text-lg">jesus</span>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-900 dark:text-white">Adios</h4>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Hola</p>
+                        </div>
+                    </div>
+
+                    <!-- Campos del formulario en grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Nombre de usuario -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Nombre de usuario
+                            </label>
+                            <input formControlName="userName" type="text"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Ingrese el usuario">
+                            @if(editUser.get('userName')?.touched && editUser.get('userName')?.invalid) {
+                            <span class="text-red-600 text-sm mt-1">El nombre de usuario no debe estar vacío</span>
+                            }
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Email
+                            </label>
+                            <input formControlName="email" type="email"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="ejemplo@email.com">
+                            @if(editUser.get('email')?.touched && editUser.get('email')?.invalid) {
+                            <span class="text-red-600 text-sm mt-1">El email está vacío o es incorrecto</span>
+                            }
+                        </div>
+
+                        <!-- Nueva contraseña (opcional) -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Nueva contraseña
+                                <span
+                                    class="text-gray-400 text-xs">(opcional){{editUser.get('password')?.invalid}}</span>
+                            </label>
+                            <input formControlName="password" type="password"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Dejar vacío para mantener la actual">
+                        </div>
+
+                        <!-- Rol -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Rol
+                            </label>
+                            <select formControlName="roleId"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Seleccione un rol</option>
+                                @for(rol of roles; track rol.id) {
+                                <option [value]="rol.id">{{ rol.name }}</option>
+                                }
+                            </select>
+                            @if(editUser.get('roleId')?.touched && editUser.get('roleId')?.invalid) {
+                            <span class="text-red-600 text-sm mt-1">Debe seleccionar un rol</span>
+                            }
+                        </div>
+
+                    </div>
+                    <!-- Botones de acción -->
+                    <div
+                        class="p-6 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
+                        <button (click)="closeEditModal()" type="button"
+                            class="px-6 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                            Cancelar
+                        </button>
+                        <button [disabled]="editUser.invalid" type="submit"
+                            class="px-6 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            Guardar cambios
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+    }
 </div>
+
+<!-- Modal de confirmación de eliminación -->
+@if(showDeleteModal) {
+<div class="fixed inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full mx-4 transform transition-all">
+        <!-- Header del modal -->
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Confirmar eliminación</h3>
+                </div>
+                <button (click)="closeDeleteModal()"
+                    class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Contenido del modal -->
+        <div class="p-6">
+            <p class="text-gray-600 dark:text-gray-400 mb-4">
+                ¿Estás seguro de que deseas eliminar el usuario?
+
+            </p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+                Esta acción no se puede deshacer y se perderán todos los datos asociados a este usuario.
+            </p>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-end space-x-3">
+            <button (click)="closeDeleteModal()"
+                class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                Cancelar
+            </button>
+            <button (click)="borrar()"
+                class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                Eliminar usuario
+            </button>
+        </div>
+    </div>
+</div>
+}
+
+<!-- Modal de éxito -->
+@if(exito) {
+<div class="fixed inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div
+        class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-2xl max-w-md w-full mx-4 transform transition-all border border-gray-200/50 dark:border-gray-700/50">
+        <!-- Header del modal -->
+        <div class="p-6 text-center">
+            <!-- Icono de éxito animado -->
+            <div
+                class="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">¡Operación exitosa!</h3>
+
+            <!-- Mensaje dinámico según la acción -->
+            <p class="text-gray-600 dark:text-gray-400 mb-4">
+
+                La operación se ha completado correctamente.
+
+            </p>
+
+            <!-- Botón de cerrar -->
+            <button (click)="cerrarModal()"
+                class="w-full px-6 py-3 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                Continuar
+            </button>
+        </div>
+    </div>
+</div>
+}

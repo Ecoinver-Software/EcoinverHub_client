@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../environment/environment';
 import { HttpClient } from '@angular/common/http';
-import { Usuario } from '../types/usuario';
+import { Usuario, UsuarioPost } from '../types/usuario';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,5 +13,23 @@ export class UsuarioService {
 
   get():Observable<Usuario[]>{
     return this.http.get<Usuario[]>(this.url);
+  }
+  
+  post(usuario:UsuarioPost):Observable<Usuario>{
+   
+    return this.http.post<Usuario>(this.url,usuario);
+  }
+  delete(id:number){
+    return this.http.delete(this.url+'/'+id);
+  }
+  put(id:number,usuario:UsuarioPost){
+    const body={
+      userName:usuario.userName,
+      email:usuario.email,
+      roleId:usuario.roleId,
+      password:usuario.password
+
+    }
+    return this.http.put(this.url+'/'+id,body);
   }
 }
