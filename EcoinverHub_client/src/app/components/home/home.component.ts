@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AnuncioService } from '../../services/anuncio.service';
+import { Anuncio } from '../../types/anuncio';
 
 interface CalendarDay {
   date: Date;
@@ -25,10 +27,13 @@ interface CalendarEvent {
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   currentDate = new Date();
   selectedDate: Date | null = null;
   calendarDays: CalendarDay[] = [];
+  
+  // Anuncios desde el servicio
+  anuncios: Anuncio[] = [];
   
   // Nombres de los meses en español
   monthNames = [
@@ -61,10 +66,140 @@ export class HomeComponent {
     }
   ];
 
-  constructor() {
+  constructor(private anuncioService: AnuncioService) {
     this.generateCalendar();
     // Seleccionar el día actual por defecto
     this.selectedDate = new Date();
+  }
+
+  ngOnInit(): void {
+    this.loadAnuncios();
+  }
+
+  // Cargar anuncios desde el servicio
+  loadAnuncios(): void {
+    this.anuncioService.get().subscribe({
+      next: (data) => {
+        this.anuncios = data;
+      },
+      error: (err) => {
+        console.error('Error cargando anuncios', err);
+      }
+    });
+  }
+
+  // Obtener todos los anuncios (sin filtro por estado)
+  get todosLosAnuncios(): Anuncio[] {
+    return this.anuncios;
+  }
+
+  // Obtener el color del estado (solo badge y punto)
+  getEstadoColor(estado: string): { bg: string, text: string, dot: string } {
+    const estadoLower = estado.toLowerCase();
+    
+    if (estadoLower === 'urgente') {
+      return {
+        bg: 'bg-red-100 dark:bg-red-900/50',
+        text: 'text-red-800 dark:text-red-200',
+        dot: 'bg-red-500'
+      };
+    } else if (estadoLower === 'activo') {
+      return {
+        bg: 'bg-green-100 dark:bg-green-900/50',
+        text: 'text-green-800 dark:text-green-200',
+        dot: 'bg-green-500'
+      };
+    } else {
+      return {
+        bg: 'bg-gray-100 dark:bg-gray-700/50',
+        text: 'text-gray-800 dark:text-gray-200',
+        dot: 'bg-gray-400'
+      };
+    }
+  }
+
+  // Mouse drag functionality
+  private isDragging = false;
+  private startX = 0;
+  private scrollLeft = 0;
+
+  onMouseDown(event: MouseEvent, container: HTMLElement) {
+    this.isDragging = true;
+    this.startX = event.pageX - container.offsetLeft;
+    this.scrollLeft = container.scrollLeft;
+    container.style.cursor = 'grabbing';
+    container.style.userSelect = 'none';
+  }
+
+  onMouseMove(event: MouseEvent, container: HTMLElement) {
+    if (!this.isDragging) return;
+    event.preventDefault();
+    const x = event.pageX - container.offsetLeft;
+    const walk = (x - this.startX) * 2; // Velocidad del scroll
+    container.scrollLeft = this.scrollLeft - walk;
+  }
+
+  onMouseUp(container: HTMLElement) {
+    this.isDragging = false;
+    container.style.cursor = 'grab';
+    container.style.userSelect = 'auto';
+  }
+
+  onMouseLeave(container: HTMLElement) {
+    this.isDragging = false;
+    container.style.cursor = 'grab';
+    container.style.userSelect = 'auto';
+  }
+
+  // Obtener las iniciales del nombre para el avatar
+  getInitials(nombre: string): string {
+    return nombre
+      .split(' ')
+      .map(word => word.charAt(0))
+      .slice(0, 2)
+      .join('')
+      .toUpperCase();
+  }
+
+  // Obtener un color de avatar basado en el nombre
+  getAvatarColor(nombre: string): string {
+    const colors = [
+      'from-blue-400 to-blue-600',
+      'from-green-400 to-green-600',
+      'from-purple-400 to-purple-600',
+      'from-orange-400 to-orange-600',
+      'from-red-400 to-red-600',
+      'from-indigo-400 to-indigo-600',
+      'from-pink-400 to-pink-600',
+      'from-teal-400 to-teal-600'
+    ];
+    
+    const index = nombre.length % colors.length;
+    return colors[index];
+  }
+
+  // Formatear fecha
+  formatDate(dateString?: string): string {
+    if (!dateString) {
+      return new Date().toLocaleDateString('es-ES', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+    }
+    
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  }
+
+  // Truncar texto si es muy largo
+  truncateText(text: string, maxLength: number = 200): string {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
   }
 
   generateCalendar() {
