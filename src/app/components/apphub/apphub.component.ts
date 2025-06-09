@@ -30,42 +30,7 @@ interface ConfiguracionHub {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './apphub.component.html',
-  styles: [`
-    .line-clamp-1 {
-      display: -webkit-box;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    
-    .line-clamp-2 {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    
-    /* Animaciones personalizadas */
-    @keyframes deslizarArriba {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .animate-slide-up {
-      animation: deslizarArriba 0.5s ease-out;
-    }
-
-    /* Efectos especiales para botones */
-    .grupo-boton:hover .efecto-brillo {
-      transform: translateX(100%);
-    }
-  `]
+  styleUrls: ['./apphub.component.css']
 })
 export class AppHubComponent implements OnInit {
   
