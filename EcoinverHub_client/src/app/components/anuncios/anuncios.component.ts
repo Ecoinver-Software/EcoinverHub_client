@@ -69,9 +69,9 @@ export class AnunciosComponent implements OnInit, AfterViewInit {
           });
           
           // Opcional: Añadir un efecto visual temporal
-          elemento.classList.add('highlight-element');
+          elemento.classList.add('highlight-elemento');
           setTimeout(() => {
-            elemento.classList.remove('highlight-element');
+            elemento.classList.remove('highlight-elemento');
           }, 2000);
         } else {
           console.warn(`Elemento con ID '${this.fragmentoAScrollear}' no encontrado`);
