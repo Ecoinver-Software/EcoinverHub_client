@@ -7,6 +7,7 @@ import { AdminitracionComponent } from './components/administracion/administraci
 
 import { AppHubComponent } from './components/apphub/apphub.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
+import { EditorAnunciosComponent } from './components/editor-anuncios/editor-anuncios.component';
 
 
 export const routes: Routes = [
@@ -21,7 +22,8 @@ export const routes: Routes = [
             { path: 'home', component: HomeComponent },
             { path: 'administracion', component: AdminitracionComponent },
             { path: 'apphub', component: AppHubComponent },
-            { path: 'perfil', component: PerfilComponent }
+            { path: 'perfil', component: PerfilComponent },
+            { path: 'editor-anuncios', component: EditorAnunciosComponent }
         ]
 
     },
