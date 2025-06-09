@@ -160,6 +160,7 @@
       <div *ngIf="anunciosFiltrados.length > 0" class="grid gap-8">
         <div
           *ngFor="let anuncio of anunciosFiltrados; let i = index"
+          [attr.id]="anuncio.id.toString()"
           class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-slate-700/20 p-8 hover:shadow-3xl transition-all duration-500 hover:-translate-y-2 group staggered-animation overflow-hidden relative"
           [ngStyle]="{'animation-delay': (i * 0.1) + 's'}"
         >

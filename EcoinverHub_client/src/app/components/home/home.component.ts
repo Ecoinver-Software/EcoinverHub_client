@@ -6,6 +6,7 @@ import { Anuncio } from '../../types/anuncio';
 //para saber si el rol es marketing
 import { AuthServiceService } from '../../services/auth.service';
 import { takeUntil } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 interface CalendarDay {
@@ -80,7 +81,7 @@ export class HomeComponent implements OnInit {
     }
   ];
 
-  constructor(private anuncioService: AnuncioService, private authService: AuthServiceService) {
+  constructor(private anuncioService: AnuncioService, private authService: AuthServiceService, private router: Router) {
     this.generateCalendar();
     // Seleccionar el día actual por defecto
     this.selectedDate = new Date();
@@ -409,18 +410,15 @@ export class HomeComponent implements OnInit {
     window.location.href = '/anuncios';
   }
 
+  navigateToAnuncio(id: number) {
+    this.router.navigate(
+    ['/anuncios'], 
+    { fragment: id.toString() }
+  );
+  }
 
-
-
-
-
-
-
-
-
-
-
-
+  
+  //-------------------------------------------------------------------------------
 
 
 

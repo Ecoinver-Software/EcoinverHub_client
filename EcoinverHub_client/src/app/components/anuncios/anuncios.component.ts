@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AnuncioService } from '../../services/anuncio.service';
 import { Anuncio } from '../../types/anuncio';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-anuncios',
@@ -11,7 +12,7 @@ import { Anuncio } from '../../types/anuncio';
   templateUrl: './anuncios.component.html',
   styleUrls: ['./anuncios.component.css']
 })
-export class AnunciosComponent implements OnInit {
+export class AnunciosComponent implements OnInit, AfterViewInit {
   anuncios: Anuncio[] = [];
   anunciosFiltrados: Anuncio[] = [];
   filtroTexto: string = '';
@@ -19,11 +20,24 @@ export class AnunciosComponent implements OnInit {
   estadosDisponibles: string[] = ['activo', 'inactivo', 'urgente', 'importante'];
   anunciosExpandidos: Set<number> = new Set();
   longitudPreview: number = 150;
+  private fragmentoAScrollear: string | null = null;
 
-  constructor(private anuncioService: AnuncioService) {}
+  constructor(
+    private anuncioService: AnuncioService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
+    // Capturar el fragmento antes de cargar los datos
+    this.route.fragment.subscribe(fragment => {
+      this.fragmentoAScrollear = fragment;
+    });
+    
     this.cargarAnuncios();
+  }
+
+  ngAfterViewInit(): void {
+    console.log('aaaa afterviu');
   }
 
   // Obtiene todos los anuncios y los ordena por fecha de creación descendente
@@ -32,11 +46,38 @@ export class AnunciosComponent implements OnInit {
       next: (data) => {
         this.anuncios = this.ordenarPorCreacion(data);
         this.aplicarFiltros();
+        
+        // Hacer scroll después de que los datos se han cargado y aplicado
+        this.scrollearAFragmento();
       },
       error: (err) => {
         console.error('Error cargando anuncios', err);
       }
     });
+  }
+
+  // Método para hacer scroll al fragmento especificado
+  private scrollearAFragmento(): void {
+    if (this.fragmentoAScrollear) {
+      // Usar setTimeout para asegurar que el DOM se ha actualizado completamente
+      setTimeout(() => {
+        const elemento = document.getElementById(this.fragmentoAScrollear!);
+        if (elemento) {
+          elemento.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'center' // Centra el elemento en la vista
+          });
+          
+          // Opcional: Añadir un efecto visual temporal
+          elemento.classList.add('highlight-element');
+          setTimeout(() => {
+            elemento.classList.remove('highlight-element');
+          }, 2000);
+        } else {
+          console.warn(`Elemento con ID '${this.fragmentoAScrollear}' no encontrado`);
+        }
+      }, 100);
+    }
   }
 
   // Ordena los anuncios para mostrar primero el más reciente
@@ -55,6 +96,11 @@ export class AnunciosComponent implements OnInit {
       
       return coincideTexto && coincideEstado;
     });
+
+    // Si se aplicaron filtros y había un fragmento, intentar scroll nuevamente
+    if (this.fragmentoAScrollear && (this.filtroTexto || this.filtroEstado)) {
+      setTimeout(() => this.scrollearAFragmento(), 50);
+    }
   }
 
   // Limpia todos los filtros aplicados
