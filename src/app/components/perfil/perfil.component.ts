@@ -234,9 +234,8 @@ export class PerfilComponent implements OnInit, OnDestroy {
     this.showToastMessage('Cerrando sesión...', 'success');
     this.authService.logout();
     
-    setTimeout(() => {
       window.location.href = '/login';
-    }, 1500);
+   
   }
 
   showToastMessage(message: string, type: 'success' | 'error') {
