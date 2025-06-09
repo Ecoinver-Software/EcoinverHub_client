@@ -34,6 +34,8 @@ export class UsuarioService {
       password:usuario.password
 
     }
+    
     return this.http.put(this.url+'/'+id,body);
   }
+  
 }
