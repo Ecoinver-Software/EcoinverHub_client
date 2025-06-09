@@ -360,7 +360,14 @@ export class AdminitracionComponent implements OnInit {
       (data) => {
         console.log(data)
         this.usuarios.push(data);
-        this.usuariosFiltrados.push(data);
+
+        // CAMBIO: Actualizar array filtrado según búsqueda actual
+        if (this.buscar.trim()) {
+          this.busqueda();
+        } else {
+          this.usuariosFiltrados = [...this.usuarios];
+        }
+
         this.calculateTotalPages();
 
         const lastPageItems = this.usuariosFiltrados.length % this.itemsPerPage;
@@ -414,7 +421,14 @@ export class AdminitracionComponent implements OnInit {
       (data) => {
         console.log(data);
         this.roles.push(data);
-        this.rolesFiltrados.push(data);
+
+        // CAMBIO: Actualizar array filtrado según búsqueda actual
+        if (this.buscarRoles.trim()) {
+          this.busquedaRoles();
+        } else {
+          this.rolesFiltrados = [...this.roles];
+        }
+
         this.calculateTotalPagesRoles();
 
         const lastPageItems = this.rolesFiltrados.length % this.itemsPerPageRoles;
@@ -500,6 +514,12 @@ export class AdminitracionComponent implements OnInit {
   }
 
   abrirEditModal(id: number) {
+    const pos = this.usuarios.findIndex(item => item.id == id);
+    const rolId = this.roles.find(item => item.name == this.usuarios[pos].roles);
+
+    this.editUser.get('userName')?.setValue(this.usuarios[pos].userName);
+    this.editUser.get('email')?.setValue(this.usuarios[pos].email);
+    this.editUser.get('roleId')?.setValue(rolId?.id);
     this.showEditModal = true;
     this.id = id;
   }
@@ -578,6 +598,11 @@ export class AdminitracionComponent implements OnInit {
   }
 
   abrirEditModalRol(id: number) {
+    const pos = this.roles.findIndex(item => item.id == id);
+    this.editRol.get('name')?.setValue(this.roles[pos].name);
+    this.editRol.get('level')?.setValue(this.roles[pos].level);
+    this.editRol.get('description')?.setValue(this.roles[pos].description);
+
     this.showEditModalRol = true;
     this.id = id;
   }
@@ -814,4 +839,12 @@ export class AdminitracionComponent implements OnInit {
     this.showUsuarios = false;
 
   }
+  
+  // Agregar este método en tu componente TypeScript
+  tieneAsignacion(usuarioId: number, aplicacionId: number): boolean {
+    return this.rolesAplicaciones.find(item =>
+      item.userId === usuarioId && item.applicationId === aplicacionId
+    ) !== undefined;
+  }
+
 }
