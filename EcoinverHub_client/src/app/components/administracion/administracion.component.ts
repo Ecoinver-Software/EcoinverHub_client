@@ -7,6 +7,8 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CommonModule } from '@angular/common';
 import { AplicacionesService } from '../../services/aplicaciones.service';
 import { Aplicacion } from '../../aplicacion';
+import { AsignarAplicaciones } from '../../types/asignarAplicaciones';
+import { AsignarAplicacionesService } from '../../services/asignarAplicaciones.service';
 
 @Component({
   selector: 'app-adminitracion',
@@ -18,36 +20,50 @@ export class AdminitracionComponent implements OnInit {
 
   usuarios: Usuario[] = [];
   roles: Rol[] = [];
-  aplicaciones:Aplicacion[]=[];
+  usuariosAplicaciones: Usuario[] = [];
+  rolesAplicaciones: AsignarAplicaciones[] = [];
+  rolesAplicacionesFiltros: AsignarAplicaciones[] = [];
+  aplicaciones: Aplicacion[] = [];
   id: number = 0;
   showEditModal: boolean = false;
   showDeleteModal: boolean = false;
   showDeleteModalRol: boolean = false;
-  
+  showDeleteModalAplicacion: boolean = false;
+  showModalAsignacion: boolean = false;
+  showUsuarios: boolean = false;
   // Propiedades para la paginación de usuarios
   currentPage: number = 1;
   itemsPerPage: number = 5;
   totalPages: number = 0;
-  
+
   // Propiedades para la paginación de roles
   currentPageRoles: number = 1;
   itemsPerPageRoles: number = 5;
   totalPagesRoles: number = 0;
+
+  // Propiedades para la paginación de aplicaciones
+  currentPageAplicaciones: number = 1;
+  itemsPerPageAplicaciones: number = 5;
+  totalPagesAplicaciones: number = 0;
+
   selectedFile: File | null = null; // Solo un archivo 
-  addAplication:FormGroup;
+  addAplication: FormGroup;
   activeTab: string = 'usuarios';
   buscar: string = '';
   buscarRoles: string = '';
+  buscarAplicaciones: string = '';
   addUser: FormGroup;
   editUser: FormGroup;
   exito: boolean = false;
   usuariosFiltrados: Usuario[] = [];
   rolesFiltrados: Rol[] = [];
+  aplicacionesFiltradas: Aplicacion[] = [];
   addRol: FormGroup;
   showEditModalRol: boolean = false;
   editRol: FormGroup;
-  rolesFiltros:Rol[]=[];
-  constructor(private userService: UsuarioService, private rolService: RolService,private aplicacionService:AplicacionesService) {
+  rolesFiltros: Rol[] = [];
+
+  constructor(private userService: UsuarioService, private rolService: RolService, private aplicacionService: AplicacionesService, private rolesAplicacionesService: AsignarAplicacionesService) {
     this.addUser = new FormGroup({
       userName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/)]),
       password: new FormControl('', Validators.required),
@@ -74,10 +90,10 @@ export class AdminitracionComponent implements OnInit {
       level: new FormControl('', Validators.required)
     });
 
-    this.addAplication=new FormGroup({
-        name:new FormControl('',[Validators.required,Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/)]),
-        description:new FormControl('',[Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
-        url:new FormControl('',Validators.required)
+    this.addAplication = new FormGroup({
+      name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/)]),
+      description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
+      url: new FormControl('', Validators.required)
     });
   }
 
@@ -104,14 +120,27 @@ export class AdminitracionComponent implements OnInit {
         console.log(error);
       }
     );
+
     this.aplicacionService.get().subscribe(
-      (data)=>{
-        this.aplicaciones=data;
+      (data) => {
+        this.aplicaciones = data;
+        this.aplicacionesFiltradas = data;
+        this.calculateTotalPagesAplicaciones();
       },
-      (error)=>{
+      (error) => {
         console.log(error);
       }
-    )
+    );
+
+    this.rolesAplicacionesService.get().subscribe(
+      (data) => {
+        this.rolesAplicaciones = data;
+        console.log(data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
   // ===== MÉTODOS DE PAGINACIÓN PARA USUARIOS =====
@@ -230,11 +259,69 @@ export class AdminitracionComponent implements OnInit {
     return Math.min(this.currentPageRoles * this.itemsPerPageRoles, this.rolesFiltrados.length);
   }
 
+  // ===== MÉTODOS DE PAGINACIÓN PARA APLICACIONES =====
+  calculateTotalPagesAplicaciones(): void {
+    this.totalPagesAplicaciones = Math.ceil(this.aplicacionesFiltradas.length / this.itemsPerPageAplicaciones);
+  }
+
+  getPaginatedAplicaciones(): Aplicacion[] {
+    const startIndex = (this.currentPageAplicaciones - 1) * this.itemsPerPageAplicaciones;
+    const endIndex = startIndex + this.itemsPerPageAplicaciones;
+    return this.aplicacionesFiltradas.slice(startIndex, endIndex);
+  }
+
+  previousPageAplicaciones(): void {
+    if (this.currentPageAplicaciones > 1) {
+      this.currentPageAplicaciones--;
+    }
+  }
+
+  nextPageAplicaciones(): void {
+    if (this.currentPageAplicaciones < this.totalPagesAplicaciones) {
+      this.currentPageAplicaciones++;
+    }
+  }
+
+  goToPageAplicaciones(page: number): void {
+    if (page >= 1 && page <= this.totalPagesAplicaciones) {
+      this.currentPageAplicaciones = page;
+    }
+  }
+
+  getPageNumbersAplicaciones(): number[] {
+    const pages: number[] = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, this.currentPageAplicaciones - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(this.totalPagesAplicaciones, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  }
+
+  hasPreviousPageAplicaciones(): boolean {
+    return this.currentPageAplicaciones > 1;
+  }
+
+  hasNextPageAplicaciones(): boolean {
+    return this.currentPageAplicaciones < this.totalPagesAplicaciones;
+  }
+
+  getCurrentPageEndIndexAplicaciones(): number {
+    return Math.min(this.currentPageAplicaciones * this.itemsPerPageAplicaciones, this.aplicacionesFiltradas.length);
+  }
+
   // ===== MÉTODOS DE BÚSQUEDA =====
   busqueda() {
-    this.usuariosFiltrados = this.usuarios.filter(item => 
-      item.userName.toLowerCase().trim().includes(this.buscar.toLowerCase()) || 
-      item.roles.toLowerCase().includes(this.buscar.toLowerCase()) || 
+    this.usuariosFiltrados = this.usuarios.filter(item =>
+      item.userName.toLowerCase().trim().includes(this.buscar.toLowerCase()) ||
+      item.roles.toLowerCase().includes(this.buscar.toLowerCase()) ||
       item.email.toLowerCase().includes(this.buscar.toLowerCase())
     );
     this.currentPage = 1; // Resetear a la primera página
@@ -242,12 +329,22 @@ export class AdminitracionComponent implements OnInit {
   }
 
   busquedaRoles() {
-    this.rolesFiltrados = this.roles.filter(item => 
-      item.name.toLowerCase().trim().includes(this.buscarRoles.toLowerCase()) || 
+    this.rolesFiltrados = this.roles.filter(item =>
+      item.name.toLowerCase().trim().includes(this.buscarRoles.toLowerCase()) ||
       item.description.toLowerCase().includes(this.buscarRoles.toLowerCase())
     );
     this.currentPageRoles = 1; // Resetear a la primera página
     this.calculateTotalPagesRoles();
+  }
+
+  busquedaAplicaciones() {
+    this.aplicacionesFiltradas = this.aplicaciones.filter(item =>
+      item.name.toLowerCase().trim().includes(this.buscarAplicaciones.toLowerCase()) ||
+      item.description.toLowerCase().includes(this.buscarAplicaciones.toLowerCase()) ||
+      item.url.toLowerCase().includes(this.buscarAplicaciones.toLowerCase())
+    );
+    this.currentPageAplicaciones = 1; // Resetear a la primera página
+    this.calculateTotalPagesAplicaciones();
   }
 
   // ===== MÉTODOS EXISTENTES =====
@@ -285,7 +382,7 @@ export class AdminitracionComponent implements OnInit {
         console.log(data);
         const pos = this.usuarios.findIndex(item => item.id == this.id);
         const posFiltrado = this.usuariosFiltrados.findIndex(item => item.id == this.id);
-        
+
         this.usuarios.splice(pos, 1);
         this.usuariosFiltrados.splice(posFiltrado, 1);
         this.showDeleteModal = false;
@@ -339,7 +436,7 @@ export class AdminitracionComponent implements OnInit {
         console.log(data);
         const pos = this.roles.findIndex(item => item.id == this.id);
         const posFiltrado = this.rolesFiltrados.findIndex(item => item.id == this.id);
-        
+
         this.roles.splice(pos, 1);
         this.rolesFiltrados.splice(posFiltrado, 1);
         this.showDeleteModalRol = false;
@@ -374,16 +471,16 @@ export class AdminitracionComponent implements OnInit {
         this.exito = true;
         const pos = this.roles.findIndex(item => item.id == this.id);
         const posFiltrado = this.rolesFiltrados.findIndex(item => item.id == this.id);
-        
+
         // Actualizar en ambos arrays
         this.roles[pos].level = data.level;
         this.roles[pos].description = data.description;
         this.roles[pos].name = data.name;
-        
+
         this.rolesFiltrados[posFiltrado].level = data.level;
         this.rolesFiltrados[posFiltrado].description = data.description;
         this.rolesFiltrados[posFiltrado].name = data.name;
-        
+
         this.editRol.reset();
       },
       (error) => {
@@ -497,38 +594,224 @@ export class AdminitracionComponent implements OnInit {
   scrollToElement(elementId: string) {
     const element = document.getElementById(elementId);
     if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
       });
     }
   }
 
   onFilesSelected(event: any): void {
-     const file = event.target.files[0]; // Obtiene el primer archivo seleccionado
-      if (file) {
+    const file = event.target.files[0]; // Obtiene el primer archivo seleccionado
+    if (file) {
       this.selectedFile = file;
     }
   }
-  crearAplicacion(){
-    if(this.selectedFile==null){
+
+  crearAplicacion() {
+    if (this.selectedFile == null) {
       return;
     }
 
-    const formData=new FormData();
+    const formData = new FormData();
 
-    formData.append('imagen',this.selectedFile);
-    formData.append('name',this.addAplication.get('name')?.value);
-    formData.append('description',this.addAplication.get('description')?.value);
-    formData.append('url',this.addAplication.get('url')?.value);
+    formData.append('image', this.selectedFile);
+    formData.append('name', this.addAplication.get('name')?.value);
+    formData.append('description', this.addAplication.get('description')?.value);
+    formData.append('url', this.addAplication.get('url')?.value);
+
     this.aplicacionService.post(formData).subscribe(
-      (data)=>{
+      (data) => {
         console.log(data);
+
+        // Solo agregar al array principal
+        this.aplicaciones.push({
+          id: data.id,
+          name: data.name,
+          description: data.description,
+          url: data.url,
+          icon: data.icon
+        });
+
+        // Actualizar el array filtrado basándose en la búsqueda actual
+        if (this.buscarAplicaciones.trim()) {
+          this.busquedaAplicaciones(); // Esto actualizará aplicacionesFiltradas
+        } else {
+          this.aplicacionesFiltradas = [...this.aplicaciones]; // Sin búsqueda, mostrar todas
+        }
+
+        this.calculateTotalPagesAplicaciones();
+
+        const lastPageItems = this.aplicacionesFiltradas.length % this.itemsPerPageAplicaciones;
+        if (lastPageItems === 1 && this.aplicacionesFiltradas.length > this.itemsPerPageAplicaciones) {
+          this.currentPageAplicaciones = this.totalPagesAplicaciones;
+        }
+
+        this.exito = true;
+        this.addAplication.reset();
+        this.selectedFile = null;
       },
-      (error)=>{
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  closeDeleteModalAplicacion() {
+    this.showDeleteModalAplicacion = false;
+  }
+
+  borrarAplicacion() {
+    this.aplicacionService.delete(this.id).subscribe(
+      (data) => {
+        console.log(data);
+        const pos = this.aplicaciones.findIndex(item => item.id == this.id);
+        const posFiltrado = this.aplicacionesFiltradas.findIndex(item => item.id == this.id);
+
+        this.aplicaciones.splice(pos, 1);
+        this.aplicacionesFiltradas.splice(posFiltrado, 1);
+        this.showDeleteModalAplicacion = false;
+        this.calculateTotalPagesAplicaciones();
+
+        const currentPageStartIndex = (this.currentPageAplicaciones - 1) * this.itemsPerPageAplicaciones;
+        if (currentPageStartIndex >= this.aplicacionesFiltradas.length && this.currentPageAplicaciones > 1) {
+          this.currentPageAplicaciones = this.currentPageAplicaciones - 1;
+        }
+
+        if (this.aplicacionesFiltradas.length === 0) {
+          this.currentPageAplicaciones = 1;
+        }
+      },
+      (error) => {
         console.log(error);
       }
     )
+  }
+
+  abrirModalDeleteAplicacion(id: number) {
+    this.id = id;
+    this.showDeleteModalAplicacion = true;
+  }
+
+  abrirModalAsignacion(i: number) {
+    this.id = i;//Realmente esto no es el id es la posicion del array de los usarios, pero nos sirve en este caso.
+    this.showModalAsignacion = true;
+  }
+
+  cerrarModalAsignacion() {
+    this.showModalAsignacion = false;
+  }
+
+  guardarRolesAplicaciones(idUsuario: number) {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    let longitudChecbox = 0;
+    for (let i = 0; i < checkboxes.length; i++) {
+      const checkbox = checkboxes[i] as HTMLInputElement;
+      const encontrado = this.rolesAplicaciones.find(item => item.userId == idUsuario && item.applicationId == Number(checkbox.value));
+
+      if (checkbox.checked && encontrado == undefined) {
+        longitudChecbox++;
+
+      }
+    }
+
+    let completado = 0;
+
+    for (let i = 0; i < checkboxes.length; i++) {
+      const checkbox = checkboxes[i] as HTMLInputElement;
+      if (checkbox.checked) {
+        const encontrado = this.rolesAplicaciones.find(item => item.userId == idUsuario && item.applicationId == Number(checkbox.value));
+        if (encontrado === undefined) {
+          const body = {
+            id: 0,
+            userId: idUsuario,
+            applicationId: Number(checkbox.value)
+
+          };
+          this.rolesAplicacionesService.post(body).subscribe(
+            (data) => {
+              console.log(data);
+              this.rolesAplicaciones.push({
+                id: data.id,
+                userId: data.userId,
+                applicationId: data.applicationId
+              });
+
+
+              completado++;
+
+              if (completado == longitudChecbox) {
+                this.showModalAsignacion = false;
+                this.exito = true;
+              }
+
+              console.log(this.rolesAplicaciones);
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+        }
+
+      }
+      else {
+        const encontrado = this.rolesAplicaciones.find(item => item.userId == idUsuario && item.applicationId == Number(checkbox.value));
+        if (encontrado !== undefined) {
+
+          this.rolesAplicacionesService.delete(encontrado.id).subscribe(
+            (data) => {
+              const pos = this.rolesAplicaciones.findIndex(item => item.id == encontrado.id);
+              this.rolesAplicaciones.splice(pos, 1);
+              console.log(data);
+              if (completado == longitudChecbox) {
+                this.showModalAsignacion = false;
+                this.exito = true;
+              }
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+        }
+
+      }
+
+    }
+  }
+
+  comprobar(idUsuario: Number, idAplicacion: number) {
+    const encontrado = this.rolesAplicaciones.find(item => item.userId == idUsuario && item.applicationId == idAplicacion);
+    if (encontrado !== undefined) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  calcularUsuarios(idAplicacion: number) {
+
+    return this.rolesAplicaciones.filter(item => item.applicationId == idAplicacion).length;
+  }
+
+  abrirShowUsuarios(idAplicacion: number) {
+    this.usuariosAplicaciones = [];
+    const aplicaciones = this.rolesAplicaciones.filter(item => item.applicationId == idAplicacion);
+    this.showUsuarios = true;
+    if (aplicaciones !== undefined) {
+      for (let i = 0; i < aplicaciones.length; i++) {
+        const usuario = this.usuarios.find(item => item.id == aplicaciones[i].userId);
+        if (usuario !== undefined) {
+          this.usuariosAplicaciones.push(usuario);
+        }
+
+      }
+    }
+  }
+
+  cerrarUsuarios() {
+
+    this.showUsuarios = false;
 
   }
 }

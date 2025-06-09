@@ -15,7 +15,11 @@ export class AplicacionesService {
     return this.http.get<Aplicacion[]>(this.url);
   }
 
-  post(formData:FormData){
-    return this.http.post(this.url,formData);
+  post(formData:FormData):Observable<Aplicacion>{
+    return this.http.post<Aplicacion>(this.url,formData);
+  }
+
+  delete(id:number){
+   return this.http.delete(this.url+'/'+id);
   }
 }
