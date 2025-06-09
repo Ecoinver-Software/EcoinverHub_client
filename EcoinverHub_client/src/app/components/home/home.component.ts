@@ -3,6 +3,11 @@ import { CommonModule } from '@angular/common';
 import { AnuncioService } from '../../services/anuncio.service';
 import { Anuncio } from '../../types/anuncio';
 
+//para saber si el rol es marketing
+import { AuthServiceService } from '../../services/auth.service';
+import { takeUntil } from 'rxjs';
+
+
 interface CalendarDay {
   date: Date;
   day: number;
@@ -20,6 +25,14 @@ interface CalendarEvent {
   type: 'vacation' | 'meeting' | 'deadline' | 'other';
 }
 
+interface UserProfile {
+  id: number;
+  userName: string;
+  email: string;
+  roles: string;
+  createdAt: string;
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -31,6 +44,7 @@ export class HomeComponent implements OnInit {
   currentDate = new Date();
   selectedDate: Date | null = null;
   calendarDays: CalendarDay[] = [];
+  userProfile: UserProfile | null = null;
   
   // Anuncios desde el servicio
   anuncios: Anuncio[] = [];
@@ -66,7 +80,7 @@ export class HomeComponent implements OnInit {
     }
   ];
 
-  constructor(private anuncioService: AnuncioService) {
+  constructor(private anuncioService: AnuncioService, private authService: AuthServiceService) {
     this.generateCalendar();
     // Seleccionar el día actual por defecto
     this.selectedDate = new Date();
@@ -74,6 +88,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadAnuncios();
+    this.esRolMarketing();
   }
 
   // Cargar anuncios desde el servicio
@@ -363,4 +378,52 @@ export class HomeComponent implements OnInit {
     
     return this.selectedDate.toLocaleDateString('es-ES', options);
   }
+
+
+  //-------------------------------------------------------------------------------
+  //metodo para verificar si el usuario tiene rol de marketing
+  esRolMarketing(): void {
+    
+  this.authService.getProfile()
+    .subscribe({
+      next: (profile) => {
+        this.userProfile = profile;
+
+        //para que pille si es marketing o admin y asi mostrar el boton de anuncios (crear)
+        if (this.userProfile?.roles.includes('Marketing') || this.userProfile?.roles.includes('admin')) {
+          document.getElementById("botonAnuncios")?.removeAttribute("hidden");
+          //console.log('aaaa');
+          //console.log('Perfil de usuario:', this.userProfile);
+          
+        }
+       
+      },
+      error: (error: any) => {
+        console.error('Error al cargar perfil:', error);
+      }
+    });
+  }
+
+  navigateToAnuncios(): void {
+    // Navegar a la página de anuncios
+    window.location.href = '/anuncios';
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

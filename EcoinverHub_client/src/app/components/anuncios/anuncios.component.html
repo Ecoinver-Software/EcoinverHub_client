@@ -1,0 +1,272 @@
+<!-- anuncios.component.html -->
+<div class="min-h-screen py-8 px-4">
+  <div class="max-w-7xl mx-auto">
+    
+    <!-- Header principal -->
+    <div class="mb-10 animate-fade-in">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-6 lg:space-y-0">
+        <div class="text-center lg:text-left">
+          <h1 class="text-4xl lg:text-5xl font-light bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 dark:from-white dark:via-blue-100 dark:to-indigo-100 bg-clip-text text-transparent mb-3">
+            Tablón de Anuncios
+          </h1>
+          <p class="text-lg text-slate-600 dark:text-slate-400">Mantente informado con las últimas novedades</p>
+        </div>
+        
+        <!-- Estadísticas rápidas -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-2xl p-4 border border-white/20 dark:border-slate-700/20 text-center">
+            <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{{ contarPorEstado('activo') }}</div>
+            <div class="text-xs text-slate-600 dark:text-slate-400 font-medium">Activos</div>
+          </div>
+          <div class="bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-2xl p-4 border border-white/20 dark:border-slate-700/20 text-center">
+            <div class="text-2xl font-bold text-red-600 dark:text-red-400">{{ contarPorEstado('urgente') }}</div>
+            <div class="text-xs text-slate-600 dark:text-slate-400 font-medium">Urgentes</div>
+          </div>
+          <div class="bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-2xl p-4 border border-white/20 dark:border-slate-700/20 text-center">
+            <div class="text-2xl font-bold text-amber-600 dark:text-amber-400">{{ contarPorEstado('importante') }}</div>
+            <div class="text-xs text-slate-600 dark:text-slate-400 font-medium">Importantes</div>
+          </div>
+          <div class="bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-2xl p-4 border border-white/20 dark:border-slate-700/20 text-center">
+            <div class="text-2xl font-bold text-slate-600 dark:text-slate-400">{{ anuncios.length }}</div>
+            <div class="text-xs text-slate-600 dark:text-slate-400 font-medium">Total</div>
+          </div>
+        </div>
+      </div>
+      <pre>
+      </pre>
+      <a href="/home" class="inline-flex items-center px-4 py-2 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-xl border border-white/20 dark:border-slate-700/20 text-slate-700 dark:text-slate-300 hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all duration-200 group">
+          <svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+          Volver al Dashboard
+        </a>
+    </div>
+
+    <!-- Panel de filtros -->
+    <div class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-slate-700/20 p-8 mb-10 animate-slide-up">
+      <div class="flex items-center mb-6">
+        <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+          </svg>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-semibold bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-slate-200 bg-clip-text text-transparent">
+          Filtros de Búsqueda
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Filtro por texto -->
+        <div class="lg:col-span-2 space-y-2">
+          <label for="filtroTexto" class="block text-slate-700 dark:text-slate-300 font-semibold text-sm">
+            Buscar en título o contenido
+          </label>
+          <div class="relative">
+            <input
+              id="filtroTexto"
+              type="text"
+              [(ngModel)]="filtroTexto"
+              (input)="aplicarFiltros()"
+              class="w-full bg-white/50 dark:bg-slate-700/50 border border-slate-200/50 dark:border-slate-600/50 rounded-2xl px-4 py-3 pl-12 text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-200 backdrop-blur-sm"
+              placeholder="Escribe para filtrar anuncios..."
+            />
+            <div class="absolute inset-y-0 left-0 flex items-center pl-4">
+              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filtro por estado -->
+        <div class="space-y-2">
+          <label for="filtroEstado" class="block text-slate-700 dark:text-slate-300 font-semibold text-sm">
+            Filtrar por estado
+          </label>
+          <div class="relative">
+            <select
+              id="filtroEstado"
+              [(ngModel)]="filtroEstado"
+              (change)="aplicarFiltros()"
+              class="w-full bg-white/50 dark:bg-slate-700/50 border border-slate-200/50 dark:border-slate-600/50 rounded-2xl px-4 py-3 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-200 backdrop-blur-sm appearance-none cursor-pointer"
+            >
+              <option value="">Todos los estados</option>
+              <option *ngFor="let estado of estadosDisponibles" [value]="estado">
+                {{ estado.charAt(0).toUpperCase() + estado.slice(1) }}
+              </option>
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón limpiar filtros -->
+      <div class="flex justify-end mt-6" *ngIf="filtroTexto || filtroEstado">
+        <button
+          (click)="limpiarFiltros()"
+          class="bg-gradient-to-r from-slate-500 to-slate-600 hover:from-slate-600 hover:to-slate-700 text-white font-semibold px-6 py-2 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center group"
+        >
+          <svg class="w-4 h-4 mr-2 group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          Limpiar Filtros
+        </button>
+      </div>
+    </div>
+
+    <!-- Resultado de filtros -->
+    <div class="mb-6 animate-slide-up delay-100" *ngIf="filtroTexto || filtroEstado">
+      <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-4">
+        <div class="flex items-center text-blue-700 dark:text-blue-300">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="font-medium">
+            Mostrando {{ anunciosFiltrados.length }} de {{ anuncios.length }} anuncios
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de anuncios -->
+    <div class="animate-slide-up delay-200">
+      <!-- Estado vacío -->
+      <div *ngIf="anunciosFiltrados.length === 0 && anuncios.length === 0" class="text-center py-20">
+        <div class="w-32 h-32 bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 rounded-full mx-auto mb-8 flex items-center justify-center shadow-2xl">
+          <svg class="w-16 h-16 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-slate-600 dark:text-slate-400 mb-3">No hay anuncios disponibles</h3>
+        <p class="text-slate-500 dark:text-slate-500 text-lg">El tablón está vacío por ahora</p>
+      </div>
+
+      <!-- Sin resultados en filtros -->
+      <div *ngIf="anunciosFiltrados.length === 0 && anuncios.length > 0" class="text-center py-16">
+        <div class="w-24 h-24 bg-gradient-to-r from-orange-100 to-orange-200 dark:from-orange-800 dark:to-orange-700 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-lg">
+          <svg class="w-12 h-12 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-600 dark:text-slate-400 mb-2">No se encontraron resultados</h3>
+        <p class="text-slate-500 dark:text-slate-500">Intenta ajustar tus filtros de búsqueda</p>
+      </div>
+
+      <!-- Grid de anuncios -->
+      <div *ngIf="anunciosFiltrados.length > 0" class="grid gap-8">
+        <div
+          *ngFor="let anuncio of anunciosFiltrados; let i = index"
+          class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-slate-700/20 p-8 hover:shadow-3xl transition-all duration-500 hover:-translate-y-2 group staggered-animation overflow-hidden relative"
+          [ngStyle]="{'animation-delay': (i * 0.1) + 's'}"
+        >
+          <!-- Decoración de fondo -->
+          <div class="absolute top-0 right-0 w-32 h-32 opacity-5 dark:opacity-10 transform rotate-12 translate-x-8 -translate-y-8">
+            <svg class="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+            </svg>
+          </div>
+
+          <div class="relative z-10">
+            <!-- Header del anuncio -->
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-6 space-y-4 sm:space-y-0">
+              <div class="flex-1">
+                <div class="flex items-center space-x-4 mb-4">
+                  <!-- Badge de estado -->
+                  <span 
+                    class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold shadow-lg transition-all duration-200 group-hover:scale-105 dark:text-gray-100"
+                    [ngClass]="{
+                      'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white': anuncio.estado === 'activo',
+                      'bg-gradient-to-r from-slate-400 to-slate-500 text-white': anuncio.estado === 'inactivo',
+                      'bg-gradient-to-r from-red-500 to-red-600 text-white': anuncio.estado === 'urgente',
+                      'bg-gradient-to-r from-amber-500 to-amber-600 text-white': anuncio.estado === 'importante'
+                    }"
+                  >
+                    <div 
+                      class="w-3 h-3 rounded-full mr-2"
+                      [ngClass]="{
+                        'bg-white animate-pulse': anuncio.estado === 'activo' || anuncio.estado === 'urgente',
+                        'bg-white/70': anuncio.estado === 'inactivo' || anuncio.estado === 'importante'
+                      }"
+                    ></div>
+                    {{ anuncio.estado.toUpperCase() }}
+                  </span>
+                  
+                  <!-- Indicador de nuevo -->
+                  <span *ngIf="i < 3" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-pulse">
+                    NUEVO
+                  </span>
+                </div>
+                
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-white mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight">
+                  {{ anuncio.nombre }}
+                </h2>
+              </div>
+              
+              <!-- Iconos decorativos -->
+              <div class="flex space-x-2 opacity-30 group-hover:opacity-60 transition-opacity duration-300">
+                <div class="w-8 h-8 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-lg flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contenido del anuncio -->
+            <div class="space-y-4">
+              <div class="bg-slate-50 dark:bg-slate-700/50 rounded-2xl p-6 border-l-4 border-blue-500">
+                <div class="space-y-4">
+                  <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-lg whitespace-pre-line break-words">
+                    {{ obtenerContenidoMostrado(anuncio) }}
+                  </p>
+                  
+                  <!-- Botón Ver más / Ver menos -->
+                  <div *ngIf="necesitaVerMas(anuncio.contenido)" class="flex justify-center">
+                    <button
+                      (click)="alternarExpansion(anuncio.id)"
+                      class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold px-6 py-2 rounded-xl text-sm transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center group"
+                    >
+                      <span>{{ estaExpandido(anuncio.id) ? 'Ver menos' : 'Ver más' }}</span>
+                      <svg 
+                        class="w-4 h-4 ml-2 transition-transform duration-200"
+                        [ngClass]="{'rotate-180': estaExpandido(anuncio.id)}"
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer del anuncio 
+            <div class="flex items-center justify-between mt-8 pt-6 border-t border-slate-200/50 dark:border-slate-600/50">
+              <div class="flex items-center space-x-3 text-slate-500 dark:text-slate-400 text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span>Anuncio #{{ anuncio.id }}</span>
+              </div>
+              
+              <div class="flex items-center space-x-2 text-slate-400 dark:text-slate-500 text-sm">
+                <div class="flex space-x-1">
+                  <div class="w-2 h-2 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
+                  <div class="w-2 h-2 bg-slate-400 dark:bg-slate-500 rounded-full"></div>
+                  <div class="w-2 h-2 bg-slate-500 dark:bg-slate-400 rounded-full"></div>
+                </div>
+              </div>
+            </div>-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
