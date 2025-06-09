@@ -3,34 +3,41 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 // Interfaces
-interface App {
+interface Aplicacion {
   id: string;
-  name: string;
-  description: string;
-  imageUrl: string;
-  category?: string;
+  nombre: string;
+  descripcion: string;
+  urlImagen: string;
+  categoria?: string;
   version?: string;
-  author?: string;
-  status: 'production' | 'development' | 'coming-soon';
-  tags?: string[];
-  lastUpdated?: Date;
+  autor?: string;
+  estado: 'produccion' | 'desarrollo' | 'proximamente';
+  etiquetas?: string[];
+  fechaActualizacion?: Date;
   url?: string;
 }
 
-interface AppHubConfig {
-  title: string;
-  subtitle?: string;
-  apps: App[];
-  showSearch?: boolean;
-  cardsPerRow?: number;
+interface ConfiguracionHub {
+  titulo: string;
+  subtitulo?: string;
+  aplicaciones: Aplicacion[];
+  mostrarBusqueda?: boolean;
+  tarjetasPorFila?: number;
 }
 
 @Component({
-  selector: 'app-hub',
+  selector: 'hub-aplicaciones',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './apphub.component.html',
   styles: [`
+    .line-clamp-1 {
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
     .line-clamp-2 {
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -39,7 +46,7 @@ interface AppHubConfig {
     }
     
     /* Animaciones personalizadas */
-    @keyframes slideUp {
+    @keyframes deslizarArriba {
       from {
         opacity: 0;
         transform: translateY(20px);
@@ -51,200 +58,237 @@ interface AppHubConfig {
     }
     
     .animate-slide-up {
-      animation: slideUp 0.5s ease-out;
+      animation: deslizarArriba 0.5s ease-out;
+    }
+
+    /* Efectos especiales para botones */
+    .grupo-boton:hover .efecto-brillo {
+      transform: translateX(100%);
     }
   `]
 })
 export class AppHubComponent implements OnInit {
-  @Input() config: AppHubConfig = {
-    title: 'Hub de Aplicaciones',
-    subtitle: 'Descubre y gestiona todas tus aplicaciones desde un solo lugar',
-    apps: [],
-    showSearch: true,
-    cardsPerRow: 4
+  
+  @Input() configuracion: ConfiguracionHub = {
+    titulo: 'Hub de Aplicaciones',
+    subtitulo: 'Descubre y gestiona todas tus aplicaciones desde un solo lugar',
+    aplicaciones: [],
+    mostrarBusqueda: true,
+    tarjetasPorFila: 4
   };
 
-  @Output() appClicked = new EventEmitter<App>();
-  @Output() appAccessed = new EventEmitter<App>();
-  @Output() searchChanged = new EventEmitter<string>();
+  @Output() aplicacionSeleccionada = new EventEmitter<Aplicacion>();
+  @Output() aplicacionAccedida = new EventEmitter<Aplicacion>();
+  @Output() busquedaCambiada = new EventEmitter<string>();
 
-  searchTerm: string = '';
-  filteredApps: App[] = [];
+  terminoBusqueda: string = '';
+  aplicacionesFiltradas: Aplicacion[] = [];
 
-  // Apps disponibles en Ecoinver Cloud
-  private availableApps: App[] = [
+  // Aplicaciones disponibles en Ecoinver Cloud
+  private aplicacionesDisponibles: Aplicacion[] = [
     {
       id: '1',
-      name: 'GMAO',
-      description: 'Sistema de gestión de mantenimiento asistido por ordenador para optimizar recursos y maximizar la eficiencia operativa',
-      imageUrl: '/assets/GMAOimg.png',
-      category: '',
+      nombre: 'GMAO',
+      descripcion: 'Sistema de gestión de mantenimiento asistido por ordenador para optimizar recursos y maximizar la eficiencia operativa',
+      urlImagen: '/assets/GMAOimg.png',
+      categoria: 'Gestión',
       version: '0.0.0',
-      author: 'Ecoinver Software Team',
-      status: 'coming-soon',
-      tags: ['mantenimiento', 'gestión', 'eficiencia', 'preventivo'],
-      lastUpdated: new Date('2025-06-04'),
+      autor: 'Ecoinver Software Team',
+      estado: 'proximamente',
+      etiquetas: ['mantenimiento', 'gestión', 'eficiencia', 'preventivo'],
+      fechaActualizacion: new Date('2025-06-04'),
       url: '/gmao'
     },
     {
       id: '2',
-      name: 'Ecoinver Assistant',
-      description: 'Asistente de inteligencia artificial local para consultas y soporte técnico especializado',
-      imageUrl: '/assets/EcoinverAssistant.png',
-      category: '',
+      nombre: 'Ecoinver Assistant',
+      descripcion: 'Asistente de inteligencia artificial local para consultas y soporte técnico especializado',
+      urlImagen: '/assets/EcoinverAssistant.png',
+      categoria: 'IA',
       version: '0.9.0',
-      author: 'Ecoinver Software Team',
-      status: 'development',
-      tags: ['IA', 'asistente', 'consultas', 'soporte'],
-      lastUpdated: new Date('2025-06-03'),
+      autor: 'Ecoinver Software Team',
+      estado: 'desarrollo',
+      etiquetas: ['IA', 'asistente', 'consultas', 'soporte'],
+      fechaActualizacion: new Date('2025-06-03'),
       url: '/assistant'
     },
     {
       id: '3',
-      name: 'Cultive Cloud',
-      description: 'Plataforma integral de gestión agrícola con monitoreo IoT y análisis predictivo avanzado',
-      imageUrl: '/assets/CultiveCloudFull.png',
-      category: '',
+      nombre: 'Cultive Cloud',
+      descripcion: 'Plataforma integral de gestión agrícola con monitoreo IoT y análisis predictivo avanzado',
+      urlImagen: '/assets/CultiveCloudFull.png',
+      categoria: 'Agricultura',
       version: '1.1.0',
-      author: 'Ecoinver Software Team',
-      status: 'production',
-      tags: ['agricultura', 'IoT', 'monitoreo', 'predictivo'],
-      lastUpdated: new Date('2025-05-28'),
+      autor: 'Ecoinver Software Team',
+      estado: 'produccion',
+      etiquetas: ['agricultura', 'monitoreo', 'predictivo'],
+      fechaActualizacion: new Date('2025-05-28'),
       url: '/cultive-cloud'
     }
-    // Aquí puedes agregar más aplicaciones cuando estén disponibles
-    // {
-    //   id: '4',
-    //   name: 'Nueva App',
-    //   description: 'Descripción de la nueva aplicación',
-    //   imageUrl: 'URL_DE_LA_IMAGEN',
-    //   category: 'Categoría',
-    //   version: '1.0.0',
-    //   author: 'Equipo Desarrollador',
-    //   status: 'development', // 'production' | 'development' | 'coming-soon'
-    //   tags: ['tag1', 'tag2'],
-    //   lastUpdated: new Date(),
-    //   url: '/nueva-app'
-    // }
   ];
 
   ngOnInit() {
-    // Si no hay apps configuradas, usar las apps disponibles
-    if (!this.config.apps || this.config.apps.length === 0) {
-      this.config.apps = this.availableApps;
+    // Si no hay aplicaciones configuradas, usar las aplicaciones disponibles
+    if (!this.configuracion.aplicaciones || this.configuracion.aplicaciones.length === 0) {
+      this.configuracion.aplicaciones = this.aplicacionesDisponibles;
     }
     
-    this.filteredApps = this.config.apps;
+    this.aplicacionesFiltradas = this.configuracion.aplicaciones;
   }
 
-  onSearchChange() {
-    this.filterApps();
-    this.searchChanged.emit(this.searchTerm);
+  // Maneja los cambios en la búsqueda
+  alCambiarBusqueda() {
+    this.filtrarAplicaciones();
+    this.busquedaCambiada.emit(this.terminoBusqueda);
   }
 
-  private filterApps() {
-    this.filteredApps = this.config.apps.filter(app => {
-      const matchesSearch = !this.searchTerm || 
-        app.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        app.description.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        (app.tags && app.tags.some(tag => tag.toLowerCase().includes(this.searchTerm.toLowerCase())));
+  // Filtra las aplicaciones según el término de búsqueda
+  private filtrarAplicaciones() {
+    this.aplicacionesFiltradas = this.configuracion.aplicaciones.filter(aplicacion => {
+      const coincideBusqueda = !this.terminoBusqueda || 
+        aplicacion.nombre.toLowerCase().includes(this.terminoBusqueda.toLowerCase()) ||
+        aplicacion.descripcion.toLowerCase().includes(this.terminoBusqueda.toLowerCase()) ||
+        (aplicacion.etiquetas && aplicacion.etiquetas.some(etiqueta => 
+          etiqueta.toLowerCase().includes(this.terminoBusqueda.toLowerCase())));
 
-      return matchesSearch;
+      return coincideBusqueda;
     });
   }
 
-  clearFilters() {
-    this.searchTerm = '';
-    this.filteredApps = this.config.apps;
-    this.searchChanged.emit(this.searchTerm);
+  // Limpia todos los filtros aplicados
+  limpiarFiltros() {
+    this.terminoBusqueda = '';
+    this.aplicacionesFiltradas = this.configuracion.aplicaciones;
+    this.busquedaCambiada.emit(this.terminoBusqueda);
   }
 
-  onAppClick(app: App) {
-    this.appClicked.emit(app);
+  // Maneja el clic en una aplicación
+  alHacerClicEnAplicacion(aplicacion: Aplicacion) {
+    this.aplicacionSeleccionada.emit(aplicacion);
   }
 
-  onAppAccess(app: App) {
-    if (app.status === 'production' || app.status === 'development') {
-      this.appAccessed.emit(app);
+  // Maneja el acceso a una aplicación
+  alAccederAplicacion(aplicacion: Aplicacion) {
+    if (aplicacion.estado === 'produccion' || aplicacion.estado === 'desarrollo') {
+      this.aplicacionAccedida.emit(aplicacion);
       // Si tiene URL, navegar directamente
-      if (app.url) {
-        window.open(app.url, '_blank');
+      if (aplicacion.url) {
+        window.open(aplicacion.url, '_blank');
       }
     }
   }
 
-  // Métodos auxiliares para estadísticas
-  getProductionAppsCount(): number {
-    return this.config.apps.filter(app => app.status === 'production').length;
+  // Obtiene la cantidad de aplicaciones en producción
+  obtenerContadorAplicacionesProduccion(): number {
+    return this.configuracion.aplicaciones.filter(app => app.estado === 'produccion').length;
   }
 
-  getDevelopmentAppsCount(): number {
-    return this.config.apps.filter(app => app.status === 'development').length;
+  // Obtiene la cantidad de aplicaciones en desarrollo
+  obtenerContadorAplicacionesDesarrollo(): number {
+    return this.configuracion.aplicaciones.filter(app => app.estado === 'desarrollo').length;
   }
 
-  // Métodos auxiliares para el styling basado en status
-  getStatusClasses(status: string): string {
-    switch (status) {
-      case 'production':
-        return 'bg-green-100/90 text-green-800 border border-green-200';
-      case 'development':
-        return 'bg-yellow-100/90 text-yellow-800 border border-yellow-200';
-      case 'coming-soon':
-        return 'bg-gray-100/90 text-gray-800 border border-gray-200';
+  // Obtiene la inicial del nombre de la aplicación
+  obtenerInicialAplicacion(nombreAplicacion: string): string {
+    return nombreAplicacion.charAt(0).toUpperCase();
+  }
+
+  // Obtiene la inicial del autor
+  obtenerInicialAutor(autor: string): string {
+    return autor.charAt(0).toUpperCase();
+  }
+
+  // Obtiene las clases CSS para el botón simple según el estado
+  obtenerClasesBotonSimple(estado: string): string {
+    switch (estado) {
+      case 'produccion':
+        return 'bg-green-100 hover:bg-green-200 text-green-800 border border-green-200';
+      case 'desarrollo':
+        return 'bg-yellow-100 hover:bg-yellow-200 text-yellow-800 border border-yellow-200';
+      case 'proximamente':
+        return 'bg-gray-100 text-gray-500 cursor-not-allowed border border-gray-200';
       default:
-        return 'bg-gray-100/90 text-gray-800 border border-gray-200';
+        return 'bg-gray-100 text-gray-500 border border-gray-200';
     }
   }
 
-  getStatusText(status: string): string {
-    switch (status) {
-      case 'production':
-        return 'Disponible';
-      case 'development':
-        return 'En desarrollo';
-      case 'coming-soon':
-        return 'Próximamente';
-      default:
-        return 'Desconocido';
-    }
-  }
-
-  getActionText(status: string): string {
-    switch (status) {
-      case 'production':
+  // Obtiene el texto de la acción según el estado
+  obtenerTextoAccion(estado: string): string {
+    switch (estado) {
+      case 'produccion':
         return 'Entrar';
-      case 'development':
-        return 'Acceso beta';
-      case 'coming-soon':
+      case 'desarrollo':
+        return 'Probar';
+      case 'proximamente':
         return 'Próximamente';
       default:
         return 'No disponible';
     }
   }
 
-  getQuickActionClasses(status: string): string {
-    switch (status) {
-      case 'production':
-        return 'bg-green-500/90 hover:bg-green-600 text-white';
-      case 'development':
-        return 'bg-yellow-500/90 hover:bg-yellow-600 text-white';
-      case 'coming-soon':
-        return 'bg-gray-200/90 text-gray-500 cursor-not-allowed';
+  // Obtiene las clases CSS para el estado de la aplicación
+  obtenerClasesEstado(estado: string): string {
+    switch (estado) {
+      case 'produccion':
+        return 'bg-green-100 text-green-800 border border-green-200';
+      case 'desarrollo':
+        return 'bg-yellow-100 text-yellow-800 border border-yellow-200';
+      case 'proximamente':
+        return 'bg-gray-100 text-gray-800 border border-gray-200';
       default:
-        return 'bg-gray-200/90 text-gray-500';
+        return 'bg-gray-100 text-gray-800 border border-gray-200';
     }
   }
 
-  getMainButtonClasses(status: string): string {
-    switch (status) {
-      case 'production':
-        return 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-green-500/25 hover:shadow-green-500/40 hover:scale-105';
-      case 'development':
-        return 'bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white shadow-yellow-500/25 hover:shadow-yellow-500/40 hover:scale-105';
-      case 'coming-soon':
-        return 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none';
+  // Obtiene las clases CSS para el badge de estado
+  obtenerClasesEstadoBadge(estado: string): string {
+    switch (estado) {
+      case 'desarrollo':
+        return 'bg-orange-500 text-white';
+      case 'proximamente':
+        return 'bg-blue-500 text-white';
       default:
-        return 'bg-gray-300 text-gray-500';
+        return 'bg-gray-500 text-white';
+    }
+  }
+
+  // Obtiene el texto del badge de estado
+  obtenerTextoEstadoBadge(estado: string): string {
+    switch (estado) {
+      case 'desarrollo':
+        return 'BETA';
+      case 'proximamente':
+        return 'SOON';
+      default:
+        return 'N/A';
+    }
+  }
+
+  // Obtiene las clases CSS para el estado compacto
+  obtenerClasesEstadoCompacto(estado: string): string {
+    switch (estado) {
+      case 'produccion':
+        return 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300';
+      case 'desarrollo':
+        return 'bg-orange-100 text-orange-700 dark:bg-orange-900/20 dark:text-orange-300';
+      case 'proximamente':
+        return 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300';
+      default:
+        return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300';
+    }
+  }
+
+  // Obtiene el texto del estado compacto
+  obtenerTextoEstadoCompacto(estado: string): string {
+    switch (estado) {
+      case 'produccion':
+        return 'Disponible';
+      case 'desarrollo':
+        return 'Beta';
+      case 'proximamente':
+        return 'Próximamente';
+      default:
+        return 'N/A';
     }
   }
 }
