@@ -14,4 +14,25 @@ export class RolService {
   get(): Observable<Rol[]> {
     return this.http.get<Rol[]>(this.url);
   }
+
+  post(rol:Rol):Observable<Rol>{
+    const body={
+      name:rol.name,
+      description:rol.description,
+      level:rol.level
+    }
+    return this.http.post<Rol>(this.url+'/create',body);
+  }
+  delete(id:number){
+    return this.http.delete(this.url+'/'+id);
+  }
+  put(id:number,rol:Rol):Observable<Rol>{
+    const body={
+      name:rol.name,
+    description:rol.description,
+    level:rol.level   
+    }
+
+    return this.http.put<Rol>(this.url+'/'+id,body);
+  }
 }
