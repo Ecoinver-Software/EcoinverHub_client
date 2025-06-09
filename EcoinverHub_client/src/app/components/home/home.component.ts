@@ -407,7 +407,7 @@ export class HomeComponent implements OnInit {
 
   navigateToAnuncios(): void {
     // Navegar a la página de anuncios
-    window.location.href = '/anuncios';
+    this.router.navigate(['/editor-anuncios']);
   }
 
   navigateToAnuncio(id: number) {
@@ -417,7 +417,7 @@ export class HomeComponent implements OnInit {
   );
   }
 
-  
+
   //-------------------------------------------------------------------------------
 
 
