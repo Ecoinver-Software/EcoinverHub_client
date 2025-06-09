@@ -1,5 +1,5 @@
 <!-- editor-anuncios.component.html -->
-<div class="min-h-screen py-8 px-4">
+<div class="min-h-screen py-8 px-4 overflow-x-hidden">
   <div class="max-w-6xl mx-auto">
     
     <!-- Header con navegación -->
@@ -11,7 +11,7 @@
           </h1>
           <p class="text-slate-600 dark:text-slate-400">Gestiona los anuncios del tablón principal</p>
         </div>
-        <a href="/dashboard" class="inline-flex items-center px-4 py-2 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-xl border border-white/20 dark:border-slate-700/20 text-slate-700 dark:text-slate-300 hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all duration-200 group">
+        <a href="/home" class="inline-flex items-center px-4 py-2 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-xl border border-white/20 dark:border-slate-700/20 text-slate-700 dark:text-slate-300 hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all duration-200 group">
           <svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
           </svg>
@@ -21,14 +21,14 @@
     </div>
 
     <!-- FORMULARIO: Crear / Editar Anuncio -->
-    <div class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-slate-700/20 p-8 mb-12 animate-slide-up">
+    <div class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-slate-700/20 p-6 sm:p-8 mb-12 animate-slide-up">
       <div class="flex items-center mb-6">
         <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
           <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
           </svg>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-semibold bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-slate-200 bg-clip-text text-transparent">
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-semibold bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-slate-200 bg-clip-text text-transparent">
           {{ isEditing ? 'Editar Anuncio' : 'Crear Nuevo Anuncio' }}
         </h2>
       </div>
@@ -172,7 +172,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
           </svg>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-semibold bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-slate-200 bg-clip-text text-transparent">
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-semibold bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-slate-200 bg-clip-text text-transparent">
           Lista de Anuncios
         </h2>
       </div>
@@ -192,15 +192,15 @@
       <div *ngIf="anuncios.length > 0" class="grid gap-6">
         <div
           *ngFor="let anuncio of anuncios; let i = index"
-          class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 dark:border-slate-700/20 p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group staggered-animation"
+          class="w-full bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 dark:border-slate-700/20 p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group staggered-animation"
           [ngStyle]="{'animation-delay': (i * 0.1) + 's'}"
           >
           <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
             <!-- Información del anuncio -->
             <div class="flex-1 space-y-3">
-              <div class="flex items-start space-x-4">
+              <div class="flex flex-col sm:flex-row sm:items-start space-y-3 sm:space-y-0 sm:space-x-4">
                 <!-- Estado badge -->
-                <div class="flex-shrink-0 mt-1">
+                <div class="flex-shrink-0 self-start sm:mt-1 dark:text-gray-200">
                   <span 
                     class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold shadow-lg"
                     [ngClass]="{
@@ -222,10 +222,10 @@
                 
                 <!-- Contenido principal -->
                 <div class="flex-1 min-w-0">
-                  <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+                  <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 break-words">
                     {{ anuncio.nombre }}
                   </h3>
-                  <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                  <p class="text-slate-600 dark:text-slate-300 leading-relaxed break-words">
                     {{ anuncio.contenido }}
                   </p>
                 </div>

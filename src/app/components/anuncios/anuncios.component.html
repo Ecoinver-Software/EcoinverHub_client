@@ -1,0 +1,295 @@
+<!-- anuncios.component.html -->
+<div class="min-h-screen bg-slate-50 dark:bg-slate-900 py-8 px-4">
+  <div class="max-w-6xl mx-auto">
+    
+    <!-- Header minimalista -->
+    <div class="mb-12">
+      <div class="text-center mb-10">
+        <div class="inline-flex items-center bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-4 py-2 rounded-full text-sm font-medium mb-6">
+          <div class="w-2 h-2 bg-slate-400 rounded-full mr-2"></div>
+          Centro de Comunicaciones
+        </div>
+        
+        <h1 class="text-5xl lg:text-6xl font-light text-slate-900 dark:text-white mb-4 tracking-tight">
+          Panel de Anuncios
+        </h1>
+        <div class="w-16 h-0.5 bg-slate-300 dark:bg-slate-700 mx-auto mb-4"></div>
+        <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+          Comunicaciones y actualizaciones importantes
+        </p>
+      </div>
+      
+      <!-- Métricas simples -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <span class="text-xs text-slate-500 dark:text-slate-500 font-medium">ACTIVOS</span>
+          </div>
+          <div class="text-2xl font-semibold text-slate-900 dark:text-white">{{ contarPorEstado('activo') }}</div>
+        </div>
+        
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+              </svg>
+            </div>
+            <span class="text-xs text-slate-500 dark:text-slate-500 font-medium">URGENTES</span>
+          </div>
+          <div class="text-2xl font-semibold text-slate-900 dark:text-white">{{ contarPorEstado('urgente') }}</div>
+        </div>
+        
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+              </svg>
+            </div>
+            <span class="text-xs text-slate-500 dark:text-slate-500 font-medium">IMPORTANTES</span>
+          </div>
+          <div class="text-2xl font-semibold text-slate-900 dark:text-white">{{ contarPorEstado('importante') }}</div>
+        </div>
+        
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </div>
+            <span class="text-xs text-slate-500 dark:text-slate-500 font-medium">TOTAL</span>
+          </div>
+          <div class="text-2xl font-semibold text-slate-900 dark:text-white">{{ anuncios.length }}</div>
+        </div>
+      </div>
+      
+      <!-- Navegación simple -->
+      <div class="flex justify-center">
+        <a href="/home" class="inline-flex items-center text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+          Volver al Dashboard
+        </a>
+      </div>
+    </div>
+
+    <!-- Panel de filtros limpio -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8 mb-10">
+      <div class="flex items-center mb-6">
+        <div class="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center mr-4">
+          <svg class="w-6 h-6 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">Filtros</h2>
+          <p class="text-slate-600 dark:text-slate-400 text-sm">Buscar y filtrar anuncios</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Búsqueda -->
+        <div class="lg:col-span-2 space-y-2">
+          <label for="filtroTexto" class="block text-slate-700 dark:text-slate-300 font-medium text-sm">
+            Buscar contenido
+          </label>
+          <div class="relative">
+            <input
+              id="filtroTexto"
+              type="text"
+              [(ngModel)]="filtroTexto"
+              (input)="aplicarFiltros()"
+              class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 pl-11 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-colors"
+              placeholder="Buscar en títulos y contenido..."
+            />
+            <div class="absolute inset-y-0 left-0 flex items-center pl-4">
+              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filtro por estado -->
+        <div class="space-y-2">
+          <label for="filtroEstado" class="block text-slate-700 dark:text-slate-300 font-medium text-sm">
+            Estado
+          </label>
+          <div class="relative">
+            <select
+              id="filtroEstado"
+              [(ngModel)]="filtroEstado"
+              (change)="aplicarFiltros()"
+              class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-colors appearance-none cursor-pointer"
+            >
+              <option value="">Todos los estados</option>
+              <option *ngFor="let estado of estadosDisponibles" [value]="estado">
+                {{ estado.charAt(0).toUpperCase() + estado.slice(1) }}
+              </option>
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón limpiar -->
+      <div class="flex justify-end mt-6" *ngIf="filtroTexto || filtroEstado">
+        <button
+          (click)="limpiarFiltros()"
+          class="bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 font-medium px-6 py-2 rounded-xl transition-colors flex items-center"
+        >
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          Limpiar filtros
+        </button>
+      </div>
+    </div>
+
+    <!-- Indicador de resultados -->
+    <div class="mb-8" *ngIf="filtroTexto || filtroEstado">
+      <div class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4">
+        <div class="flex items-center text-slate-700 dark:text-slate-300">
+          <svg class="w-5 h-5 mr-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="font-medium">
+            Mostrando {{ anunciosFiltrados.length }} de {{ anuncios.length }} anuncios
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de anuncios -->
+    <div class="space-y-6">
+      <!-- Estado vacío -->
+      <div *ngIf="anunciosFiltrados.length === 0 && anuncios.length === 0" class="text-center py-20">
+        <div class="w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+          <svg class="w-12 h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-600 dark:text-slate-400 mb-2">No hay anuncios</h3>
+        <p class="text-slate-500 dark:text-slate-500">El tablón está vacío por ahora</p>
+      </div>
+
+      <!-- Sin resultados -->
+      <div *ngIf="anunciosFiltrados.length === 0 && anuncios.length > 0" class="text-center py-16">
+        <div class="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+          <svg class="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-slate-600 dark:text-slate-400 mb-2">Sin resultados</h3>
+        <p class="text-slate-500 dark:text-slate-500">Intenta ajustar los filtros</p>
+      </div>
+
+      <!-- Anuncios -->
+      <div *ngIf="anunciosFiltrados.length > 0" class="space-y-6">
+        <article
+          *ngFor="let anuncio of anunciosFiltrados; let i = index"
+          [attr.id]="anuncio.id.toString()"
+          class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:shadow-lg"
+        >
+          <div class="p-8">
+            <!-- Header del anuncio -->
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-6 space-y-4 sm:space-y-0">
+              <div class="flex-1">
+                <div class="flex items-center space-x-3 mb-4">
+                  <!-- Estado simple -->
+                  <span 
+                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                    [ngClass]="{
+                      'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400': anuncio.estado === 'activo',
+                      'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400': anuncio.estado === 'inactivo',
+                      'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400': anuncio.estado === 'urgente',
+                      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400': anuncio.estado === 'importante'
+                    }"
+                  >
+                    <div 
+                      class="w-1.5 h-1.5 rounded-full mr-2"
+                      [ngClass]="{
+                        'bg-green-500': anuncio.estado === 'activo',
+                        'bg-gray-500': anuncio.estado === 'inactivo',
+                        'bg-red-500': anuncio.estado === 'urgente',
+                        'bg-yellow-500': anuncio.estado === 'importante'
+                      }"
+                    ></div>
+                    {{ anuncio.estado.charAt(0).toUpperCase() + anuncio.estado.slice(1) }}
+                  </span>
+                  
+                  <!-- Indicador nuevo -->
+                  <span *ngIf="i < 3" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-medium px-2 py-1 rounded-full">
+                    Nuevo
+                  </span>
+                </div>
+                
+                <h2 class="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white mb-2 leading-tight">
+                  {{ anuncio.nombre }}
+                </h2>
+              </div>
+            </div>
+
+            <!-- Contenido -->
+            <div class="space-y-4">
+              <div class="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-6 border-l-4"
+                   [ngClass]="{
+                     'border-l-green-500': anuncio.estado === 'activo',
+                     'border-l-gray-500': anuncio.estado === 'inactivo',
+                     'border-l-red-500': anuncio.estado === 'urgente',
+                     'border-l-yellow-500': anuncio.estado === 'importante'
+                   }">
+                <div class="space-y-4">
+                  <p class="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line break-words">
+                    {{ obtenerContenidoMostrado(anuncio) }}
+                  </p>
+                  
+                  <!-- Botón expandir -->
+                  <div *ngIf="necesitaVerMas(anuncio.contenido)" class="flex justify-center">
+                    <button
+                      (click)="alternarExpansion(anuncio.id)"
+                      class="bg-slate-100 dark:bg-slate-600 hover:bg-slate-200 dark:hover:bg-slate-500 text-slate-700 dark:text-slate-300 font-medium px-4 py-2 rounded-lg text-sm transition-colors flex items-center"
+                    >
+                      <span>{{ estaExpandido(anuncio.id) ? 'Ver menos' : 'Ver más' }}</span>
+                      <svg 
+                        class="w-4 h-4 ml-2 transition-transform duration-200"
+                        [ngClass]="{'rotate-180': estaExpandido(anuncio.id)}"
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="flex items-center justify-between mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
+              <div class="flex items-center space-x-3 text-slate-500 dark:text-slate-400 text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <span>Anuncio #{{ anuncio.id }}</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
