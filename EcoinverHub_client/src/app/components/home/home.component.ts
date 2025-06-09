@@ -304,7 +304,7 @@ export class HomeComponent implements OnInit {
     this.generateCalendar();
   }
 
-  // Solicitar ausencia (función de ejemplo)
+  // Solicitar ausencia (función de ejemplo) no se implementará todavia
   requestAbsence() {
     if (this.selectedDate) {
       const selectedDateStr = this.selectedDate.toLocaleDateString('es-ES');
