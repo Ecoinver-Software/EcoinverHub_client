@@ -171,7 +171,15 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="flex justify-start">
+
+                                    <div class="flex justify-start items-center gap-2">
+                                        @for(aplicacion of aplicaciones; track aplicacion.id){
+                                        @if(tieneAsignacion(usuario.id,aplicacion.id)){
+                                        <img [src]="'https://localhost:7028/'+aplicacion.icon"
+                                            class="w-8 h-8 rounded-full object-cover shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200">
+                                        }
+
+                                        }
                                         <button (click)="abrirModalAsignacion(i)"
                                             class="group w-8 h-8 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
@@ -596,7 +604,8 @@
                                     </a>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="flex items-center space-x-2" (click)="abrirShowUsuarios(aplicacion.id)" style="cursor: pointer;">
+                                    <div class="flex items-center space-x-2" (click)="abrirShowUsuarios(aplicacion.id)"
+                                        style="cursor: pointer;">
                                         <span
                                             class="text-sm font-medium text-gray-900 dark:text-white">{{calcularUsuarios(aplicacion.id)}}</span>
                                         <span class="text-xs text-gray-500 dark:text-gray-400">usuarios</span>
@@ -702,6 +711,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
+                                        <img [src]="">
                                     </div>
                                 </label>
                                 <input type="file" id="icon-file" accept="image/*" class="hidden"
@@ -1192,9 +1202,10 @@
 
 <!-- Overlay del Modal -->
 @if(showUsuarios){
-<div class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" id="modalUsuariosFiltrados">
+<div class="fixed inset-0 backdrop-blur-sm bg-opacity-70 flex items-center justify-center z-50" id="modalUsuariosFiltrados">
     <!-- Modal Container -->
-    <div class="bg-gray-900 rounded-lg shadow-xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden border border-gray-700">
+    <div
+        class="bg-gray-900 rounded-lg shadow-xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden border border-gray-700">
 
         <!-- Modal Body -->
         <div class="p-6">
@@ -1207,7 +1218,8 @@
             <!-- Buscador -->
             <div class="mb-4">
                 <div class="relative">
-                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm"></i>
+                    <i
+                        class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm"></i>
                     <input type="text"
                         class="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-600 rounded-md focus:ring-1 focus:ring-blue-400 focus:border-blue-400 outline-none text-sm text-white placeholder-gray-400"
                         placeholder="Buscar por nombre, email o rol..." id="buscarUsuarioModal">
@@ -1233,7 +1245,8 @@
                         <tr class="hover:bg-gray-800 transition-colors">
                             <td class="px-4 py-3">
                                 <div class="flex items-center">
-                                    <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-medium text-xs mr-3">
+                                    <div
+                                        class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-medium text-xs mr-3">
                                         {{usuario.userName.substring(0,2).toUpperCase()}}
                                     </div>
                                     <div>
@@ -1243,7 +1256,8 @@
                             </td>
                             <td class="px-4 py-3 text-gray-300 text-sm">{{usuario.email}}</td>
                             <td class="px-4 py-3">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-900 text-blue-200 border border-blue-700">
+                                <span
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-900 text-blue-200 border border-blue-700">
                                     {{usuario.roles}}
                                 </span>
                             </td>
