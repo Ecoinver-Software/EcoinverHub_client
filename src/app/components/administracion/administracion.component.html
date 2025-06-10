@@ -578,7 +578,7 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                            @for(aplicacion of getPaginatedAplicaciones();track aplicacion.id){
+                            @for(aplicacion of getPaginatedAplicaciones();track aplicacion.id;let i=$index){
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center space-x-3">
@@ -613,6 +613,14 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center space-x-2">
+                                        <button (click)="abrirModalAplicacion(i)"
+                                            class="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                        </button>
+
                                         <button (click)="abrirModalDeleteAplicacion(aplicacion.id)"
                                             class="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -711,7 +719,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
-                                        <img [src]="">
+                                        <img id="imagePreview">
                                     </div>
                                 </label>
                                 <input type="file" id="icon-file" accept="image/*" class="hidden"
@@ -923,6 +931,104 @@
                             Cancelar
                         </button>
                         <button [disabled]="editRol.invalid" type="submit"
+                            class="px-6 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            Guardar cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    }
+     <!-- MODAL EDITAR APLICACIÓN -->
+    @if(showEditModalAplicacion) {
+    <div class="fixed inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div
+            class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-2xl max-w-2xl w-full mx-4 transform transition-all border border-gray-200/50 dark:border-gray-700/50">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div
+                            class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Editar Usuario</h3>
+                    </div>
+                    <button (click)="cerrarModalAplicacion()"
+                        class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6">
+                <form [formGroup]="editAplication" (submit)="updateAplicacion()" class="space-y-6">
+                    <div class="flex items-center space-x-4 mb-6">
+                       <div class="flex items-center space-x-4">
+                                <label for="icon-file" class="cursor-pointer">
+                                    <div
+                                        class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center justify-center transition-colors">
+                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                        </svg>
+                                        <img [src]="imgenUrl">
+                                    </div>
+                                </label>
+                                <input type="file" id="icon" accept="image/*" class="hidden"
+                                    (change)="onFilesSelected($event)">
+                                <div class="text-sm text-gray-500 dark:text-gray-400">
+                                    Haz clic en el círculo para seleccionar una imagen
+                                </div>
+                            </div>
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-900 dark:text-white"></h4>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nombre de
+                                Aplicacion</label>
+                            <input formControlName="name" type="text" name="nombre"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Ingrese el usuario">
+                            @if(editAplication.get('name')?.touched && editAplication.get('name')?.invalid) {
+                            <span class="text-red-600 text-sm mt-1">El nombre de usuario no debe estar vacío</span>
+                            }
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Descripción</label>
+                            <input formControlName="description" type="text" name="descripcion"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="ejemplo@email.com">
+                            @if(editAplication.get('description')?.touched && editAplication.get('description')?.invalid) {
+                            <span class="text-red-600 text-sm mt-1">El email está vacío o es incorrecto</span>
+                            }
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Url
+                                
+                            </label>
+                            <input formControlName="url" type="text"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                        </div>
+                        
+                    </div>
+                    <div
+                        class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
+                        <button (click)="cerrarModalAplicacion()" type="button"
+                            class="px-6 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                            Cancelar
+                        </button>
+                        <button [disabled]="editUser.invalid" type="submit"
                             class="px-6 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                             Guardar cambios
                         </button>
@@ -1202,7 +1308,8 @@
 
 <!-- Overlay del Modal -->
 @if(showUsuarios){
-<div class="fixed inset-0 backdrop-blur-sm bg-opacity-70 flex items-center justify-center z-50" id="modalUsuariosFiltrados">
+<div class="fixed inset-0 backdrop-blur-sm bg-opacity-70 flex items-center justify-center z-50"
+    id="modalUsuariosFiltrados">
     <!-- Modal Container -->
     <div
         class="bg-gray-900 rounded-lg shadow-xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden border border-gray-700">
@@ -1218,9 +1325,8 @@
             <!-- Buscador -->
             <div class="mb-4">
                 <div class="relative">
-                    <i
-                        class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm"></i>
-                    <input type="text"
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm"></i>
+                    <input type="text" [(ngModel)]="busquedaUsuarios" (input)="buscarUsuarios()"
                         class="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-600 rounded-md focus:ring-1 focus:ring-blue-400 focus:border-blue-400 outline-none text-sm text-white placeholder-gray-400"
                         placeholder="Buscar por nombre, email o rol..." id="buscarUsuarioModal">
                 </div>
@@ -1241,7 +1347,7 @@
                     </thead>
                     <tbody class="bg-gray-900 divide-y divide-gray-700" id="tablaUsuarios">
 
-                        @for(usuario of usuariosAplicaciones;track usuario.id){
+                        @for(usuario of usuariosAplicacionesFiltros;track usuario.id){
                         <tr class="hover:bg-gray-800 transition-colors">
                             <td class="px-4 py-3">
                                 <div class="flex items-center">
@@ -1268,11 +1374,14 @@
                 </table>
 
                 <!-- Sin resultados -->
-                <div class="text-center py-8 hidden" id="sinResultados">
+                @if(usuariosAplicaciones.length==0){
+                <div class="text-center py-8" id="sinResultados">
                     <i class="fas fa-users text-gray-600 text-4xl mb-3"></i>
                     <h3 class="text-sm font-medium text-gray-400 mb-1">No se encontraron usuarios</h3>
                     <p class="text-xs text-gray-500">Intenta con otros términos de búsqueda</p>
                 </div>
+                }
+
             </div>
         </div>
 
