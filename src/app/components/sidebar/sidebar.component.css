@@ -1,0 +1,82 @@
+/* Prevenir flash durante las transiciones */
+* {
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Suavizar las transiciones del sidebar */
+aside {
+  will-change: transform, width;
+  transform: translateZ(0);
+}
+
+/* Optimizar las animaciones de los elementos internos */
+.transition-all,
+.transition-opacity,
+.transition-colors,
+.transition-transform {
+  will-change: auto;
+}
+
+/* Prevenir parpadeos en los enlaces */
+a {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+/* Mejorar el rendimiento de las transiciones */
+.group:hover .group-hover\:opacity-100,
+.group:hover .group-hover\:scale-110 {
+  transform: translateZ(0);
+}
+
+/* Estabilizar las transiciones de color */
+.hover\:text-orange-500:hover,
+.focus\:text-orange-500:focus {
+  transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Mejorar la fluidez del overlay móvil */
+.fixed.inset-0.bg-black.bg-opacity-50 {
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+}
+
+/* Optimizar la animación del botón hamburguesa */
+button.fixed.top-4.left-4 {
+  transform: translateZ(0);
+}
+
+/* Prevenir saltos durante el cambio de estado activo */
+.bg-orange-50,
+.dark\:bg-orange-900\/20 {
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Mejorar la estabilidad visual */
+@media (prefers-reduced-motion: no-preference) {
+  .transition-all {
+    transition-duration: 0.2s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Para usuarios que prefieren menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .transition-all,
+  .transition-opacity,
+  .transition-colors,
+  .transition-transform {
+    transition-duration: 0.01ms !important;
+  }
+  
+  .group-hover\/item\:scale-110:hover {
+    transform: none !important;
+  }
+  
+  .animate-pulse {
+    animation: none !important;
+  }
+}
