@@ -46,7 +46,7 @@ export class LoginComponent {
           this.errorMessage=true;
           setTimeout(()=>{
             this.errorMessage=false;
-            alert('Acceso incorrecto');
+            
           },2500);
         }
 

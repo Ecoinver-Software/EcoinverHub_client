@@ -21,6 +21,7 @@ export class AdminitracionComponent implements OnInit {
   usuarios: Usuario[] = [];
   roles: Rol[] = [];
   usuariosAplicaciones: Usuario[] = [];
+  usuariosAplicacionesFiltros: Usuario[] = [];//Para el filtro de los usuarios de cada aplicación.
   rolesAplicaciones: AsignarAplicaciones[] = [];
   rolesAplicacionesFiltros: AsignarAplicaciones[] = [];
   aplicaciones: Aplicacion[] = [];
@@ -30,7 +31,10 @@ export class AdminitracionComponent implements OnInit {
   showDeleteModalRol: boolean = false;
   showDeleteModalAplicacion: boolean = false;
   showModalAsignacion: boolean = false;
+  showEditModalAplicacion: boolean = false;
+
   showUsuarios: boolean = false;
+  busquedaUsuarios: string = '';
   // Propiedades para la paginación de usuarios
   currentPage: number = 1;
   itemsPerPage: number = 5;
@@ -45,7 +49,7 @@ export class AdminitracionComponent implements OnInit {
   currentPageAplicaciones: number = 1;
   itemsPerPageAplicaciones: number = 5;
   totalPagesAplicaciones: number = 0;
-
+  imgenUrl:string='';
   selectedFile: File | null = null; // Solo un archivo 
   addAplication: FormGroup;
   activeTab: string = 'usuarios';
@@ -62,38 +66,44 @@ export class AdminitracionComponent implements OnInit {
   showEditModalRol: boolean = false;
   editRol: FormGroup;
   rolesFiltros: Rol[] = [];
+  editAplication: FormGroup;
 
   constructor(private userService: UsuarioService, private rolService: RolService, private aplicacionService: AplicacionesService, private rolesAplicacionesService: AsignarAplicacionesService) {
-    this.addUser = new FormGroup({
+    this.addUser = new FormGroup({//Para ñadir un nuevo usuario.
       userName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/)]),
       password: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
       roleId: new FormControl('', Validators.required)
     });
 
-    this.editUser = new FormGroup({
+    this.editUser = new FormGroup({//Para editar un usuario
       userName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/)]),
       password: new FormControl(''),
       email: new FormControl('', [Validators.required, Validators.email]),
       roleId: new FormControl('', Validators.required)
     });
 
-    this.addRol = new FormGroup({
+    this.addRol = new FormGroup({//Para añadir un nuevo rol.
       name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/)]),
       description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
       level: new FormControl('', Validators.required)
     });
 
-    this.editRol = new FormGroup({
+    this.editRol = new FormGroup({//Para editar un rol
       name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/)]),
       description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
       level: new FormControl('', Validators.required)
     });
 
-    this.addAplication = new FormGroup({
+    this.addAplication = new FormGroup({//Para añadir una nueva aplicación
       name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/)]),
       description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
       url: new FormControl('', Validators.required)
+    });
+    this.editAplication = new FormGroup({//Para editar una aplicación
+      name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/)]),
+      description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
+      url: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)])
     });
   }
 
@@ -631,6 +641,11 @@ export class AdminitracionComponent implements OnInit {
     if (file) {
       this.selectedFile = file;
     }
+
+    const imagePreview = document.getElementById('imagePreview') as HTMLImageElement;
+    if (imagePreview) {
+      imagePreview.src = URL.createObjectURL(file);//Crea una ruta temporal para las imñagenes;
+    }
   }
 
   crearAplicacion() {
@@ -821,6 +836,7 @@ export class AdminitracionComponent implements OnInit {
 
   abrirShowUsuarios(idAplicacion: number) {
     this.usuariosAplicaciones = [];
+    this.usuariosAplicacionesFiltros = [];
     const aplicaciones = this.rolesAplicaciones.filter(item => item.applicationId == idAplicacion);
     this.showUsuarios = true;
     if (aplicaciones !== undefined) {
@@ -828,10 +844,12 @@ export class AdminitracionComponent implements OnInit {
         const usuario = this.usuarios.find(item => item.id == aplicaciones[i].userId);
         if (usuario !== undefined) {
           this.usuariosAplicaciones.push(usuario);
+          this.usuariosAplicacionesFiltros.push(usuario);
         }
 
       }
     }
+
   }
 
   cerrarUsuarios() {
@@ -839,12 +857,35 @@ export class AdminitracionComponent implements OnInit {
     this.showUsuarios = false;
 
   }
-  
+
   // Agregar este método en tu componente TypeScript
   tieneAsignacion(usuarioId: number, aplicacionId: number): boolean {
     return this.rolesAplicaciones.find(item =>
       item.userId === usuarioId && item.applicationId === aplicacionId
     ) !== undefined;
+  }
+
+  //Para la búsqueda de usuarios en la lista de aplicaciones.
+  buscarUsuarios() {
+    this.usuariosAplicacionesFiltros = this.usuariosAplicaciones.filter(item => item.userName.toLowerCase().includes(this.busquedaUsuarios.toLowerCase()));
+
+  }
+  abrirModalAplicacion(i: number) {
+    this.editAplication.get('name')?.setValue(this.aplicaciones[i].name);
+    this.editAplication.get('description')?.setValue(this.aplicaciones[i].description);
+    this.editAplication.get('url')?.setValue(this.aplicaciones[i].url);
+    
+
+    this.imgenUrl='https://localhost:7028/'+this.aplicaciones[i].icon;
+    console.log(this.imgenUrl);
+    this.showEditModalAplicacion = true;
+  }
+  cerrarModalAplicacion() {
+    this.showEditModalAplicacion = false;
+  }
+
+  updateAplicacion() {
+    
   }
 
 }

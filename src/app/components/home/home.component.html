@@ -276,7 +276,7 @@
           <!-- Indicadores de scroll elegantes -->
           <div class="flex justify-center mt-8 space-x-2">
             <div 
-              *ngFor="let anuncio of todosLosAnuncios; let i = index" 
+              *ngFor="let anuncio of getAnuncios(); let i = index" 
               class="w-2 h-2 rounded-full transition-all duration-300 {{ getEstadoColor(anuncio.estado).dot }}"
               [ngClass]="{
                 'w-8 opacity-100': i === 0,
