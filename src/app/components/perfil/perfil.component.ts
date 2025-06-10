@@ -9,6 +9,8 @@ interface UserProfile {
   userName: string;
   email: string;
   roles: string;
+  lastname: string;
+  name: string;
   createdAt: string;
 }
 
@@ -56,7 +58,9 @@ export class PerfilComponent implements OnInit, OnDestroy {
   ) {
     this.profileForm = this.fb.group({
       userName: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]]
+      email: ['', [Validators.required, Validators.email]],
+      name: ['', [Validators.required, Validators.minLength(2)]],
+      lastname: ['', [Validators.required, Validators.minLength(2)]]
     });
 
     this.securityForm = this.fb.group({
@@ -88,6 +92,8 @@ export class PerfilComponent implements OnInit, OnDestroy {
         // DESHABILITAR los campos para que no sean editables:
         this.profileForm.get('userName')?.disable();
         this.profileForm.get('email')?.disable();
+        this.profileForm.get('name')?.disable();
+        this.profileForm.get('lastname')?.disable();
         this.isLoadingUser = false;
       },
       error: (error) => {
@@ -102,7 +108,9 @@ export class PerfilComponent implements OnInit, OnDestroy {
     if (this.userProfile) {
       this.profileForm.patchValue({
         userName: this.userProfile.userName,
-        email: this.userProfile.email
+        email: this.userProfile.email,
+        name: this.userProfile.name,
+        lastname: this.userProfile.lastname
       });
     }
   }

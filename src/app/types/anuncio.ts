@@ -3,6 +3,7 @@ export interface Anuncio {
     nombre: string;
     estado: string;
     contenido: string;
+    createdAt: Date;
 }
 
 export interface AnuncioPost {

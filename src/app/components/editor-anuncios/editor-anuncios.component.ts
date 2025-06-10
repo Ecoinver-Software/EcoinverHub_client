@@ -69,7 +69,8 @@ export class EditorAnunciosComponent implements OnInit {
       id: 0, // Valor temporal, el backend debe asignar el id real
       nombre: this.form.value.nombre,
       estado: this.form.value.estado,
-      contenido: this.form.value.contenido
+      contenido: this.form.value.contenido,
+      createdAt: this.form.value.createdAt || new Date() 
     };
 
     if (this.isEditing && this.editingId !== null) {
