@@ -977,7 +977,7 @@
                 <form [formGroup]="editAplication" (submit)="updateAplicacion()" class="space-y-6">
                     <div class="flex items-center space-x-4 mb-6">
                         <div class="flex items-center space-x-4">
-                            <label for="icon-file" class="cursor-pointer">
+                            <label for="icon" class="cursor-pointer">
                                 <div
                                     class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center justify-center transition-colors overflow-hidden">
                                     <!-- El SVG solo se muestra cuando no hay imagen -->
@@ -989,11 +989,11 @@
 
                                     <!-- La imagen ocupa todo el contenedor -->
                                     <img [src]="imagenUrl" class="w-full h-full object-cover rounded-full"
-                                        *ngIf="imagenUrl" alt="Imagen" (change)="cambiarImagen($event)">
+                                        *ngIf="imagenUrl" alt="Imagen" >
                                 </div>
                             </label>
                             <input type="file" id="icon" accept="image/*" class="hidden"
-                                (change)="onFilesSelected($event)">
+                                (change)="cambiarImagen($event)"> 
                             <div class="text-sm text-gray-500 dark:text-gray-400">
                                 Haz clic en el círculo para seleccionar una imagen
                             </div>
@@ -1039,9 +1039,9 @@
                             class="px-6 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
                             Cancelar
                         </button>
-                        <button [disabled]="editUser.invalid" type="submit"
+                        <button [disabled]="editAplication.invalid" type="submit"
                             class="px-6 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                            Guardar cambios
+                            Guardar cambios 
                         </button>
                     </div>
                 </form>

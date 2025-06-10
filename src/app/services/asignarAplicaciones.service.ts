@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AsignarAplicaciones } from '../types/asignarAplicaciones';
 import { HttpClient } from '@angular/common/http';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,5 +28,7 @@ export class AsignarAplicacionesService {
   delete(id:number){
     return this.http.delete(this.url+'/'+id);
   }
+
+ 
 
 }

@@ -22,4 +22,7 @@ export class AplicacionesService {
   delete(id:number){
    return this.http.delete(this.url+'/'+id);
   }
+   put(id:number,form:FormData):Observable<Aplicacion>{
+    return this.http.put<Aplicacion>(this.url+'/'+id,form);
+  }
 }

@@ -49,7 +49,7 @@ export class AdminitracionComponent implements OnInit {
   currentPageAplicaciones: number = 1;
   itemsPerPageAplicaciones: number = 5;
   totalPagesAplicaciones: number = 0;
-  imagenUrl:string='';
+  imagenUrl: string = '';
   selectedFile: File | null = null; // Solo un archivo 
   addAplication: FormGroup;
   activeTab: string = 'usuarios';
@@ -69,41 +69,42 @@ export class AdminitracionComponent implements OnInit {
   editAplication: FormGroup;
 
   constructor(private userService: UsuarioService, private rolService: RolService, private aplicacionService: AplicacionesService, private rolesAplicacionesService: AsignarAplicacionesService) {
-    this.addUser = new FormGroup({//Para ñadir un nuevo usuario.
-      userName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/)]),
+    this.addUser = new FormGroup({//Para añadir un nuevo usuario.
+      userName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
       password: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
       roleId: new FormControl('', Validators.required)
     });
 
     this.editUser = new FormGroup({//Para editar un usuario
-      userName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/)]),
+      userName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
       password: new FormControl(''),
       email: new FormControl('', [Validators.required, Validators.email]),
       roleId: new FormControl('', Validators.required)
     });
 
     this.addRol = new FormGroup({//Para añadir un nuevo rol.
-      name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/)]),
+      name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
       description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
       level: new FormControl('', Validators.required)
     });
 
     this.editRol = new FormGroup({//Para editar un rol
-      name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/)]),
+      name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
       description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
       level: new FormControl('', Validators.required)
     });
 
     this.addAplication = new FormGroup({//Para añadir una nueva aplicación
-      name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/)]),
+      name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
       description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
       url: new FormControl('', Validators.required)
     });
+
     this.editAplication = new FormGroup({//Para editar una aplicación
-      name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/)]),
+      name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
       description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
-      url: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)])
+      url: new FormControl('', Validators.required)
     });
   }
 
@@ -874,9 +875,10 @@ export class AdminitracionComponent implements OnInit {
     this.editAplication.get('name')?.setValue(this.aplicaciones[i].name);
     this.editAplication.get('description')?.setValue(this.aplicaciones[i].description);
     this.editAplication.get('url')?.setValue(this.aplicaciones[i].url);
-    
+    this.id = this.aplicaciones[i].id;
 
-    this.imagenUrl='https://localhost:7028/'+this.aplicaciones[i].icon;
+    this.imagenUrl = 'https://localhost:7028/' + this.aplicaciones[i].icon;
+
     console.log(this.imagenUrl);
     this.showEditModalAplicacion = true;
   }
@@ -885,12 +887,49 @@ export class AdminitracionComponent implements OnInit {
   }
 
   updateAplicacion() {
-    
+
+    const form = new FormData();
+    if (this.selectedFile !== null) {
+      form.append('image', this.selectedFile);
+    }
+    console.log(this.selectedFile);
+    form.append('name', this.editAplication.get('name')?.value);
+    form.append('description', this.editAplication.get('description')?.value);
+    form.append('url', this.editAplication.get('url')?.value);
+
+    this.aplicacionService.put(this.id, form).subscribe(
+      (data) => {
+        const pos=this.aplicaciones.findIndex(item=>item.id==this.id);
+        this.aplicaciones[pos].icon=data.icon;
+        this.aplicaciones[pos].name=data.name;
+        this.aplicaciones[pos].url=data.url;
+        this.aplicaciones[pos].description=data.description;
+        console.log(data);
+        this.selectedFile=null;
+        this.showEditModalAplicacion=false;
+        this.exito=true;
+
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+
   }
 
-  cambiarImagen(evento:Event){//Se cambia la imagen del preview
-    const imagen=evento.target as HTMLImageElement;
+  cambiarImagen(evento: Event) {
 
+    const input = evento.target as HTMLInputElement;
+    this.selectedFile=null;
+      URL.revokeObjectURL(this.imagenUrl);
+    if (input && input.files && input.files.length > 0) {
+      const imagen = input.files[0];
+      this.selectedFile = imagen;
+      
+      //El problema es que a veces no entra aqui 
+      
 
+      this.imagenUrl = URL.createObjectURL(imagen);
+    }
   }
 }
