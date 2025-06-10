@@ -218,7 +218,9 @@
 
         <!-- Logout Button -->
         <div class="hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors mx-2 mb-2 rounded-lg">
-          <button class="h-12 w-full px-4 flex items-center text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 focus:text-red-600 dark:focus:text-red-400 focus:bg-red-50 dark:focus:bg-red-900/20 focus:outline-none transition-all group/item rounded-lg">
+          <button
+          (click)="logout()"
+          class="h-12 w-full px-4 flex items-center text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 focus:text-red-600 dark:focus:text-red-400 focus:bg-red-50 dark:focus:bg-red-900/20 focus:outline-none transition-all group/item rounded-lg">
             <div class="flex items-center space-x-3 min-w-0">
               <svg class="h-5 w-5 flex-shrink-0 group-hover/item:scale-110 transition-transform" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>

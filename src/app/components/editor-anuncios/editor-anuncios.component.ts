@@ -16,6 +16,9 @@ export class EditorAnunciosComponent implements OnInit {
   isEditing: boolean = false;
   editingId: number | null = null;
 
+    expandedCards: Set<string> = new Set();
+
+
   constructor(
     private anuncioService: AnuncioService,
     private fb: FormBuilder
@@ -120,4 +123,15 @@ export class EditorAnunciosComponent implements OnInit {
       }
     });
   }
+
+
+  toggleCardExpansion(anuncioId: string): void {
+    if (this.expandedCards.has(anuncioId)) {
+      this.expandedCards.delete(anuncioId);
+    } else {
+      this.expandedCards.add(anuncioId);
+    }
+  }
+
+  
 }

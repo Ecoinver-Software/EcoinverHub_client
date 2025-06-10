@@ -1,4 +1,6 @@
 import { Component, HostListener, ElementRef } from '@angular/core';
+import { AuthServiceService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,7 +11,7 @@ import { Component, HostListener, ElementRef } from '@angular/core';
 export class SidebarComponent {
   isMobileMenuOpen = false;
 
-  constructor(private elementRef: ElementRef) {}
+  constructor(private elementRef: ElementRef, private authService: AuthServiceService, router:Router) {}
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event) {
@@ -44,5 +46,10 @@ export class SidebarComponent {
       : '-translate-x-full lg:translate-x-0 lg:w-16 lg:hover:w-56';
     
     return `${baseClasses} ${mobileClasses}`;
+  }
+
+  logout() {
+    this.authService.logout();
+    window.location.href = '/login'; 
   }
 }
