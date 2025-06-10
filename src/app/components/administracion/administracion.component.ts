@@ -49,7 +49,7 @@ export class AdminitracionComponent implements OnInit {
   currentPageAplicaciones: number = 1;
   itemsPerPageAplicaciones: number = 5;
   totalPagesAplicaciones: number = 0;
-  imgenUrl:string='';
+  imagenUrl:string='';
   selectedFile: File | null = null; // Solo un archivo 
   addAplication: FormGroup;
   activeTab: string = 'usuarios';
@@ -644,7 +644,7 @@ export class AdminitracionComponent implements OnInit {
 
     const imagePreview = document.getElementById('imagePreview') as HTMLImageElement;
     if (imagePreview) {
-      imagePreview.src = URL.createObjectURL(file);//Crea una ruta temporal para las imñagenes;
+      imagePreview.src = URL.createObjectURL(file);//Crea una ruta temporal para las imagenes;
     }
   }
 
@@ -876,8 +876,8 @@ export class AdminitracionComponent implements OnInit {
     this.editAplication.get('url')?.setValue(this.aplicaciones[i].url);
     
 
-    this.imgenUrl='https://localhost:7028/'+this.aplicaciones[i].icon;
-    console.log(this.imgenUrl);
+    this.imagenUrl='https://localhost:7028/'+this.aplicaciones[i].icon;
+    console.log(this.imagenUrl);
     this.showEditModalAplicacion = true;
   }
   cerrarModalAplicacion() {
@@ -888,4 +888,9 @@ export class AdminitracionComponent implements OnInit {
     
   }
 
+  cambiarImagen(evento:Event){//Se cambia la imagen del preview
+    const imagen=evento.target as HTMLImageElement;
+
+
+  }
 }

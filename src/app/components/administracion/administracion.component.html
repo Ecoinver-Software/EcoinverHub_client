@@ -713,13 +713,19 @@
                             <div class="flex items-center space-x-4">
                                 <label for="icon-file" class="cursor-pointer">
                                     <div
-                                        class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center justify-center transition-colors">
+                                        class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center justify-center transition-colors overflow-hidden relative">
+                                        <!-- El SVG siempre se muestra como fondo -->
                                         <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
-                                        <img id="imagePreview">
+
+                                        <!-- La imagen se superpone cuando tiene src -->
+                                        <img id="imagePreview"
+                                            class="absolute inset-0 w-full h-full object-cover rounded-full opacity-0 transition-opacity duration-300"
+                                            onload="this.style.opacity='1'" onerror="this.style.opacity='0'"
+                                            alt="Preview">
                                     </div>
                                 </label>
                                 <input type="file" id="icon-file" accept="image/*" class="hidden"
@@ -940,7 +946,7 @@
         </div>
     </div>
     }
-     <!-- MODAL EDITAR APLICACIÓN -->
+    <!-- MODAL EDITAR APLICACIÓN -->
     @if(showEditModalAplicacion) {
     <div class="fixed inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <div
@@ -956,7 +962,7 @@
                                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Editar Usuario</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Editar Aplicaciones</h3>
                     </div>
                     <button (click)="cerrarModalAplicacion()"
                         class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg transition-colors">
@@ -970,24 +976,28 @@
             <div class="p-6">
                 <form [formGroup]="editAplication" (submit)="updateAplicacion()" class="space-y-6">
                     <div class="flex items-center space-x-4 mb-6">
-                       <div class="flex items-center space-x-4">
-                                <label for="icon-file" class="cursor-pointer">
-                                    <div
-                                        class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center justify-center transition-colors">
-                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                        </svg>
-                                        <img [src]="imgenUrl">
-                                    </div>
-                                </label>
-                                <input type="file" id="icon" accept="image/*" class="hidden"
-                                    (change)="onFilesSelected($event)">
-                                <div class="text-sm text-gray-500 dark:text-gray-400">
-                                    Haz clic en el círculo para seleccionar una imagen
+                        <div class="flex items-center space-x-4">
+                            <label for="icon-file" class="cursor-pointer">
+                                <div
+                                    class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center justify-center transition-colors overflow-hidden">
+                                    <!-- El SVG solo se muestra cuando no hay imagen -->
+                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24" *ngIf="!imagenUrl">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+
+                                    <!-- La imagen ocupa todo el contenedor -->
+                                    <img [src]="imagenUrl" class="w-full h-full object-cover rounded-full"
+                                        *ngIf="imagenUrl" alt="Imagen" (change)="cambiarImagen($event)">
                                 </div>
+                            </label>
+                            <input type="file" id="icon" accept="image/*" class="hidden"
+                                (change)="onFilesSelected($event)">
+                            <div class="text-sm text-gray-500 dark:text-gray-400">
+                                Haz clic en el círculo para seleccionar una imagen
                             </div>
+                        </div>
                         <div>
                             <h4 class="text-lg font-medium text-gray-900 dark:text-white"></h4>
                         </div>
@@ -1004,23 +1014,24 @@
                             }
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Descripción</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Descripción</label>
                             <input formControlName="description" type="text" name="descripcion"
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="ejemplo@email.com">
-                            @if(editAplication.get('description')?.touched && editAplication.get('description')?.invalid) {
+                            @if(editAplication.get('description')?.touched &&
+                            editAplication.get('description')?.invalid) {
                             <span class="text-red-600 text-sm mt-1">El email está vacío o es incorrecto</span>
                             }
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Url
-                                
+
                             </label>
                             <input formControlName="url" type="text"
-                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                >
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
-                        
+
                     </div>
                     <div
                         class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
@@ -1325,7 +1336,8 @@
             <!-- Buscador -->
             <div class="mb-4">
                 <div class="relative">
-                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm"></i>
+                    <i
+                        class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm"></i>
                     <input type="text" [(ngModel)]="busquedaUsuarios" (input)="buscarUsuarios()"
                         class="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-600 rounded-md focus:ring-1 focus:ring-blue-400 focus:border-blue-400 outline-none text-sm text-white placeholder-gray-400"
                         placeholder="Buscar por nombre, email o rol..." id="buscarUsuarioModal">
