@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AplicacionesService } from '../../services/aplicaciones.service';
 import { Aplicacion } from '../../types/aplicacion';
+import { AsignarAplicacionesService } from '../../services/asignarAplicaciones.service';
+import { AuthServiceService } from '../../services/auth.service';
 
 // // Interfaces
 // interface Aplicacion {
@@ -34,7 +36,11 @@ interface ConfiguracionHub {
 })
 export class AppHubComponent implements OnInit {
 
-  constructor(private aplicacionesService: AplicacionesService) { }
+  constructor(
+    private aplicacionesService: AplicacionesService,
+    private asignarAplicacionesService: AsignarAplicacionesService,
+    private authService: AuthServiceService
+  ) { }
 
   @Input() configuracion: ConfiguracionHub = {
     titulo: 'Hub de Aplicaciones',
@@ -52,28 +58,44 @@ export class AppHubComponent implements OnInit {
   aplicacionesFiltradas: Aplicacion[] = [];
 
   ngOnInit() {
-    this.aplicacionesService.get().subscribe({
-      next: (apps) => {
-        this.configuracion.aplicaciones = apps.map(app => {
-          const iconPath = app.icon?.replace(/\\/g, '/'); // corrige barras invertidas
-          return {
-            ...app,
-            icon: `https://localhost:7028/${iconPath}` // añade la URL base
-          };
-        });
+    const userId = this.authService.getUserId();
 
-        this.aplicacionesFiltradas = this.configuracion.aplicaciones;
+    if (!userId) {
+      console.error('No se pudo obtener el userId desde el token');
+      return;
+    }
 
-        // Mostrar en consola la URL del icono de cada app
-        this.aplicacionesFiltradas.forEach(app => {
-          console.log(`Icono de "${app.name}":`, app.icon); // usa 'nombre' si es el campo correcto
+    this.asignarAplicacionesService.get().subscribe({
+      next: (asignaciones) => {
+        const appsAsignadas = asignaciones
+          .filter(a => a.userId === userId)
+          .map(a => a.applicationId);
+
+        this.aplicacionesService.get().subscribe({
+          next: (apps) => {
+            const todasLasApps = apps.map(app => ({
+              ...app,
+              icon: `https://localhost:7028/${app.icon?.replace(/\\/g, '/')}`
+            }));
+
+            this.configuracion.aplicaciones = todasLasApps.filter(app =>
+              appsAsignadas.includes(app.id)
+            );
+
+            this.aplicacionesFiltradas = [...this.configuracion.aplicaciones];
+
+            // Mostrar en consola para depuración
+            this.aplicacionesFiltradas.forEach(app =>
+              console.log(`App permitida: ${app.name}`, app)
+            );
+          },
+          error: (err) => console.error('Error al obtener las aplicaciones', err)
         });
       },
-      error: (err) => {
-        console.error('Error al obtener las aplicaciones', err);
-      }
+      error: (err) => console.error('Error al obtener las asignaciones', err)
     });
   }
+
 
 
 
