@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnuncioService } from '../../services/anuncio.service';
 import { Anuncio } from '../../types/anuncio';
@@ -7,7 +7,6 @@ import { Anuncio } from '../../types/anuncio';
 import { AuthServiceService } from '../../services/auth.service';
 import { takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
-
 
 interface CalendarDay {
   date: Date;
@@ -41,7 +40,9 @@ interface UserProfile {
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
+  @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef<HTMLElement>;
+  
   currentDate = new Date();
   selectedDate: Date | null = null;
   calendarDays: CalendarDay[] = [];
@@ -49,6 +50,12 @@ export class HomeComponent implements OnInit {
   
   // Anuncios desde el servicio
   anuncios: Anuncio[] = [];
+  
+  // Array ordenado para mostrar (sin modificar el original)
+  anunciosOrdenados: Anuncio[] = [];
+  
+  // Índice del anuncio actualmente más visible
+  anuncioActivoIndex: number = 0;
   
   // Nombres de los meses en español
   monthNames = [
@@ -64,26 +71,25 @@ export class HomeComponent implements OnInit {
     {
       id: '1',
       title: 'Reunión de equipo',
-      date: new Date(2025, 5, 5), // 5 de junio de 2025
+      date: new Date(2025, 5, 5),
       type: 'meeting'
     },
     {
       id: '2',
       title: 'Entrega de proyecto',
-      date: new Date(2025, 5, 10), // 10 de junio de 2025
+      date: new Date(2025, 5, 10),
       type: 'deadline'
     },
     {
       id: '3',
       title: 'Vacaciones',
-      date: new Date(2025, 5, 15), // 15 de junio de 2025
+      date: new Date(2025, 5, 15),
       type: 'vacation'
     }
   ];
 
   constructor(private anuncioService: AnuncioService, private authService: AuthServiceService, private router: Router) {
     this.generateCalendar();
-    // Seleccionar el día actual por defecto
     this.selectedDate = new Date();
   }
 
@@ -92,11 +98,84 @@ export class HomeComponent implements OnInit {
     this.esRolMarketing();
   }
 
+  ngAfterViewInit(): void {
+    // Pequeño delay para asegurar que el DOM esté completamente renderizado
+    setTimeout(() => {
+      this.configurarListenerScroll();
+    }, 100);
+  }
+
+  // Configurar el evento de scroll para detectar el anuncio más visible
+  configurarListenerScroll(): void {
+    if (this.scrollContainer?.nativeElement) {
+      this.scrollContainer.nativeElement.addEventListener('scroll', () => {
+        this.detectarAnuncioMasVisible();
+      });
+      // También detectar al cargar inicialmente
+      this.detectarAnuncioMasVisible();
+    }
+  }
+
+  // Detectar qué anuncio está más centrado en la vista
+  detectarAnuncioMasVisible(): void {
+    if (!this.scrollContainer?.nativeElement || this.anunciosOrdenados.length === 0) return;
+
+    const contenedor = this.scrollContainer.nativeElement;
+    const tarjetasAnuncios = contenedor.querySelectorAll('.tarjeta-anuncio');
+    
+    if (tarjetasAnuncios.length === 0) return;
+
+    const scrollLeft = contenedor.scrollLeft;
+    const contenedorWidth = contenedor.clientWidth;
+    const centroContenedor = scrollLeft + contenedorWidth / 2;
+
+    let anuncioMasCercano = 0;
+    let distanciaMinima = Infinity;
+
+    tarjetasAnuncios.forEach((tarjeta: Element, index: number) => {
+      const elemento = tarjeta as HTMLElement;
+      const offsetLeft = elemento.offsetLeft;
+      const ancho = elemento.offsetWidth;
+      const centroTarjeta = offsetLeft + ancho / 2;
+      const distancia = Math.abs(centroContenedor - centroTarjeta);
+
+      if (distancia < distanciaMinima) {
+        distanciaMinima = distancia;
+        anuncioMasCercano = index;
+      }
+    });
+
+    if (this.anuncioActivoIndex !== anuncioMasCercano) {
+      this.anuncioActivoIndex = anuncioMasCercano;
+    }
+  }
+
+  // Obtener las clases CSS para cada indicador
+  obtenerClasesIndicador(index: number): string {
+    if (index >= this.anunciosOrdenados.length) return '';
+    
+    const esActivo = index === this.anuncioActivoIndex;
+    const anuncio = this.anunciosOrdenados[index];
+    const colorBase = this.getEstadoColor(anuncio?.estado || 'normal').dot;
+    
+    if (esActivo) {
+      return `${colorBase} w-8 h-2 rounded-full transition-all duration-300 opacity-100 scale-110`;
+    } else {
+      return `${colorBase} w-2 h-2 rounded-full transition-all duration-300 opacity-40 hover:opacity-70 scale-100`;
+    }
+  }
+
   // Cargar anuncios desde el servicio
   loadAnuncios(): void {
     this.anuncioService.get().subscribe({
       next: (data) => {
         this.anuncios = data;
+        // Crear una copia invertida sin modificar el array original
+        this.anunciosOrdenados = [...this.anuncios].reverse();
+        // Configurar listener después de cargar anuncios
+        setTimeout(() => {
+          this.configurarListenerScroll();
+        }, 200);
       },
       error: (err) => {
         console.error('Error cargando anuncios', err);
@@ -104,16 +183,15 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  // Obtener todos los anuncios (sin filtro por estado)
+  // Obtener todos los anuncios ordenados (sin modificar el array original)
   get todosLosAnuncios(): Anuncio[] {
-    //this.anuncios=this.anuncios.reverse(); //invertir el orden para mostrar los más recientes primero
-    let anun=this.anuncios.reverse();
-    return anun;
+    return this.anunciosOrdenados;
   }
 
   getAnuncios(): Anuncio[] {
-    return this.anuncios;
+    return this.anunciosOrdenados;
   }
+
   // Obtener el color del estado (solo badge y punto)
   getEstadoColor(estado: string): { bg: string, text: string, dot: string } {
     const estadoLower = estado.toLowerCase();
@@ -162,14 +240,20 @@ export class HomeComponent implements OnInit {
     if (!this.isDragging) return;
     event.preventDefault();
     const x = event.pageX - container.offsetLeft;
-    const walk = (x - this.startX) * 2; // Velocidad del scroll
+    const walk = (x - this.startX) * 2;
     container.scrollLeft = this.scrollLeft - walk;
+    
+    // Detectar anuncio visible durante el drag
+    this.detectarAnuncioMasVisible();
   }
 
   onMouseUp(container: HTMLElement) {
     this.isDragging = false;
     container.style.cursor = 'grab';
     container.style.userSelect = 'auto';
+    
+    // Detectar anuncio visible al soltar
+    this.detectarAnuncioMasVisible();
   }
 
   onMouseLeave(container: HTMLElement) {
@@ -235,18 +319,14 @@ export class HomeComponent implements OnInit {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
     
-    // Primer día del mes
     const firstDay = new Date(year, month, 1);
-    // Último día del mes
     const lastDay = new Date(year, month + 1, 0);
     
-    // Primer día de la semana (Lunes = 1, Domingo = 0)
     let startDate = new Date(firstDay);
     const dayOfWeek = firstDay.getDay();
-    const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Ajustar para que Lunes sea el primer día
+    const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
     startDate.setDate(firstDay.getDate() - daysToSubtract);
     
-    // Generar 42 días (6 semanas)
     for (let i = 0; i < 42; i++) {
       const date = new Date(startDate);
       date.setDate(startDate.getDate() + i);
@@ -285,7 +365,7 @@ export class HomeComponent implements OnInit {
   selectDate(day: CalendarDay) {
     if (day.isCurrentMonth) {
       this.selectedDate = new Date(day.date);
-      this.generateCalendar(); // Regenerar para actualizar la selección
+      this.generateCalendar();
     }
   }
 
@@ -331,14 +411,12 @@ export class HomeComponent implements OnInit {
     this.generateCalendar();
   }
 
-  // Solicitar ausencia (función de ejemplo) no se implementará todavia
+  // Solicitar ausencia
   requestAbsence() {
     if (this.selectedDate) {
       const selectedDateStr = this.selectedDate.toLocaleDateString('es-ES');
       alert(`Solicitando ausencia para el día ${selectedDateStr}`);
       
-      // Aquí podrías agregar la lógica para abrir un modal o navegar a otra página
-      // Por ejemplo, agregar un evento de ausencia
       const newEvent: CalendarEvent = {
         id: Date.now().toString(),
         title: 'Ausencia solicitada',
@@ -391,50 +469,51 @@ export class HomeComponent implements OnInit {
     return this.selectedDate.toLocaleDateString('es-ES', options);
   }
 
-
-  //-------------------------------------------------------------------------------
-  //metodo para verificar si el usuario tiene rol de marketing
+  // Verificar si el usuario tiene rol de marketing
   esRolMarketing(): void {
-    
-  this.authService.getProfile()
-    .subscribe({
-      next: (profile) => {
-        this.userProfile = profile;
-        let name= this.userProfile?.roles;
-        name= name?.toLowerCase();
+    this.authService.getProfile()
+      .subscribe({
+        next: (profile) => {
+          this.userProfile = profile;
+          let name = this.userProfile?.roles;
+          name = name?.toLowerCase();
 
-        //para que pille si es marketing o admin y asi mostrar el boton de anuncios (crear)
-        if (name?.includes('marketing') || name?.includes('admin')) {
-          document.getElementById("botonAnuncios")?.removeAttribute("hidden");
-          //console.log('aaaa');
-          //console.log('Perfil de usuario:', this.userProfile);
-          
+          if (name?.includes('marketing') || name?.includes('admin')) {
+            document.getElementById("botonAnuncios")?.removeAttribute("hidden");
+          }
+        },
+        error: (error: any) => {
+          console.error('Error al cargar perfil:', error);
         }
-       
-      },
-      error: (error: any) => {
-        console.error('Error al cargar perfil:', error);
-      }
-    });
+      });
   }
 
   navigateToAnuncios(): void {
-    // Navegar a la página de anuncios
     this.router.navigate(['/editor-anuncios']);
   }
 
   navigateToAnuncio(id: number) {
     this.router.navigate(
-    ['/anuncios'], 
-    { fragment: id.toString() }
-  );
+      ['/anuncios'], 
+      { fragment: id.toString() }
+    );
   }
 
+  // Hacer scroll suave a un anuncio específico cuando se hace clic en su indicador
+  scrollToAnuncio(index: number): void {
+    if (!this.scrollContainer?.nativeElement) return;
 
-  //-------------------------------------------------------------------------------
-
-
-
-
-
+    const contenedor = this.scrollContainer.nativeElement;
+    const tarjetasAnuncios = contenedor.querySelectorAll('.tarjeta-anuncio');
+    
+    if (tarjetasAnuncios[index]) {
+      const tarjeta = tarjetasAnuncios[index] as HTMLElement;
+      const scrollLeft = tarjeta.offsetLeft - (contenedor.clientWidth / 2) + (tarjeta.offsetWidth / 2);
+      
+      contenedor.scrollTo({
+        left: scrollLeft,
+        behavior: 'smooth'
+      });
+    }
+  }
 }
