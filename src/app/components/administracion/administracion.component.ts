@@ -98,13 +98,19 @@ export class AdminitracionComponent implements OnInit {
     this.addAplication = new FormGroup({//Para añadir una nueva aplicación
       name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
       description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
-      url: new FormControl('', Validators.required)
+      url: new FormControl('', Validators.required),
+      estado: new FormControl('', Validators.required),
+      version: new FormControl('', Validators.required),
+      autor: new FormControl('', Validators.required)
     });
 
     this.editAplication = new FormGroup({//Para editar una aplicación
       name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
       description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
-      url: new FormControl('', Validators.required)
+      url: new FormControl('', Validators.required),
+      estado:new FormControl('',Validators.required),
+      version:new FormControl('',Validators.required),
+      autor:new FormControl('',Validators.required)
     });
   }
 
@@ -136,6 +142,7 @@ export class AdminitracionComponent implements OnInit {
       (data) => {
         this.aplicaciones = data;
         this.aplicacionesFiltradas = data;
+        console.log(this.aplicacionesFiltradas);
         this.calculateTotalPagesAplicaciones();
       },
       (error) => {
@@ -660,6 +667,9 @@ export class AdminitracionComponent implements OnInit {
     formData.append('name', this.addAplication.get('name')?.value);
     formData.append('description', this.addAplication.get('description')?.value);
     formData.append('url', this.addAplication.get('url')?.value);
+    formData.append('estado', this.addAplication.get('estado')?.value);
+    formData.append('version', this.addAplication.get('version')?.value);
+    formData.append('autor', this.addAplication.get('autor')?.value);
 
     this.aplicacionService.post(formData).subscribe(
       (data) => {
@@ -671,7 +681,12 @@ export class AdminitracionComponent implements OnInit {
           name: data.name,
           description: data.description,
           url: data.url,
-          icon: data.icon
+          icon: data.icon,
+          estado:data.estado,
+          version:data.version,
+          autor:data.autor,
+          fechaActualizacion:data.fechaActualizacion
+          
         });
 
         // Actualizar el array filtrado basándose en la búsqueda actual
@@ -875,6 +890,10 @@ export class AdminitracionComponent implements OnInit {
     this.editAplication.get('name')?.setValue(this.aplicaciones[i].name);
     this.editAplication.get('description')?.setValue(this.aplicaciones[i].description);
     this.editAplication.get('url')?.setValue(this.aplicaciones[i].url);
+    this.editAplication.get('version')?.setValue(this.aplicaciones[i].version);
+    this.editAplication.get('autor')?.setValue(this.aplicaciones[i].autor);
+    this.editAplication.get('estado')?.setValue(this.aplicaciones[i].estado);
+    console.log(this.editAplication);
     this.id = this.aplicaciones[i].id;
 
     this.imagenUrl = 'https://localhost:7028/' + this.aplicaciones[i].icon;
@@ -896,18 +915,25 @@ export class AdminitracionComponent implements OnInit {
     form.append('name', this.editAplication.get('name')?.value);
     form.append('description', this.editAplication.get('description')?.value);
     form.append('url', this.editAplication.get('url')?.value);
-
+    form.append('estado',this.editAplication.get('estado')?.value);
+    form.append('version',this.editAplication.get('version')?.value);
+    form.append('autor',this.editAplication.get('autor')?.value);
     this.aplicacionService.put(this.id, form).subscribe(
       (data) => {
-        const pos=this.aplicaciones.findIndex(item=>item.id==this.id);
-        this.aplicaciones[pos].icon=data.icon;
-        this.aplicaciones[pos].name=data.name;
-        this.aplicaciones[pos].url=data.url;
-        this.aplicaciones[pos].description=data.description;
+        //Actualizamos la vista con los nuevos valores.
+        const pos = this.aplicaciones.findIndex(item => item.id == this.id);
+        this.aplicaciones[pos].icon = data.icon;
+        this.aplicaciones[pos].name = data.name;
+        this.aplicaciones[pos].url = data.url;
+        this.aplicaciones[pos].description = data.description;
+        this.aplicaciones[pos].autor=data.autor;
+        this.aplicaciones[pos].estado=data.estado;
+        this.aplicaciones[pos].version=data.version;
+        this.aplicaciones[pos].fechaActualizacion=data.fechaActualizacion;
         console.log(data);
-        this.selectedFile=null;
-        this.showEditModalAplicacion=false;
-        this.exito=true;
+        this.selectedFile = null;
+        this.showEditModalAplicacion = false;
+        this.exito = true;
 
       },
       (error) => {
@@ -920,14 +946,14 @@ export class AdminitracionComponent implements OnInit {
   cambiarImagen(evento: Event) {
 
     const input = evento.target as HTMLInputElement;
-    this.selectedFile=null;
-      URL.revokeObjectURL(this.imagenUrl);
+    this.selectedFile = null;
+    URL.revokeObjectURL(this.imagenUrl);
     if (input && input.files && input.files.length > 0) {
       const imagen = input.files[0];
       this.selectedFile = imagen;
-      
+
       //El problema es que a veces no entra aqui 
-      
+
 
       this.imagenUrl = URL.createObjectURL(imagen);
     }

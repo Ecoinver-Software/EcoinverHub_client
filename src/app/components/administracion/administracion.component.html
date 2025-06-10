@@ -571,6 +571,19 @@
                                     URL</th>
                                 <th
                                     class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Estado</th>
+                                <th
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Versión</th>
+                                <th
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Fecha actualización</th>
+                                <th
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Autor
+                                </th>
+                                <th
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Usuarios Asignados</th>
                                 <th
                                     class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -602,6 +615,35 @@
                                         class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium underline">
                                         {{aplicacion.url}}
                                     </a>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2" style="cursor: pointer;">
+                                        <span
+                                            class="text-sm font-medium text-gray-900 dark:text-white">{{aplicacion.estado?.toUpperCase()}}</span>
+
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2" style="cursor: pointer;">
+                                        <span
+                                            class="text-sm font-medium text-gray-900 dark:text-white">{{aplicacion.version}}</span>
+
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2" style="cursor: pointer;">
+                                        <span
+                                            class="text-sm font-medium text-gray-900 dark:text-white">{{aplicacion.fechaActualizacion
+                                            | date:'dd/MM/yyyy'}}</span>
+
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2" style="cursor: pointer;">
+                                        <span
+                                            class="text-sm font-medium text-gray-900 dark:text-white">{{aplicacion.autor}}</span>
+
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center space-x-2" (click)="abrirShowUsuarios(aplicacion.id)"
@@ -668,6 +710,7 @@
                 </div>
             </div>
 
+         
             <!-- FORMULARIO APLICACIÓN -->
             <div id="formulario-aplicacion"
                 class="mt-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50">
@@ -683,67 +726,121 @@
                     </div>
                 </div>
                 <div class="p-6">
-                    <form class="grid grid-cols-1 md:grid-cols-2 gap-6" [formGroup]="addAplication"
-                        (submit)="crearAplicacion()">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nombre de la
-                                aplicación</label>
-                            <input type="text" formControlName="name"
-                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Ingrese el nombre de la aplicación">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">URL</label>
-                            <input type="url" formControlName="url"
-                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="https://ejemplo.com">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Descripción</label>
-                            <textarea rows="3" formControlName="description"
-                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Describe la funcionalidad de la aplicación"></textarea>
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Icono de la
-                                aplicación
-                                <span class="text-gray-400 text-xs">(opcional)</span>
-                            </label>
-                            <div class="flex items-center space-x-4">
-                                <label for="icon-file" class="cursor-pointer">
-                                    <div
-                                        class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center justify-center transition-colors overflow-hidden relative">
-                                        <!-- El SVG siempre se muestra como fondo -->
-                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                        </svg>
+                    <form [formGroup]="addAplication" (submit)="crearAplicacion()">
+                        <!-- Grid principal -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                                        <!-- La imagen se superpone cuando tiene src -->
-                                        <img id="imagePreview"
-                                            class="absolute inset-0 w-full h-full object-cover rounded-full opacity-0 transition-opacity duration-300"
-                                            onload="this.style.opacity='1'" onerror="this.style.opacity='0'"
-                                            alt="Preview">
+                            <!-- Columna izquierda - Información básica -->
+                            <div class="lg:col-span-2">
+                                <div class="space-y-6">
+
+                                    <!-- Fila 1: Nombre y URL -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nombre
+                                                de la aplicación</label>
+                                            <input type="text" formControlName="name"
+                                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                placeholder="Ingrese el nombre de la aplicación">
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">URL</label>
+                                            <input type="url" formControlName="url"
+                                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                placeholder="https://ejemplo.com">
+                                        </div>
                                     </div>
-                                </label>
-                                <input type="file" id="icon-file" accept="image/*" class="hidden"
-                                    (change)="onFilesSelected($event)">
-                                <div class="text-sm text-gray-500 dark:text-gray-400">
-                                    Haz clic en el círculo para seleccionar una imagen
+
+                                    <!-- Fila 2: Estado y Versión -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Estado</label>
+                                            <select formControlName="estado"
+                                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                                <option value="produccion">Producción</option>
+                                                <option value="desarrollo">Desarrollo</option>
+                                                <option value="proximamente">Próximamente</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Versión</label>
+                                            <input type="text" formControlName="version"
+                                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                placeholder="0.1.1">
+                                        </div>
+                                    </div>
+
+                                    <!-- Fila 3: Autor -->
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Autor</label>
+                                        <input type="text" formControlName="autor"
+                                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="Nombre del autor">
+                                    </div>
+
+                                    <!-- Descripción -->
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Descripción</label>
+                                        <textarea rows="3" formControlName="description"
+                                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="Describe la funcionalidad de la aplicación"></textarea>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="flex justify-end space-x-4 mt-6">
-                                <button type="button"
-                                    class="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                    Cancelar
-                                </button>
-                                <button type="submit"
-                                    class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                                    Guardar Aplicación
-                                </button>
+
+                            <!-- Columna derecha - Icono -->
+                            <div class="lg:col-span-1">
+                                <div
+                                    class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl border border-gray-200 dark:border-gray-600">
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+                                        Icono de la aplicación
+                                     
+                                    </label>
+
+                                    <div class="flex flex-col items-center space-y-4">
+                                        <label for="icon-file" class="cursor-pointer">
+                                            <div
+                                                class="w-20 h-20 rounded-2xl bg-white dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center justify-center transition-colors overflow-hidden relative">
+                                                <!-- El SVG siempre se muestra como fondo -->
+                                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                                </svg>
+
+                                                <!-- La imagen se superpone cuando tiene src -->
+                                                <img id="imagePreview"
+                                                    class="absolute inset-0 w-full h-full object-cover rounded-2xl opacity-0 transition-opacity duration-300"
+                                                    onload="this.style.opacity='1'" onerror="this.style.opacity='0'"
+                                                    alt="Preview">
+                                            </div>
+                                        </label>
+                                        <input type="file" id="icon-file" accept="image/*" class="hidden"
+                                            (change)="onFilesSelected($event)">
+                                        <div class="text-sm text-gray-500 dark:text-gray-400 text-center">
+                                            Haz clic en el círculo para seleccionar una imagen
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="flex justify-end space-x-4 mt-8">
+                            <button type="button"
+                                class="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                Cancelar
+                            </button>
+                            <button type="submit" [disabled]="addAplication.invalid"
+                                class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                Guardar Aplicación
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -946,7 +1043,7 @@
         </div>
     </div>
     }
-    <!-- MODAL EDITAR APLICACIÓN -->
+   <!-- MODAL EDITAR APLICACIÓN -->
     @if(showEditModalAplicacion) {
     <div class="fixed inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <div
@@ -989,11 +1086,11 @@
 
                                     <!-- La imagen ocupa todo el contenedor -->
                                     <img [src]="imagenUrl" class="w-full h-full object-cover rounded-full"
-                                        *ngIf="imagenUrl" alt="Imagen" >
+                                        *ngIf="imagenUrl" alt="Imagen">
                                 </div>
                             </label>
                             <input type="file" id="icon" accept="image/*" class="hidden"
-                                (change)="cambiarImagen($event)"> 
+                                (change)="cambiarImagen($event)">
                             <div class="text-sm text-gray-500 dark:text-gray-400">
                                 Haz clic en el círculo para seleccionar una imagen
                             </div>
@@ -1025,13 +1122,32 @@
                             }
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Url
-
-                            </label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Url</label>
                             <input formControlName="url" type="text"
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
-
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Versión</label>
+                            <input  type="text" formControlName="version"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="1.0.0">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Estado</label>
+                            <select formControlName="estado"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Seleccionar estado</option>
+                                <option value="desarrollo">Desarrollo</option>
+                                <option value="proximamente">Próximamente</option>
+                                <option value="produccion">Producción</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Autor</label>
+                            <input  type="text" formControlName="autor"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Nombre del autor">
+                        </div>
                     </div>
                     <div
                         class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
@@ -1041,7 +1157,7 @@
                         </button>
                         <button [disabled]="editAplication.invalid" type="submit"
                             class="px-6 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                            Guardar cambios 
+                            Guardar cambios
                         </button>
                     </div>
                 </form>
