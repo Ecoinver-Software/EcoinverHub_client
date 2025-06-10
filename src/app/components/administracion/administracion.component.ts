@@ -6,7 +6,7 @@ import { RolService } from '../../services/rol.service';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AplicacionesService } from '../../services/aplicaciones.service';
-import { Aplicacion } from '../../aplicacion';
+import { Aplicacion } from '../../types/aplicacion';
 import { AsignarAplicaciones } from '../../types/asignarAplicaciones';
 import { AsignarAplicacionesService } from '../../services/asignarAplicaciones.service';
 

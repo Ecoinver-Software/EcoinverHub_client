@@ -51,14 +51,14 @@
         <div class="relative mb-3">
           <div class="w-full aspect-square rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
             <img 
-              [src]="aplicacion.urlImagen" 
-              [alt]="aplicacion.nombre"
+              [src]="aplicacion.icon" 
+              [alt]="aplicacion.name"
               class="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-300"
               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
             >
             <!-- Icono de respaldo -->
             <div class="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold" style="display: none;">
-              {{ obtenerInicialAplicacion(aplicacion.nombre) }}
+              {{ obtenerInicialAplicacion(aplicacion.name) }}
             </div>
           </div>
           
@@ -76,7 +76,7 @@
         <!-- Información de la aplicación -->
         <div class="text-center">
           <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-1 line-clamp-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
-            {{ aplicacion.nombre }}
+            {{ aplicacion.name }}
           </h3>
           
           <!-- Versión y estado de la aplicación -->
@@ -88,14 +88,6 @@
               {{ obtenerTextoEstadoCompacto(aplicacion.estado) }}
             </span>
           </div>
-
-          <!-- Categoría (opcional, solo si existe) -->
-          <div *ngIf="aplicacion.categoria" class="mb-2">
-            <span class="text-xs text-gray-500 dark:text-gray-400">
-              {{ aplicacion.categoria }}
-            </span>
-          </div>
-
           <!-- Botón de acción -->
           <button 
             (click)="alAccederAplicacion(aplicacion); $event.stopPropagation()"

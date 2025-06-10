@@ -1,21 +1,21 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AplicacionesService } from '../../services/aplicaciones.service';
+import { Aplicacion } from '../../types/aplicacion';
 
-// Interfaces
-interface Aplicacion {
-  id: string;
-  nombre: string;
-  descripcion: string;
-  urlImagen: string;
-  categoria?: string;
-  version?: string;
-  autor?: string;
-  estado: 'produccion' | 'desarrollo' | 'proximamente';
-  etiquetas?: string[];
-  fechaActualizacion?: Date;
-  url?: string;
-}
+// // Interfaces
+// interface Aplicacion {
+//   id: string;
+//   nombre: string;
+//   descripcion: string;
+//   urlImagen: string;
+//   version?: string;
+//   autor?: string;
+//   estado: 'produccion' | 'desarrollo' | 'proximamente';
+//   fechaActualizacion?: Date;
+//   url?: string;
+// }
 
 interface ConfiguracionHub {
   titulo: string;
@@ -33,7 +33,9 @@ interface ConfiguracionHub {
   styleUrls: ['./apphub.component.css']
 })
 export class AppHubComponent implements OnInit {
-  
+
+  constructor(private aplicacionesService: AplicacionesService) { }
+
   @Input() configuracion: ConfiguracionHub = {
     titulo: 'Hub de Aplicaciones',
     subtitulo: 'Descubre y gestiona todas tus aplicaciones desde un solo lugar',
@@ -49,57 +51,31 @@ export class AppHubComponent implements OnInit {
   terminoBusqueda: string = '';
   aplicacionesFiltradas: Aplicacion[] = [];
 
-  // Aplicaciones disponibles en Ecoinver Cloud
-  private aplicacionesDisponibles: Aplicacion[] = [
-    {
-      id: '1',
-      nombre: 'GMAO',
-      descripcion: 'Sistema de gestión de mantenimiento asistido por ordenador para optimizar recursos y maximizar la eficiencia operativa',
-      urlImagen: '/assets/GMAOimg.png',
-      categoria: 'Gestión',
-      version: '0.0.0',
-      autor: 'Ecoinver Software Team',
-      estado: 'proximamente',
-      etiquetas: ['mantenimiento', 'gestión', 'eficiencia', 'preventivo'],
-      fechaActualizacion: new Date('2025-06-04'),
-      url: '/gmao'
-    },
-    {
-      id: '2',
-      nombre: 'Ecoinver Assistant',
-      descripcion: 'Asistente de inteligencia artificial local para consultas y soporte técnico especializado',
-      urlImagen: '/assets/EcoinverAssistant.png',
-      categoria: 'IA',
-      version: '0.9.0',
-      autor: 'Ecoinver Software Team',
-      estado: 'desarrollo',
-      etiquetas: ['IA', 'asistente', 'consultas', 'soporte'],
-      fechaActualizacion: new Date('2025-06-03'),
-      url: '/assistant'
-    },
-    {
-      id: '3',
-      nombre: 'Cultive Cloud',
-      descripcion: 'Plataforma integral de gestión agrícola con monitoreo IoT y análisis predictivo avanzado',
-      urlImagen: '/assets/CultiveCloudFull.png',
-      categoria: 'Agricultura',
-      version: '1.1.0',
-      autor: 'Ecoinver Software Team',
-      estado: 'produccion',
-      etiquetas: ['agricultura', 'monitoreo', 'predictivo'],
-      fechaActualizacion: new Date('2025-05-28'),
-      url: '/cultive-cloud'
-    }
-  ];
-
   ngOnInit() {
-    // Si no hay aplicaciones configuradas, usar las aplicaciones disponibles
-    if (!this.configuracion.aplicaciones || this.configuracion.aplicaciones.length === 0) {
-      this.configuracion.aplicaciones = this.aplicacionesDisponibles;
-    }
-    
-    this.aplicacionesFiltradas = this.configuracion.aplicaciones;
+    this.aplicacionesService.get().subscribe({
+      next: (apps) => {
+        this.configuracion.aplicaciones = apps.map(app => {
+          const iconPath = app.icon?.replace(/\\/g, '/'); // corrige barras invertidas
+          return {
+            ...app,
+            icon: `https://localhost:7028/${iconPath}` // añade la URL base
+          };
+        });
+
+        this.aplicacionesFiltradas = this.configuracion.aplicaciones;
+
+        // Mostrar en consola la URL del icono de cada app
+        this.aplicacionesFiltradas.forEach(app => {
+          console.log(`Icono de "${app.name}":`, app.icon); // usa 'nombre' si es el campo correcto
+        });
+      },
+      error: (err) => {
+        console.error('Error al obtener las aplicaciones', err);
+      }
+    });
   }
+
+
 
   // Maneja los cambios en la búsqueda
   alCambiarBusqueda() {
@@ -110,10 +86,10 @@ export class AppHubComponent implements OnInit {
   // Filtra las aplicaciones según el término de búsqueda
   private filtrarAplicaciones() {
     this.aplicacionesFiltradas = this.configuracion.aplicaciones.filter(aplicacion => {
-      const coincideBusqueda = !this.terminoBusqueda || 
-        aplicacion.nombre.toLowerCase().includes(this.terminoBusqueda.toLowerCase()) ||
-        aplicacion.descripcion.toLowerCase().includes(this.terminoBusqueda.toLowerCase()) ||
-        (aplicacion.etiquetas && aplicacion.etiquetas.some(etiqueta => 
+      const coincideBusqueda = !this.terminoBusqueda ||
+        aplicacion.name.toLowerCase().includes(this.terminoBusqueda.toLowerCase()) ||
+        aplicacion.description.toLowerCase().includes(this.terminoBusqueda.toLowerCase()) ||
+        (aplicacion.etiquetas && aplicacion.etiquetas.some(etiqueta =>
           etiqueta.toLowerCase().includes(this.terminoBusqueda.toLowerCase())));
 
       return coincideBusqueda;
@@ -164,7 +140,7 @@ export class AppHubComponent implements OnInit {
   }
 
   // Obtiene las clases CSS para el botón simple según el estado
-  obtenerClasesBotonSimple(estado: string): string {
+  obtenerClasesBotonSimple(estado?: string): string {
     switch (estado) {
       case 'produccion':
         return 'bg-green-100 hover:bg-green-200 text-green-800 border border-green-200';
@@ -178,7 +154,7 @@ export class AppHubComponent implements OnInit {
   }
 
   // Obtiene el texto de la acción según el estado
-  obtenerTextoAccion(estado: string): string {
+  obtenerTextoAccion(estado?: string): string {
     switch (estado) {
       case 'produccion':
         return 'Entrar';
@@ -192,7 +168,7 @@ export class AppHubComponent implements OnInit {
   }
 
   // Obtiene las clases CSS para el estado de la aplicación
-  obtenerClasesEstado(estado: string): string {
+  obtenerClasesEstado(estado?: string): string {
     switch (estado) {
       case 'produccion':
         return 'bg-green-100 text-green-800 border border-green-200';
@@ -206,7 +182,7 @@ export class AppHubComponent implements OnInit {
   }
 
   // Obtiene las clases CSS para el badge de estado
-  obtenerClasesEstadoBadge(estado: string): string {
+  obtenerClasesEstadoBadge(estado?: string): string {
     switch (estado) {
       case 'desarrollo':
         return 'bg-orange-500 text-white';
@@ -218,7 +194,7 @@ export class AppHubComponent implements OnInit {
   }
 
   // Obtiene el texto del badge de estado
-  obtenerTextoEstadoBadge(estado: string): string {
+  obtenerTextoEstadoBadge(estado?: string): string {
     switch (estado) {
       case 'desarrollo':
         return 'BETA';
@@ -230,7 +206,7 @@ export class AppHubComponent implements OnInit {
   }
 
   // Obtiene las clases CSS para el estado compacto
-  obtenerClasesEstadoCompacto(estado: string): string {
+  obtenerClasesEstadoCompacto(estado?: string): string {
     switch (estado) {
       case 'produccion':
         return 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300';
@@ -244,7 +220,7 @@ export class AppHubComponent implements OnInit {
   }
 
   // Obtiene el texto del estado compacto
-  obtenerTextoEstadoCompacto(estado: string): string {
+  obtenerTextoEstadoCompacto(estado?: string): string {
     switch (estado) {
       case 'produccion':
         return 'Disponible';
