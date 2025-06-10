@@ -106,9 +106,14 @@ export class HomeComponent implements OnInit {
 
   // Obtener todos los anuncios (sin filtro por estado)
   get todosLosAnuncios(): Anuncio[] {
-    return this.anuncios;
+    //this.anuncios=this.anuncios.reverse(); //invertir el orden para mostrar los más recientes primero
+    let anun=this.anuncios.reverse();
+    return anun;
   }
 
+  getAnuncios(): Anuncio[] {
+    return this.anuncios;
+  }
   // Obtener el color del estado (solo badge y punto)
   getEstadoColor(estado: string): { bg: string, text: string, dot: string } {
     const estadoLower = estado.toLowerCase();
@@ -124,6 +129,12 @@ export class HomeComponent implements OnInit {
         bg: 'bg-green-100 dark:bg-green-900/50',
         text: 'text-green-800 dark:text-green-200',
         dot: 'bg-green-500'
+      };
+    } else if (estadoLower === 'importante') {
+      return {
+        bg: 'bg-yellow-100 dark:bg-yellow-900/50',
+        text: 'text-yellow-800 dark:text-yellow-200',
+        dot: 'bg-yellow-500'
       };
     } else {
       return {
