@@ -133,5 +133,10 @@ export class EditorAnunciosComponent implements OnInit {
     }
   }
 
+  //filtrar al reves para mostrar los anuncios más recientes primero
+  getAnunciosAlreves(): Anuncio[] {
+    this.anuncios = [...this.anuncios].reverse();
+    return this.anuncios;
+  }
   
 }
