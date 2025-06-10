@@ -400,9 +400,11 @@ export class HomeComponent implements OnInit {
     .subscribe({
       next: (profile) => {
         this.userProfile = profile;
+        let name= this.userProfile?.roles;
+        name= name?.toLowerCase();
 
         //para que pille si es marketing o admin y asi mostrar el boton de anuncios (crear)
-        if (this.userProfile?.roles.includes('Marketing') || this.userProfile?.roles.includes('admin')) {
+        if (name?.includes('marketing') || name?.includes('admin')) {
           document.getElementById("botonAnuncios")?.removeAttribute("hidden");
           //console.log('aaaa');
           //console.log('Perfil de usuario:', this.userProfile);
