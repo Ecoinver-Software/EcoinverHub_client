@@ -475,10 +475,10 @@ export class AdminitracionComponent implements OnInit {
     this.rolService.delete(this.id).subscribe(
       (data) => {
         console.log(data);
-        const pos = this.roles.findIndex(item => item.id == this.id);
+       
         const posFiltrado = this.rolesFiltrados.findIndex(item => item.id == this.id);
 
-        this.roles.splice(pos, 1);
+        
         this.rolesFiltrados.splice(posFiltrado, 1);
         this.showDeleteModalRol = false;
         this.calculateTotalPagesRoles();
@@ -744,7 +744,7 @@ export class AdminitracionComponent implements OnInit {
         const pos = this.aplicaciones.findIndex(item => item.id == this.id);
         const posFiltrado = this.aplicacionesFiltradas.findIndex(item => item.id == this.id);
 
-        this.aplicaciones.splice(pos, 1);
+        
         this.aplicacionesFiltradas.splice(posFiltrado, 1);
         this.showDeleteModalAplicacion = false;
         this.calculateTotalPagesAplicaciones();
