@@ -31,7 +31,10 @@ export class UsuarioService {
       userName:usuario.userName,
       email:usuario.email,
       roleId:usuario.roleId,
-      password:usuario.password
+      password:usuario.password,
+      lastname:usuario.lastname,
+      name:usuario.name,
+      empresa:usuario.empresa
 
     }
     

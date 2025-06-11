@@ -3,6 +3,9 @@ export interface Usuario {
     userName:string;
     email:string;
     roles:string;
+    name:string;
+    lastname:string;
+    empresa:string;
 }
 
 export interface UsuarioPost{
@@ -11,4 +14,7 @@ export interface UsuarioPost{
     password:string;
     email:string;
     roleId:number;
+    name:string;
+    lastname:string;
+    empresa:string;
 }

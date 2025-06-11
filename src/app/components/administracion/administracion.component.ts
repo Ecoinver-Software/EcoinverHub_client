@@ -73,14 +73,20 @@ export class AdminitracionComponent implements OnInit {
       userName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
       password: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
-      roleId: new FormControl('', Validators.required)
+      roleId: new FormControl('', Validators.required),
+      name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
+      lastName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
+      empresa: new FormControl('', Validators.required)
     });
 
     this.editUser = new FormGroup({//Para editar un usuario
       userName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
       password: new FormControl(''),
       email: new FormControl('', [Validators.required, Validators.email]),
-      roleId: new FormControl('', Validators.required)
+      roleId: new FormControl('', Validators.required),
+      name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
+      lastName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
+      empresa: new FormControl('', Validators.required)
     });
 
     this.addRol = new FormGroup({//Para añadir un nuevo rol.
@@ -108,9 +114,9 @@ export class AdminitracionComponent implements OnInit {
       name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
       description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
       url: new FormControl('', Validators.required),
-      estado:new FormControl('',Validators.required),
-      version:new FormControl('',Validators.required),
-      autor:new FormControl('',Validators.required)
+      estado: new FormControl('', Validators.required),
+      version: new FormControl('', Validators.required),
+      autor: new FormControl('', Validators.required)
     });
   }
 
@@ -371,7 +377,10 @@ export class AdminitracionComponent implements OnInit {
       userName: this.addUser.get('userName')?.value,
       password: this.addUser.get('password')?.value,
       email: this.addUser.get('email')?.value,
-      roleId: this.addUser.get('roleId')?.value
+      roleId: this.addUser.get('roleId')?.value,
+      name: this.addUser.get('name')?.value,
+      lastname: this.addUser.get('lastName')?.value,
+      empresa: this.addUser.get('empresa')?.value
     }
 
     this.userService.post(body).subscribe(
@@ -535,9 +544,13 @@ export class AdminitracionComponent implements OnInit {
     const pos = this.usuarios.findIndex(item => item.id == id);
     const rolId = this.roles.find(item => item.name == this.usuarios[pos].roles);
 
+    //Par el edit colocamos los valores correspondientes a ese usuario
     this.editUser.get('userName')?.setValue(this.usuarios[pos].userName);
     this.editUser.get('email')?.setValue(this.usuarios[pos].email);
     this.editUser.get('roleId')?.setValue(rolId?.id);
+    this.editUser.get('name')?.setValue(this.usuarios[pos].name);
+    this.editUser.get('lastName')?.setValue(this.usuarios[pos].lastname);
+    this.editUser.get('empresa')?.setValue(this.usuarios[pos].empresa);
     this.showEditModal = true;
     this.id = id;
   }
@@ -551,7 +564,10 @@ export class AdminitracionComponent implements OnInit {
       userName: this.editUser.get('userName')?.value,
       password: this.editUser.get('password')?.value,
       email: this.editUser.get('email')?.value,
-      roleId: this.editUser.get('roleId')?.value
+      roleId: this.editUser.get('roleId')?.value,
+      name: this.editUser.get('name')?.value,
+      lastname: this.editUser.get('lastName')?.value,
+      empresa: this.editUser.get('empresa')?.value
     }
     this.userService.put(this.id, body).subscribe(
       (data) => {
@@ -564,6 +580,10 @@ export class AdminitracionComponent implements OnInit {
         this.usuarios[pos].email = body.email;
         this.usuarios[pos].id = this.id;
         this.usuarios[pos].userName = body.userName;
+        this.usuarios[pos].name=body.name;
+        this.usuarios[pos].lastname=body.lastname;
+        this.usuarios[pos].empresa=body.empresa;
+        console.log(this.usuarios[pos]);
         if (role) {
           this.usuarios[pos].roles = role;
         }
@@ -682,11 +702,11 @@ export class AdminitracionComponent implements OnInit {
           description: data.description,
           url: data.url,
           icon: data.icon,
-          estado:data.estado,
-          version:data.version,
-          autor:data.autor,
-          fechaActualizacion:data.fechaActualizacion
-          
+          estado: data.estado,
+          version: data.version,
+          autor: data.autor,
+          fechaActualizacion: data.fechaActualizacion
+
         });
 
         // Actualizar el array filtrado basándose en la búsqueda actual
@@ -915,9 +935,9 @@ export class AdminitracionComponent implements OnInit {
     form.append('name', this.editAplication.get('name')?.value);
     form.append('description', this.editAplication.get('description')?.value);
     form.append('url', this.editAplication.get('url')?.value);
-    form.append('estado',this.editAplication.get('estado')?.value);
-    form.append('version',this.editAplication.get('version')?.value);
-    form.append('autor',this.editAplication.get('autor')?.value);
+    form.append('estado', this.editAplication.get('estado')?.value);
+    form.append('version', this.editAplication.get('version')?.value);
+    form.append('autor', this.editAplication.get('autor')?.value);
     this.aplicacionService.put(this.id, form).subscribe(
       (data) => {
         //Actualizamos la vista con los nuevos valores.
@@ -926,10 +946,10 @@ export class AdminitracionComponent implements OnInit {
         this.aplicaciones[pos].name = data.name;
         this.aplicaciones[pos].url = data.url;
         this.aplicaciones[pos].description = data.description;
-        this.aplicaciones[pos].autor=data.autor;
-        this.aplicaciones[pos].estado=data.estado;
-        this.aplicaciones[pos].version=data.version;
-        this.aplicaciones[pos].fechaActualizacion=data.fechaActualizacion;
+        this.aplicaciones[pos].autor = data.autor;
+        this.aplicaciones[pos].estado = data.estado;
+        this.aplicaciones[pos].version = data.version;
+        this.aplicaciones[pos].fechaActualizacion = data.fechaActualizacion;
         console.log(data);
         this.selectedFile = null;
         this.showEditModalAplicacion = false;
