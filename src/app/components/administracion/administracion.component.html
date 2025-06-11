@@ -157,8 +157,9 @@
                                 </td>
                                  <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ usuario.name }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ usuario.lastname}}</td>
-                                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ usuario.email }}</td>
+                                
                                 <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ usuario.empresa }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ usuario.email }}</td>
                                 <td class="px-6 py-4">
                                     <span
                                         class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200">
@@ -1514,63 +1515,63 @@
 
 <!-- Overlay del Modal -->
 @if(showUsuarios){
-<div class="fixed inset-0 backdrop-blur-sm bg-opacity-70 flex items-center justify-center z-50"
+<div class="fixed inset-0 backdrop-blur-sm bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50"
     id="modalUsuariosFiltrados">
     <!-- Modal Container -->
     <div
-        class="bg-gray-900 rounded-lg shadow-xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden border border-gray-700">
+        class="bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden border border-gray-300 dark:border-gray-700">
 
         <!-- Modal Body -->
         <div class="p-6">
             <!-- Título -->
             <div class="mb-6">
-                <h2 class="text-xl font-semibold text-white mb-2">Lista de Usuarios</h2>
-                <p class="text-gray-400 text-sm">Usuarios registrados en el sistema</p>
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Lista de Usuarios</h2>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">Usuarios registrados en el sistema</p>
             </div>
 
             <!-- Buscador -->
             <div class="mb-4">
                 <div class="relative">
                     <i
-                        class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm"></i>
+                        class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 text-sm"></i>
                     <input type="text" [(ngModel)]="busquedaUsuarios" (input)="buscarUsuarios()"
-                        class="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-600 rounded-md focus:ring-1 focus:ring-blue-400 focus:border-blue-400 outline-none text-sm text-white placeholder-gray-400"
+                        class="w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-1 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 outline-none text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                         placeholder="Buscar por nombre, email o rol..." id="buscarUsuarioModal">
                 </div>
             </div>
 
             <!-- Tabla de usuarios -->
-            <div class="overflow-y-auto max-h-96 border border-gray-700 rounded-md">
+            <div class="overflow-y-auto max-h-96 border border-gray-300 dark:border-gray-700 rounded-md">
                 <table class="w-full text-sm">
-                    <thead class="bg-gray-800 sticky top-0">
+                    <thead class="bg-gray-100 dark:bg-gray-800 sticky top-0">
                         <tr>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                 Usuario</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                 Email</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                 Rol</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-gray-900 divide-y divide-gray-700" id="tablaUsuarios">
+                    <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700" id="tablaUsuarios">
 
                         @for(usuario of usuariosAplicacionesFiltros;track usuario.id){
-                        <tr class="hover:bg-gray-800 transition-colors">
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                             <td class="px-4 py-3">
                                 <div class="flex items-center">
                                     <div
-                                        class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-medium text-xs mr-3">
+                                        class="w-8 h-8 bg-blue-600 dark:bg-blue-600 rounded-full flex items-center justify-center text-white font-medium text-xs mr-3">
                                         {{usuario.userName.substring(0,2).toUpperCase()}}
                                     </div>
                                     <div>
-                                        <div class="font-medium text-white text-sm">{{usuario.userName}}</div>
+                                        <div class="font-medium text-gray-900 dark:text-white text-sm">{{usuario.userName}}</div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-4 py-3 text-gray-300 text-sm">{{usuario.email}}</td>
+                            <td class="px-4 py-3 text-gray-600 dark:text-gray-300 text-sm">{{usuario.email}}</td>
                             <td class="px-4 py-3">
                                 <span
-                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-900 text-blue-200 border border-blue-700">
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-700">
                                     {{usuario.roles}}
                                 </span>
                             </td>
@@ -1583,9 +1584,9 @@
                 <!-- Sin resultados -->
                 @if(usuariosAplicaciones.length==0){
                 <div class="text-center py-8" id="sinResultados">
-                    <i class="fas fa-users text-gray-600 text-4xl mb-3"></i>
-                    <h3 class="text-sm font-medium text-gray-400 mb-1">No se encontraron usuarios</h3>
-                    <p class="text-xs text-gray-500">Intenta con otros términos de búsqueda</p>
+                    <i class="fas fa-users text-gray-400 dark:text-gray-600 text-4xl mb-3"></i>
+                    <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">No se encontraron usuarios</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-500">Intenta con otros términos de búsqueda</p>
                 </div>
                 }
 
@@ -1593,9 +1594,9 @@
         </div>
 
         <!-- Footer -->
-        <div class="bg-gray-800 px-6 py-3 flex justify-end border-t border-gray-700">
+        <div class="bg-gray-50 dark:bg-gray-800 px-6 py-3 flex justify-end border-t border-gray-200 dark:border-gray-700">
             <button type="button" (click)="cerrarUsuarios()"
-                class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm font-medium transition-colors border border-gray-600">
+                class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white px-4 py-2 rounded text-sm font-medium transition-colors border border-gray-300 dark:border-gray-600">
                 Cerrar
             </button>
         </div>
