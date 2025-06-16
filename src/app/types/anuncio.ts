@@ -1,5 +1,6 @@
 export interface Anuncio {
     id:number;
+    creador: string;
     nombre: string;
     estado: string;
     contenido: string;
@@ -7,6 +8,7 @@ export interface Anuncio {
 }
 
 export interface AnuncioPost {
+    creador: string;
     nombre: string;
     estado: string;
     contenido: string;

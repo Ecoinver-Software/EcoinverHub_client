@@ -242,11 +242,11 @@
 
               <!-- Autor y fecha con diseño limpio -->
               <div class="flex items-center space-x-3 text-sm text-slate-500 dark:text-slate-400 mb-6">
-                <div class="w-8 h-8 bg-gradient-to-r {{ getAvatarColor(anuncio.nombre) }} rounded-full flex items-center justify-center shadow-lg">
-                  <span class="text-white font-semibold text-xs">{{ getInitials(anuncio.nombre) }}</span>
+                <div class="w-8 h-8 bg-gradient-to-r {{ getAvatarColor(anuncio.creador) }} rounded-full flex items-center justify-center shadow-lg">
+                  <span class="text-white font-semibold text-xs">{{ getInitials(anuncio.creador) }}</span> <!-- aaaaaaaaaaaaaaa -->
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="font-medium truncate text-slate-700 dark:text-slate-300">{{ anuncio.nombre }}</p>
+                  <p class="font-medium truncate text-slate-700 dark:text-slate-300">{{ anuncio.creador }}</p>
                   <p class="text-xs text-slate-500 dark:text-slate-400">{{ formatDate() }}</p>
                 </div>
               </div>
@@ -260,6 +260,11 @@
 
               <!-- Botón elegante y minimalista -->
               <div class="mt-auto">
+                <div class="flex-1 mb-6">
+                <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm line-clamp-4">
+                  <span>Emitido: {{ anuncio.createdAt | date:"d '/' MM '/' y" : 'es' }}</span>
+                  </p>
+              </div>
                 <button 
                   (click)="navigateToAnuncio(anuncio.id)"
                   class="cursor-pointer w-full text-center text-sm font-semibold px-6 py-3 rounded-2xl bg-gradient-to-r from-slate-800 to-slate-700 dark:from-white dark:to-slate-100 text-white dark:text-slate-900 hover:from-slate-700 hover:to-slate-600 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl group-hover:shadow-slate-500/25"
