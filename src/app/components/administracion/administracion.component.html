@@ -189,7 +189,7 @@
                                     <div class="flex justify-start items-center gap-2">
                                         @for(aplicacion of aplicaciones; track aplicacion.id){
                                         @if(tieneAsignacion(usuario.id,aplicacion.id)){
-                                        <img [src]="imagen+aplicacion.icon"
+                                        <img [src]="imagen+'/'+aplicacion.icon"
                                             class="w-8 h-8 rounded-full object-cover shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200">
                                         }
 
@@ -644,7 +644,7 @@
                                     <div class="flex items-center space-x-3">
                                         <div
                                             class="w-12 h-12 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-                                            <img [src]="imagen+aplicacion.icon">
+                                            <img [src]="imagen+'/'+aplicacion.icon">
                                         </div>
                                         <div>
                                             <div class="font-medium text-gray-900 dark:text-white">{{aplicacion.name}}
@@ -658,7 +658,7 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <a href="#" target="_blank"
+                                    <a [href]="aplicacion.url" target="_blank"
                                         class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium underline">
                                         {{aplicacion.url}}
                                     </a>

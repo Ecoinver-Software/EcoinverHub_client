@@ -152,6 +152,9 @@ export class AdminitracionComponent implements OnInit {
         console.log(this.aplicacionesFiltradas);
         this.calculateTotalPagesAplicaciones();
         console.log('Ruta del servidor '+this.imagen);
+         console.log('environment.imgUrl:', environment.imgUrl);
+  console.log('imagen variable:', this.imagen);
+  console.log('URL completa ejemplo:', this.imagen + '/' + 'uploads/deepseek-italy-ban-garante.png');
       },
       (error) => {
         console.log(error);
@@ -918,7 +921,7 @@ export class AdminitracionComponent implements OnInit {
     console.log(this.editAplication);
     this.id = this.aplicaciones[i].id;
 
-    this.imagenUrl = 'https://localhost:7028/' + this.aplicaciones[i].icon;
+    this.imagenUrl = this.imagen+'/'+ this.aplicaciones[i].icon;
 
     console.log(this.imagenUrl);
     this.showEditModalAplicacion = true;

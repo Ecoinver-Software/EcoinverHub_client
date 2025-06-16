@@ -36,7 +36,7 @@ interface ConfiguracionHub {
   styleUrls: ['./apphub.component.css']
 })
 export class AppHubComponent implements OnInit {
-
+  loading:boolean=true;
   constructor(
     private aplicacionesService: AplicacionesService,
     private asignarAplicacionesService: AsignarAplicacionesService,
@@ -82,7 +82,9 @@ export class AppHubComponent implements OnInit {
             this.configuracion.aplicaciones = todasLasApps.filter(app =>
               appsAsignadas.includes(app.id)
             );
-
+            setTimeout(() => {
+              this.loading=false;
+            }, 500);
             this.aplicacionesFiltradas = [...this.configuracion.aplicaciones];
 
             // Mostrar en consola para depuración
@@ -90,10 +92,17 @@ export class AppHubComponent implements OnInit {
               console.log(`App permitida: ${app.name}`, app)
             );
           },
-          error: (err) => console.error('Error al obtener las aplicaciones', err)
+          error: (err) => {
+            console.error('Error al obtener las aplicaciones', err)
+            this.loading=false;
+          }
         });
       },
-      error: (err) => console.error('Error al obtener las asignaciones', err)
+      error: (err) =>{
+        console.error('Error al obtener las asignaciones', err)
+        this.loading=false;
+      }
+
     });
   }
 
