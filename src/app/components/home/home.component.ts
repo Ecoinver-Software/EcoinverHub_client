@@ -42,21 +42,21 @@ interface UserProfile {
 })
 export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef<HTMLElement>;
-  
+
   currentDate = new Date();
   selectedDate: Date | null = null;
   calendarDays: CalendarDay[] = [];
   userProfile: UserProfile | null = null;
-  
+
   // Anuncios desde el servicio
   anuncios: Anuncio[] = [];
-  
+
   // Array ordenado para mostrar (sin modificar el original)
   anunciosOrdenados: Anuncio[] = [];
-  
+
   // Índice del anuncio actualmente más visible
   anuncioActivoIndex: number = 0;
-  
+
   // Nombres de los meses en español
   monthNames = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -122,7 +122,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     const contenedor = this.scrollContainer.nativeElement;
     const tarjetasAnuncios = contenedor.querySelectorAll('.tarjeta-anuncio');
-    
+
     if (tarjetasAnuncios.length === 0) return;
 
     const scrollLeft = contenedor.scrollLeft;
@@ -153,11 +153,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
   // Obtener las clases CSS para cada indicador
   obtenerClasesIndicador(index: number): string {
     if (index >= this.anunciosOrdenados.length) return '';
-    
+
     const esActivo = index === this.anuncioActivoIndex;
     const anuncio = this.anunciosOrdenados[index];
     const colorBase = this.getEstadoColor(anuncio?.estado || 'normal').dot;
-    
+
     if (esActivo) {
       return `${colorBase} w-8 h-2 rounded-full transition-all duration-300 opacity-100 scale-110`;
     } else {
@@ -195,7 +195,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   // Obtener el color del estado (solo badge y punto)
   getEstadoColor(estado: string): { bg: string, text: string, dot: string } {
     const estadoLower = estado.toLowerCase();
-    
+
     if (estadoLower === 'urgente') {
       return {
         bg: 'bg-red-100 dark:bg-red-900/50',
@@ -242,7 +242,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const x = event.pageX - container.offsetLeft;
     const walk = (x - this.startX) * 2;
     container.scrollLeft = this.scrollLeft - walk;
-    
+
     // Detectar anuncio visible durante el drag
     this.detectarAnuncioMasVisible();
   }
@@ -251,7 +251,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.isDragging = false;
     container.style.cursor = 'grab';
     container.style.userSelect = 'auto';
-    
+
     // Detectar anuncio visible al soltar
     this.detectarAnuncioMasVisible();
   }
@@ -263,31 +263,47 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   // Obtener las iniciales del nombre para el avatar
-  getInitials(nombre: string): string {
-    return nombre
-      .split(' ')
-      .map(word => word.charAt(0))
-      .slice(0, 2)
-      .join('')
-      .toUpperCase();
+  getInitials(nombre: string | null | undefined): string {
+  // Add comprehensive null/undefined check
+  if (!nombre || typeof nombre !== 'string' || nombre.trim() === '') {
+    return 'NN'; // Default initials for "No Name"
   }
 
+  return nombre
+    .trim()
+    .split(' ')
+    .filter(word => word.length > 0) // Filter out empty strings
+    .map(word => word.charAt(0))
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+}
+
+getCreatorName(anuncio: any): string {
+  return anuncio?.creador || 'Usuario desconocido';
+}
+
   // Obtener un color de avatar basado en el nombre
-  getAvatarColor(nombre: string): string {
-    const colors = [
-      'from-blue-400 to-blue-600',
-      'from-green-400 to-green-600',
-      'from-purple-400 to-purple-600',
-      'from-orange-400 to-orange-600',
-      'from-red-400 to-red-600',
-      'from-indigo-400 to-indigo-600',
-      'from-pink-400 to-pink-600',
-      'from-teal-400 to-teal-600'
-    ];
-    
-    const index = nombre.length % colors.length;
-    return colors[index];
+  getAvatarColor(nombre: string | null | undefined): string {
+  // Add comprehensive null/undefined check
+  if (!nombre || typeof nombre !== 'string' || nombre.trim() === '') {
+    nombre = 'Default'; // Fallback value
   }
+
+  const colors = [
+    'from-blue-400 to-blue-600',
+    'from-green-400 to-green-600',
+    'from-purple-400 to-purple-600',
+    'from-orange-400 to-orange-600',
+    'from-red-400 to-red-600',
+    'from-indigo-400 to-indigo-600',
+    'from-pink-400 to-pink-600',
+    'from-teal-400 to-teal-600'
+  ];
+
+  const index = nombre.length % colors.length;
+  return colors[index];
+}
 
   // Formatear fecha
   formatDate(dateString?: string): string {
@@ -298,7 +314,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         year: 'numeric'
       });
     }
-    
+
     const date = new Date(dateString);
     return date.toLocaleDateString('es-ES', {
       day: 'numeric',
@@ -315,28 +331,28 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   generateCalendar() {
     this.calendarDays = [];
-    
+
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
-    
+
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
-    
+
     let startDate = new Date(firstDay);
     const dayOfWeek = firstDay.getDay();
     const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
     startDate.setDate(firstDay.getDate() - daysToSubtract);
-    
+
     for (let i = 0; i < 42; i++) {
       const date = new Date(startDate);
       date.setDate(startDate.getDate() + i);
-      
+
       const isCurrentMonth = date.getMonth() === month;
       const isToday = this.isToday(date);
       const isSelected = this.selectedDate ? this.isSameDay(date, this.selectedDate) : false;
       const hasEvents = this.hasEventsOnDate(date);
       const dayEvents = this.getEventsForDate(date);
-      
+
       this.calendarDays.push({
         date: date,
         day: date.getDate(),
@@ -416,14 +432,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if (this.selectedDate) {
       const selectedDateStr = this.selectedDate.toLocaleDateString('es-ES');
       alert(`Solicitando ausencia para el día ${selectedDateStr}`);
-      
+
       const newEvent: CalendarEvent = {
         id: Date.now().toString(),
         title: 'Ausencia solicitada',
         date: new Date(this.selectedDate),
         type: 'vacation'
       };
-      
+
       this.events.push(newEvent);
       this.generateCalendar();
     } else {
@@ -434,7 +450,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   // Obtener clases CSS para cada día
   getDayClasses(day: CalendarDay): string {
     let classes = 'text-sm text-center py-3 rounded-lg cursor-pointer transition-colors relative ';
-    
+
     if (!day.isCurrentMonth) {
       classes += 'text-gray-400 dark:text-gray-600 ';
     } else if (day.isToday) {
@@ -444,28 +460,28 @@ export class HomeComponent implements OnInit, AfterViewInit {
     } else {
       classes += 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ';
     }
-    
+
     return classes;
   }
 
   // Obtener eventos del día seleccionado
   getSelectedDayEvents(): CalendarEvent[] {
     if (!this.selectedDate) return [];
-    
+
     return this.events.filter(event => this.isSameDay(event.date, this.selectedDate!));
   }
-  
+
   // Obtener el texto del día seleccionado
   getSelectedDateText(): string {
     if (!this.selectedDate) return 'Ninguna fecha seleccionada';
-    
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     };
-    
+
     return this.selectedDate.toLocaleDateString('es-ES', options);
   }
 
@@ -494,7 +510,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   navigateToAnuncio(id: number) {
     this.router.navigate(
-      ['/anuncios'], 
+      ['/anuncios'],
       { fragment: id.toString() }
     );
   }
@@ -505,11 +521,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     const contenedor = this.scrollContainer.nativeElement;
     const tarjetasAnuncios = contenedor.querySelectorAll('.tarjeta-anuncio');
-    
+
     if (tarjetasAnuncios[index]) {
       const tarjeta = tarjetasAnuncios[index] as HTMLElement;
       const scrollLeft = tarjeta.offsetLeft - (contenedor.clientWidth / 2) + (tarjeta.offsetWidth / 2);
-      
+
       contenedor.scrollTo({
         left: scrollLeft,
         behavior: 'smooth'

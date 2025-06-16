@@ -1,7 +1,7 @@
 <!-- home.component.html -->
 <div class="min-h-screen">
   <div class="w-full max-w-none px-3 xs:px-4 sm:px-6 md:px-8 lg:px-8 xl:px-12 2xl:px-16 py-4 xs:py-6 sm:py-8 lg:py-12">
-    
+
     <!-- Header mejorado con gradiente y efectos -->
     <div class="mb-6 xs:mb-8 sm:mb-10 md:mb-12 lg:mb-16 animate-fade-in">
       <div class="flex flex-col space-y-3 xs:space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
@@ -22,18 +22,18 @@
 
     <!-- Grid Layout Principal con animaciones -->
     <div class="grid grid-cols-1 lg:grid-cols-12 xl:grid-cols-12 2xl:grid-cols-12 gap-4 xs:gap-5 sm:gap-6 lg:gap-8 xl:gap-10">
-      
+
       <!-- Columna Izquierda - Calendario y Recursos -->
       <div class="lg:col-span-3 xl:col-span-3 2xl:col-span-3 space-y-4 xs:space-y-5 sm:space-y-6 lg:space-y-8 animate-slide-up">
-        
+
         <!-- Mi Calendario con diseño glassmorphism -->
         <div class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 dark:border-slate-700/20 overflow-hidden hover:shadow-2xl transition-all duration-300">
           <div class="p-4 xs:p-5 sm:p-6 lg:p-8 border-b border-slate-200/50 dark:border-slate-700/50 bg-gradient-to-r from-blue-50/50 to-indigo-50/50 dark:from-slate-800/50 dark:to-slate-700/50">
             <div class="flex items-center justify-between">
               <h3 class="text-base xs:text-lg sm:text-xl font-semibold bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-slate-200 bg-clip-text text-transparent">Mi calendario</h3>
-              <button 
+              <button
                 (click)="goToToday()"
-                class="p-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-700/50 rounded-xl transition-all duration-200 hover:scale-110" 
+                class="p-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-700/50 rounded-xl transition-all duration-200 hover:scale-110"
                 title="Ir a hoy">
                 <svg class="w-4 h-4 xs:w-5 xs:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2z"/>
@@ -41,11 +41,11 @@
               </button>
             </div>
           </div>
-          
+
           <div class="p-4 xs:p-5 sm:p-6 lg:p-8">
             <!-- Navegación del mes con mejor diseño -->
             <div class="flex items-center justify-between mb-6 xs:mb-7 sm:mb-8">
-              <button 
+              <button
                 (click)="previousMonth()"
                 class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-all duration-200 hover:scale-110 group">
                 <svg class="w-4 h-4 xs:w-5 xs:h-5 text-slate-600 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -53,7 +53,7 @@
                 </svg>
               </button>
               <h4 class="text-sm xs:text-base sm:text-lg font-semibold bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-slate-200 bg-clip-text text-transparent">{{ currentMonthName }} {{ currentYear }}</h4>
-              <button 
+              <button
                 (click)="nextMonth()"
                 class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-all duration-200 hover:scale-110 group">
                 <svg class="w-4 h-4 xs:w-5 xs:h-5 text-slate-600 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,48 +61,48 @@
                 </svg>
               </button>
             </div>
-            
+
             <!-- Headers de días de la semana -->
             <div class="grid grid-cols-7 gap-1 xs:gap-1.5 sm:gap-2 mb-4 xs:mb-5 sm:mb-6">
-              <div 
-                *ngFor="let dayName of dayNames" 
+              <div
+                *ngFor="let dayName of dayNames"
                 class="text-xs xs:text-sm font-semibold text-slate-500 dark:text-slate-400 text-center py-2 xs:py-2.5 sm:py-3">
                 {{ dayName }}
               </div>
             </div>
-            
+
             <!-- Grid del calendario con mejor diseño -->
             <div class="grid grid-cols-7 gap-1 xs:gap-1.5 sm:gap-2">
-              <div 
+              <div
                 *ngFor="let day of calendarDays"
                 [class]="getDayClasses(day)"
                 (click)="selectDate(day)"
                 [title]="day.hasEvents ? 'Tiene eventos: ' + day.events?.join(', ') : ''"
                 class="aspect-square flex items-center justify-center text-xs xs:text-sm cursor-pointer transition-all duration-200 relative rounded-xl hover:bg-blue-50 dark:hover:bg-slate-700">
                 {{ day.day }}
-                
+
                 <!-- Indicador de eventos -->
-                <div *ngIf="day.hasEvents && day.isCurrentMonth" 
+                <div *ngIf="day.hasEvents && day.isCurrentMonth"
                      class="absolute bottom-0.5 xs:bottom-1 left-1/2 transform -translate-x-1/2">
                   <div class="w-1 h-1 xs:w-1.5 xs:h-1.5 bg-orange-500 rounded-full animate-pulse"></div>
                 </div>
               </div>
             </div>
-            
+
             <!-- Información del día seleccionado -->
             <div *ngIf="selectedDate" class="mt-6 p-4 bg-gradient-to-r from-blue-50/50 to-indigo-50/50 dark:from-slate-700/50 dark:to-slate-600/50 rounded-xl border border-blue-100/50 dark:border-slate-600/50">
               <h5 class="text-xs xs:text-sm font-semibold text-slate-800 dark:text-white mb-2">Fecha seleccionada:</h5>
               <p class="text-xs text-slate-600 dark:text-slate-400 mb-3">{{ getSelectedDateText() }}</p>
-              
+
               <!-- Eventos del día seleccionado -->
               <div *ngIf="getSelectedDayEvents().length > 0" class="mb-3">
                 <h6 class="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">Eventos:</h6>
-                <div *ngFor="let event of getSelectedDayEvents()" 
+                <div *ngFor="let event of getSelectedDayEvents()"
                      class="text-xs text-slate-600 dark:text-slate-400 mb-1 flex items-center">
                   <div class="w-2 h-2 rounded-full mr-2"
                        [ngClass]="{
                          'bg-blue-500': event.type === 'meeting',
-                         'bg-red-500': event.type === 'deadline', 
+                         'bg-red-500': event.type === 'deadline',
                          'bg-green-500': event.type === 'vacation',
                          'bg-gray-500': event.type === 'other'
                        }"></div>
@@ -110,9 +110,9 @@
                 </div>
               </div>
             </div>
-            
+
             <!-- Botón solicitar ausencia mejorado -->
-            <button 
+            <button
               (click)="requestAbsence()"
               [disabled]="!selectedDate"
               hidden="true"
@@ -165,7 +165,7 @@
   <div class="flex flex-col xs:flex-row xs:items-center xs:justify-between mb-8 space-y-3 xs:space-y-0">
     <div class="flex items-center justify-center xs:justify-start space-x-3">
       <h2 class="text-xl xs:text-2xl sm:text-3xl font-light bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 dark:from-white dark:via-blue-100 dark:to-indigo-100 bg-clip-text text-transparent">Tablón de anuncios</h2>
-      <button 
+      <button
       id="botonAnuncios"
       hidden="true"
       (click)="navigateToAnuncios()"
@@ -199,9 +199,9 @@
   <!-- Gradientes para indicar scroll -->
   <div class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-slate-50 to-transparent dark:from-slate-900 pointer-events-none z-10 rounded-l-2xl"></div>
   <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-slate-50 to-transparent dark:from-slate-900 pointer-events-none z-10 rounded-r-2xl"></div>
-  
+
   <!-- Container con scroll horizontal y drag -->
-  <div 
+  <div
     #scrollContainer
     class="overflow-x-auto scrollbar-hide cursor-grab select-none"
     (mousedown)="onMouseDown($event, scrollContainer)"
@@ -211,8 +211,8 @@
   >
     <div class="flex space-x-6 pb-4" style="width: max-content;">
       <!-- Cada anuncio como tarjeta elegante -->
-      <div 
-        *ngFor="let anuncio of todosLosAnuncios; let i = index" 
+      <div
+        *ngFor="let anuncio of todosLosAnuncios; let i = index"
         class="flex-shrink-0 w-80 sm:w-96 tarjeta-anuncio"
       >
         <!-- Contenido de la tarjeta -->
@@ -221,12 +221,12 @@
             <div class="flex flex-col h-full">
               <!-- Header con estado y indicador minimalista -->
               <div class="flex items-center justify-between mb-4">
-                <span 
+                <span
                   class="text-xs font-bold px-3 py-2 rounded-full {{ getEstadoColor(anuncio.estado).bg }} {{ getEstadoColor(anuncio.estado).text }} shadow-lg"
                 >
                   {{ anuncio.estado.toUpperCase() }}
                 </span>
-                <div 
+                <div
                   class="w-3 h-3 rounded-full {{ getEstadoColor(anuncio.estado).dot }} shadow-lg"
                   [ngClass]="{
                     'animate-pulse': anuncio.estado.toLowerCase() === 'urgente' || anuncio.estado.toLowerCase() === 'activo'
@@ -242,13 +242,13 @@
 
               <!-- Autor y fecha con diseño limpio -->
               <div class="flex items-center space-x-3 text-sm text-slate-500 dark:text-slate-400 mb-6">
-                <div class="w-8 h-8 bg-gradient-to-r {{ getAvatarColor(anuncio.creador) }} rounded-full flex items-center justify-center shadow-lg">
-                  <span class="text-white font-semibold text-xs">{{ getInitials(anuncio.creador) }}</span> <!-- aaaaaaaaaaaaaaa -->
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p class="font-medium truncate text-slate-700 dark:text-slate-300">{{ anuncio.creador }}</p>
-                  <p class="text-xs text-slate-500 dark:text-slate-400">{{ formatDate() }}</p>
-                </div>
+                <div class="w-8 h-8 bg-gradient-to-r {{ getAvatarColor(getCreatorName(anuncio)) }} rounded-full flex items-center justify-center shadow-lg">
+  <span class="text-white font-semibold text-xs">{{ getInitials(getCreatorName(anuncio)) }}</span>
+</div>
+<div class="flex-1 min-w-0">
+  <p class="font-medium truncate text-slate-700 dark:text-slate-300">{{ getCreatorName(anuncio) }}</p>
+  <p class="text-xs text-slate-500 dark:text-slate-400">{{ anuncio.createdAt | date:"d 'de' MMMM 'de' y" : 'es' }}</p>
+</div>
               </div>
 
               <!-- Contenido con tipografía elegante -->
@@ -261,11 +261,12 @@
               <!-- Botón elegante y minimalista -->
               <div class="mt-auto">
                 <div class="flex-1 mb-6">
+                  <!--
                 <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm line-clamp-4">
                   <span>Emitido: {{ anuncio.createdAt | date:"d '/' MM '/' y" : 'es' }}</span>
-                  </p>
+                  </p>-->
               </div>
-                <button 
+                <button
                   (click)="navigateToAnuncio(anuncio.id)"
                   class="cursor-pointer w-full text-center text-sm font-semibold px-6 py-3 rounded-2xl bg-gradient-to-r from-slate-800 to-slate-700 dark:from-white dark:to-slate-100 text-white dark:text-slate-900 hover:from-slate-700 hover:to-slate-600 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl group-hover:shadow-slate-500/25"
                 >
@@ -281,8 +282,8 @@
 
   <!-- Indicadores de scroll dinámicos y elegantes -->
   <div class="flex justify-center mt-8 space-x-3">
-    <div 
-      *ngFor="let anuncio of todosLosAnuncios; let i = index" 
+    <div
+      *ngFor="let anuncio of todosLosAnuncios; let i = index"
       [ngClass]="obtenerClasesIndicador(i)"
       class="cursor-pointer"
       (click)="scrollToAnuncio(i)"
@@ -293,7 +294,7 @@
         <!-- Sección Pendiente de mí -->
         <div class="mt-16">
           <h3 class="text-xl xs:text-2xl font-light bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 dark:from-white dark:via-blue-100 dark:to-indigo-100 bg-clip-text text-transparent mb-8 text-center lg:text-left">Pendiente de mí</h3>
-          
+
           <div class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 dark:border-slate-700/20">
             <div class="p-8">
               <div class="space-y-8">
@@ -336,8 +337,8 @@
 
       <!-- Columna Derecha - Widgets -->
       <div class="lg:col-span-3 xl:col-span-3 2xl:col-span-3 space-y-8 animate-slide-up delay-200">
-        
-        <!-- Próximas celebraciones 
+
+        <!-- Próximas celebraciones
         <div class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 dark:border-slate-700/20 hover:shadow-2xl transition-all duration-300">
           <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50 bg-gradient-to-r from-yellow-50/50 to-amber-50/50 dark:from-slate-800/50 dark:to-slate-700/50">
             <div class="flex items-center justify-between">
@@ -441,7 +442,7 @@
                 </div>
                 <span class="text-xs font-medium text-slate-700 dark:text-slate-300 text-center">Informes</span>
               </button>
-              
+
               <button class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-emerald-50/80 to-teal-50/80 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-2xl hover:shadow-lg transition-all duration-300 group border border-emerald-100/50 dark:border-emerald-800/50 hover:border-emerald-200 dark:hover:border-emerald-700">
                 <div class="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform shadow-lg">
                   <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -450,7 +451,7 @@
                 </div>
                 <span class="text-xs font-medium text-slate-700 dark:text-slate-300 text-center">Nóminas</span>
               </button>
-              
+
               <button class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-amber-50/80 to-orange-50/80 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl hover:shadow-lg transition-all duration-300 group border border-amber-100/50 dark:border-amber-800/50 hover:border-amber-200 dark:hover:border-amber-700">
                 <div class="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform shadow-lg">
                   <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -459,7 +460,7 @@
                 </div>
                 <span class="text-xs font-medium text-slate-700 dark:text-slate-300 text-center">Config.</span>
               </button>
-              
+
               <button class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-50/80 to-pink-50/80 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl hover:shadow-lg transition-all duration-300 group border border-purple-100/50 dark:border-purple-800/50 hover:border-purple-200 dark:hover:border-purple-700">
                 <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform shadow-lg">
                   <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
