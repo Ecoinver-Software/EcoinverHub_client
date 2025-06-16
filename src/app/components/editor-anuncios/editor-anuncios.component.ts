@@ -141,7 +141,7 @@ export class EditorAnunciosComponent implements OnInit {
   onEdit(anuncio: Anuncio): void {
     this.isEditing = true;
     this.editingId = anuncio.id;
-    this.form.setValue({
+    this.form.patchValue({
       //creador: this.getNombreCreador(),
       nombre: anuncio.nombre,
       estado: anuncio.estado,
