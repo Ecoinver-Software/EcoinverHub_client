@@ -9,6 +9,7 @@ import { AplicacionesService } from '../../services/aplicaciones.service';
 import { Aplicacion } from '../../types/aplicacion';
 import { AsignarAplicaciones } from '../../types/asignarAplicaciones';
 import { AsignarAplicacionesService } from '../../services/asignarAplicaciones.service';
+import { environment } from '../../environment/environment';
 
 @Component({
   selector: 'app-adminitracion',
@@ -32,7 +33,7 @@ export class AdminitracionComponent implements OnInit {
   showDeleteModalAplicacion: boolean = false;
   showModalAsignacion: boolean = false;
   showEditModalAplicacion: boolean = false;
-
+  imagen=environment.imgUrl;
   showUsuarios: boolean = false;
   busquedaUsuarios: string = '';
   // Propiedades para la paginación de usuarios
@@ -50,7 +51,7 @@ export class AdminitracionComponent implements OnInit {
   itemsPerPageAplicaciones: number = 5;
   totalPagesAplicaciones: number = 0;
   imagenUrl: string = '';
-  selectedFile: File | null = null; // Solo un archivo 
+  selectedFile: File | null = null; // Solo un archivo
   addAplication: FormGroup;
   activeTab: string = 'usuarios';
   buscar: string = '';
@@ -150,6 +151,7 @@ export class AdminitracionComponent implements OnInit {
         this.aplicacionesFiltradas = data;
         console.log(this.aplicacionesFiltradas);
         this.calculateTotalPagesAplicaciones();
+        console.log('Ruta del servidor '+this.imagen);
       },
       (error) => {
         console.log(error);
@@ -475,10 +477,10 @@ export class AdminitracionComponent implements OnInit {
     this.rolService.delete(this.id).subscribe(
       (data) => {
         console.log(data);
-       
+
         const posFiltrado = this.rolesFiltrados.findIndex(item => item.id == this.id);
 
-        
+
         this.rolesFiltrados.splice(posFiltrado, 1);
         this.showDeleteModalRol = false;
         this.calculateTotalPagesRoles();
@@ -744,7 +746,7 @@ export class AdminitracionComponent implements OnInit {
         const pos = this.aplicaciones.findIndex(item => item.id == this.id);
         const posFiltrado = this.aplicacionesFiltradas.findIndex(item => item.id == this.id);
 
-        
+
         this.aplicacionesFiltradas.splice(posFiltrado, 1);
         this.showDeleteModalAplicacion = false;
         this.calculateTotalPagesAplicaciones();
@@ -972,7 +974,7 @@ export class AdminitracionComponent implements OnInit {
       const imagen = input.files[0];
       this.selectedFile = imagen;
 
-      //El problema es que a veces no entra aqui 
+      //El problema es que a veces no entra aqui
 
 
       this.imagenUrl = URL.createObjectURL(imagen);

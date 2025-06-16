@@ -5,6 +5,7 @@ import { AplicacionesService } from '../../services/aplicaciones.service';
 import { Aplicacion } from '../../types/aplicacion';
 import { AsignarAplicacionesService } from '../../services/asignarAplicaciones.service';
 import { AuthServiceService } from '../../services/auth.service';
+import { environment } from '../../environment/environment';
 
 // // Interfaces
 // interface Aplicacion {
@@ -56,7 +57,7 @@ export class AppHubComponent implements OnInit {
 
   terminoBusqueda: string = '';
   aplicacionesFiltradas: Aplicacion[] = [];
-
+  imagen=environment.imgUrl;
   ngOnInit() {
     const userId = this.authService.getUserId();
 
@@ -75,7 +76,7 @@ export class AppHubComponent implements OnInit {
           next: (apps) => {
             const todasLasApps = apps.map(app => ({
               ...app,
-              icon: `https://localhost:7028/${app.icon?.replace(/\\/g, '/')}`
+              icon: `${this.imagen}/${app.icon?.replace(/\\/g, '/')}`
             }));
 
             this.configuracion.aplicaciones = todasLasApps.filter(app =>
