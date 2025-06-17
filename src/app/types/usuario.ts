@@ -6,6 +6,7 @@ export interface Usuario {
     name:string;
     lastname:string;
     empresa:string;
+    equipoId:number | null;
 }
 
 export interface UsuarioPost{

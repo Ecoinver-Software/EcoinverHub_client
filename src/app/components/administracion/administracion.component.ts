@@ -9,10 +9,13 @@ import { AplicacionesService } from '../../services/aplicaciones.service';
 import { Aplicacion } from '../../types/aplicacion';
 import { AsignarAplicaciones } from '../../types/asignarAplicaciones';
 import { AsignarAplicacionesService } from '../../services/asignarAplicaciones.service';
+import { EquiposService } from '../../services/equipos.service';
+import { Equipos } from '../../types/equipos';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-adminitracion',
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, NgSelectModule],
   templateUrl: './administracion.component.html',
   styleUrl: './administracion.component.css'
 })
@@ -20,6 +23,8 @@ export class AdminitracionComponent implements OnInit {
 
   usuarios: Usuario[] = [];
   roles: Rol[] = [];
+  equipos: Equipos[] = [];
+  equiposFiltrados: Equipos[] = [];
   usuariosAplicaciones: Usuario[] = [];
   usuariosAplicacionesFiltros: Usuario[] = [];//Para el filtro de los usuarios de cada aplicación.
   rolesAplicaciones: AsignarAplicaciones[] = [];
@@ -32,7 +37,8 @@ export class AdminitracionComponent implements OnInit {
   showDeleteModalAplicacion: boolean = false;
   showModalAsignacion: boolean = false;
   showEditModalAplicacion: boolean = false;
-
+  showEditModalEquipo: boolean = false;
+  showEquipos: boolean = false;
   showUsuarios: boolean = false;
   busquedaUsuarios: string = '';
   // Propiedades para la paginación de usuarios
@@ -44,6 +50,10 @@ export class AdminitracionComponent implements OnInit {
   currentPageRoles: number = 1;
   itemsPerPageRoles: number = 5;
   totalPagesRoles: number = 0;
+  // Propiedades para la paginación de roles
+  currentPageEquipos: number = 1;
+  itemsPerPageEquipos: number = 5;
+  totalPagesEquipos: number = 0;
 
   // Propiedades para la paginación de aplicaciones
   currentPageAplicaciones: number = 1;
@@ -55,6 +65,7 @@ export class AdminitracionComponent implements OnInit {
   activeTab: string = 'usuarios';
   buscar: string = '';
   buscarRoles: string = '';
+  bEquipos: string = '';
   buscarAplicaciones: string = '';
   addUser: FormGroup;
   editUser: FormGroup;
@@ -67,8 +78,13 @@ export class AdminitracionComponent implements OnInit {
   editRol: FormGroup;
   rolesFiltros: Rol[] = [];
   editAplication: FormGroup;
+  addEquipos: FormGroup;
+  editEquipos: FormGroup;
+  showDeleteModalEquipos: boolean = false;
+  aplicacionesAsignacion:string='';
+  usuariosAsignacion:string='';
 
-  constructor(private userService: UsuarioService, private rolService: RolService, private aplicacionService: AplicacionesService, private rolesAplicacionesService: AsignarAplicacionesService) {
+  constructor(private userService: UsuarioService, private rolService: RolService, private aplicacionService: AplicacionesService, private rolesAplicacionesService: AsignarAplicacionesService, private equipoService: EquiposService) {
     this.addUser = new FormGroup({//Para añadir un nuevo usuario.
       userName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
       password: new FormControl('', Validators.required),
@@ -103,21 +119,35 @@ export class AdminitracionComponent implements OnInit {
 
     this.addAplication = new FormGroup({//Para añadir una nueva aplicación
       name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
-      description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
+      description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,:;()\-_"']+$/)]),
       url: new FormControl('', Validators.required),
       estado: new FormControl('', Validators.required),
       version: new FormControl('', Validators.required),
       autor: new FormControl('', Validators.required)
     });
 
+
     this.editAplication = new FormGroup({//Para editar una aplicación
       name: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
-      description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]),
+      description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,:;()\-_"']+$/)]),
       url: new FormControl('', Validators.required),
       estado: new FormControl('', Validators.required),
       version: new FormControl('', Validators.required),
       autor: new FormControl('', Validators.required)
     });
+
+    this.addEquipos = new FormGroup({//Para agregar un nuevo equipo.
+      nombre: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
+      jefeEquipo: new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]+$/)]),
+      empresa: new FormControl('', Validators.required)
+    });
+
+    this.editEquipos = new FormGroup({//Para agregar un nuevo equipo.
+      nombre: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/)]),
+      jefeEquipo: new FormControl(null, [Validators.required, Validators.pattern(/^[0-9]+$/)]),
+      empresa: new FormControl('', Validators.required)
+    });
+
   }
 
   ngOnInit(): void {
@@ -165,6 +195,18 @@ export class AdminitracionComponent implements OnInit {
         console.log(error);
       }
     );
+    //Nos traemos los equipos de la DB
+    this.equipoService.get().subscribe(
+      (data) => {
+        this.equipos = data;//Para el array original
+        this.equiposFiltrados = data;//Para el array que se muestra en la tabla pudiendo añadirle filtros.
+        this.calculateTotalPagesEquipos();
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+
   }
 
   // ===== MÉTODOS DE PAGINACIÓN PARA USUARIOS =====
@@ -175,7 +217,7 @@ export class AdminitracionComponent implements OnInit {
   getPaginatedUsers(): Usuario[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    return this.usuariosFiltrados.slice(startIndex, endIndex);
+    return this.usuarios.slice(startIndex, endIndex);
   }
 
   previousPage(): void {
@@ -475,10 +517,10 @@ export class AdminitracionComponent implements OnInit {
     this.rolService.delete(this.id).subscribe(
       (data) => {
         console.log(data);
-       
+        const pos = this.roles.findIndex(item => item.id == this.id);
         const posFiltrado = this.rolesFiltrados.findIndex(item => item.id == this.id);
 
-        
+        this.roles.splice(pos, 1);
         this.rolesFiltrados.splice(posFiltrado, 1);
         this.showDeleteModalRol = false;
         this.calculateTotalPagesRoles();
@@ -580,9 +622,9 @@ export class AdminitracionComponent implements OnInit {
         this.usuarios[pos].email = body.email;
         this.usuarios[pos].id = this.id;
         this.usuarios[pos].userName = body.userName;
-        this.usuarios[pos].name=body.name;
-        this.usuarios[pos].lastname=body.lastname;
-        this.usuarios[pos].empresa=body.empresa;
+        this.usuarios[pos].name = body.name;
+        this.usuarios[pos].lastname = body.lastname;
+        this.usuarios[pos].empresa = body.empresa;
         console.log(this.usuarios[pos]);
         if (role) {
           this.usuarios[pos].roles = role;
@@ -682,7 +724,7 @@ export class AdminitracionComponent implements OnInit {
     }
 
     const formData = new FormData();
-
+    const imagePreview = document.getElementById('imagePreview') as HTMLImageElement;
     formData.append('image', this.selectedFile);
     formData.append('name', this.addAplication.get('name')?.value);
     formData.append('description', this.addAplication.get('description')?.value);
@@ -708,6 +750,7 @@ export class AdminitracionComponent implements OnInit {
           fechaActualizacion: data.fechaActualizacion
 
         });
+        imagePreview.src = '';
 
         // Actualizar el array filtrado basándose en la búsqueda actual
         if (this.buscarAplicaciones.trim()) {
@@ -744,7 +787,7 @@ export class AdminitracionComponent implements OnInit {
         const pos = this.aplicaciones.findIndex(item => item.id == this.id);
         const posFiltrado = this.aplicacionesFiltradas.findIndex(item => item.id == this.id);
 
-        
+        this.aplicaciones.splice(pos, 1);
         this.aplicacionesFiltradas.splice(posFiltrado, 1);
         this.showDeleteModalAplicacion = false;
         this.calculateTotalPagesAplicaciones();
@@ -769,13 +812,28 @@ export class AdminitracionComponent implements OnInit {
     this.showDeleteModalAplicacion = true;
   }
 
-  abrirModalAsignacion(i: number) {
+  abrirModalAsignacion(id: number) {
+    const i = this.usuariosFiltrados.findIndex(item => item.id == id);
     this.id = i;//Realmente esto no es el id es la posicion del array de los usarios, pero nos sirve en este caso.
     this.showModalAsignacion = true;
   }
 
+  abrirModalAsignacionEquipos(i: number) {
+
+    this.id = i;//Realmente esto no es el id es la posicion del array de los usuarios, pero nos sirve en este caso.
+    this.showModalAsignacion = true;
+  }
+
   cerrarModalAsignacion() {
+    this.aplicacionesFiltradas=this.aplicaciones;
+    this.aplicacionesAsignacion='';
     this.showModalAsignacion = false;
+  }
+  cerrarModalAsignacionEquipos() {
+    this.showEquipos = false;
+    this.usuariosAsignacion='';
+    this.usuariosFiltrados=this.usuarios;
+    
   }
 
   guardarRolesAplicaciones(idUsuario: number) {
@@ -817,7 +875,7 @@ export class AdminitracionComponent implements OnInit {
               completado++;
 
               if (completado == longitudChecbox) {
-                this.showModalAsignacion = false;
+                this.cerrarModalAsignacion();//Para cerrar el modal
                 this.exito = true;
               }
 
@@ -840,7 +898,7 @@ export class AdminitracionComponent implements OnInit {
               this.rolesAplicaciones.splice(pos, 1);
               console.log(data);
               if (completado == longitudChecbox) {
-                this.showModalAsignacion = false;
+                this.cerrarModalAsignacion();//Para cerrar el modal
                 this.exito = true;
               }
             },
@@ -854,7 +912,73 @@ export class AdminitracionComponent implements OnInit {
 
     }
   }
+  guardarUsuariosEquipos(idEquipo: number) {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    let longitudChecbox = 0;
+    for (let i = 0; i < checkboxes.length; i++) {
+      const checkbox = checkboxes[i] as HTMLInputElement;
+      const encontrado = this.usuariosFiltrados.find(item => item.id == Number(checkbox.value) && item.equipoId == idEquipo);
 
+      if (checkbox.checked && encontrado == undefined) {
+        longitudChecbox++;
+
+      }
+    }
+
+    let completado = 0;
+
+    for (let i = 0; i < checkboxes.length; i++) {
+      const checkbox = checkboxes[i] as HTMLInputElement;
+      if (checkbox.checked) {
+        const encontrado = this.usuariosFiltrados.find(item => item.id == Number(checkbox.value) && item.equipoId == idEquipo);
+        if (encontrado === undefined) {
+
+          this.userService.patch(Number(checkbox.value), idEquipo).subscribe(
+            (data) => {
+
+              const pos = this.usuarios.findIndex(item => item.id == Number(checkbox.value))
+
+              this.usuarios[pos].equipoId = data.equipoId;
+              completado++;
+
+              if (completado == longitudChecbox) {
+                this.cerrarModalAsignacionEquipos();
+                this.exito = true;
+              }
+
+              console.log(this.usuarios);
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+        }
+
+      }
+      else {
+        const encontrado = this.usuarios.find(item => item.id == Number(checkbox.value) && item.equipoId == idEquipo);
+        if (encontrado !== undefined) {
+
+          this.userService.patch(Number(checkbox.value), null).subscribe(
+            (data) => {
+              const pos = this.usuarios.findIndex(item => item.id == encontrado.id);
+              this.usuarios[pos].equipoId = data.equipoId;
+              console.log(data);
+              if (completado == longitudChecbox) {
+                this.cerrarModalAsignacionEquipos();
+                this.exito = true;
+              }
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+        }
+
+      }
+
+    }
+  }
   comprobar(idUsuario: Number, idAplicacion: number) {
     const encontrado = this.rolesAplicaciones.find(item => item.userId == idUsuario && item.applicationId == idAplicacion);
     if (encontrado !== undefined) {
@@ -864,7 +988,27 @@ export class AdminitracionComponent implements OnInit {
       return false;
     }
   }
+  comprobarEquipos(idEquipo: Number, idUsuario: number) {
+    const encontrado = this.usuarios.find(item => item.id == idUsuario && item.equipoId == idEquipo);
+    if (encontrado !== undefined) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  comp(idEquipo: Number, idUsuario: number) {//Para comprobar que el usuario aparezca si no pertenece a ningun equipo.
+    const encontrado = this.usuarios.find(item => item.id == idUsuario && item.equipoId == idEquipo);
+    const encontrar = this.usuarios.find(item => item.id == idUsuario && item.equipoId == null);
 
+    console.log(encontrar);
+    if (encontrado !== undefined || encontrar !== undefined) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
   calcularUsuarios(idAplicacion: number) {
 
     return this.rolesAplicaciones.filter(item => item.applicationId == idAplicacion).length;
@@ -896,6 +1040,7 @@ export class AdminitracionComponent implements OnInit {
 
   // Agregar este método en tu componente TypeScript
   tieneAsignacion(usuarioId: number, aplicacionId: number): boolean {
+
     return this.rolesAplicaciones.find(item =>
       item.userId === usuarioId && item.applicationId === aplicacionId
     ) !== undefined;
@@ -973,9 +1118,229 @@ export class AdminitracionComponent implements OnInit {
       this.selectedFile = imagen;
 
       //El problema es que a veces no entra aqui 
-
-
       this.imagenUrl = URL.createObjectURL(imagen);
     }
   }
+
+
+  crearEquipo() {
+    const body = {
+      nombre: this.addEquipos.get('nombre')?.value,
+      jefeEquipoId: this.addEquipos.get('jefeEquipo')?.value,
+      empresa: this.addEquipos.get('empresa')?.value
+    }
+
+    this.equipoService.post(body).subscribe(
+      (data) => {
+        console.log(data);
+        this.equipos.push(data);
+
+        // Actualizar array filtrado según búsqueda actual
+        if (this.bEquipos.trim()) {
+          this.buscarEquipo();
+        } else {
+          this.equiposFiltrados = [...this.equipos];
+        }
+
+        this.calculateTotalPagesEquipos();
+
+        // Ir a la última página si se agregó un nuevo elemento
+        const lastPageItems = this.equiposFiltrados.length % this.itemsPerPageEquipos;
+        if (lastPageItems === 1 && this.equiposFiltrados.length > this.itemsPerPageEquipos) {
+          this.currentPageEquipos = this.totalPagesEquipos;
+        }
+
+        this.exito = true;
+        this.addEquipos.reset();
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  showModalDeleteEquipos(id: number) {
+    this.showDeleteModalEquipos = true;
+    this.id = id;
+
+  }
+  closeDeleteModalEquipos() {
+    this.showDeleteModalEquipos = false;
+  }
+
+  // ===== MÉTODO BORRAR EQUIPO =====
+  borrarEquipo() {
+    this.equipoService.delete(this.id).subscribe(
+      (data) => {
+        console.log(data);
+        const pos = this.equipos.findIndex(item => item.id == this.id);
+        const posFiltrado = this.equiposFiltrados.findIndex(item => item.id == this.id);
+
+        this.equipos.splice(pos, 1);
+        this.equiposFiltrados.splice(posFiltrado, 1);
+        this.showDeleteModalEquipos = false;
+        this.calculateTotalPagesEquipos();
+
+        // Ajustar página actual si es necesario
+        const currentPageStartIndex = (this.currentPageEquipos - 1) * this.itemsPerPageEquipos;
+        if (currentPageStartIndex >= this.equiposFiltrados.length && this.currentPageEquipos > 1) {
+          this.currentPageEquipos = this.currentPageEquipos - 1;
+        }
+
+        if (this.equiposFiltrados.length === 0) {
+          this.currentPageEquipos = 1;
+        }
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+  buscarUsuariosEquipos(id: number) {
+    return this.usuarios.filter(item => item.equipoId == id).length;
+  }
+
+  showModalEditEquipos(id: number) {
+    this.id = id;
+    const pos = this.equipos.findIndex(item => item.id == this.id);
+    const encontrado = this.usuarios.find(item => item.name == this.equiposFiltrados[pos].nombreJefe)?.id;
+
+    // Resetear completamente el formulario
+    this.editEquipos.reset();
+    this.editEquipos.markAsUntouched();
+    this.editEquipos.markAsPristine();
+
+    this.showEditModalEquipo = true;
+
+    setTimeout(() => {
+      this.editEquipos.patchValue({
+        nombre: this.equiposFiltrados[pos].nombre || '',
+        jefeEquipo: encontrado || null,
+        empresa: this.equiposFiltrados[pos].empresa || ''
+      });
+    }, 100);
+
+    console.log(encontrado);
+  }
+
+  closeEditEquipos() {
+    this.showEditModalEquipo = false;
+  }
+
+  nombreIcono() {
+    return this.equiposFiltrados.find(item => item.id == this.id)?.nombre.substring(0, 2).toUpperCase();
+  }
+
+  updateEquipos() {
+
+    const body = {
+      nombre: this.editEquipos.get('nombre')?.value,
+      jefeEquipoId: this.editEquipos.get('jefeEquipo')?.value,
+      empresa: this.editEquipos.get('empresa')?.value
+    }
+    const pos = this.equipos.findIndex(item => item.id == this.id);
+    this.equipoService.put(this.id, body).subscribe(
+      (data) => {
+        this.equipos[pos].empresa = this.editEquipos.get('empresa')?.value;
+        this.equipos[pos].nombre = this.editEquipos.get('nombre')?.value;
+        this.equipos[pos].nombreJefe = data.nombreJefe;
+        console.log(data.nombreJefe);
+        this.showEditModalEquipo = false;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  equiposUsuarios(id: number) {
+    const i = this.equiposFiltrados.findIndex(item => item.id == id);
+    this.id = i;
+    this.showEquipos = true;
+  }
+  buscarEquipo() {
+    this.equiposFiltrados = this.equipos.filter(item =>
+      item.nombre.toLowerCase().includes(this.bEquipos.toLowerCase()) ||
+      item.empresa.toLowerCase().includes(this.bEquipos.toLowerCase()) ||
+      item.nombreJefe.toLowerCase().includes(this.bEquipos.toLowerCase())
+    );
+    this.currentPageEquipos = 1; // Resetear a la primera página
+    this.calculateTotalPagesEquipos();
+  }
+
+  // ===== MÉTODOS DE PAGINACIÓN PARA Equipos=====
+  calculateTotalPagesEquipos(): void {
+    this.totalPagesEquipos = Math.ceil(this.equiposFiltrados.length / this.itemsPerPageEquipos);
+  }
+
+  getPaginatedEquipos(): Equipos[] {
+    const startIndex = (this.currentPageEquipos - 1) * this.itemsPerPageEquipos;
+    const endIndex = startIndex + this.itemsPerPageEquipos;
+    return this.equiposFiltrados.slice(startIndex, endIndex);
+  }
+
+  previousPageEquipos(): void {
+    if (this.currentPageEquipos > 1) {
+      this.currentPageEquipos--;
+    }
+  }
+
+  nextPageEquipos(): void {
+    if (this.currentPageEquipos < this.totalPagesEquipos) {
+      this.currentPageEquipos++;
+    }
+  }
+
+  goToPageEquipos(page: number): void {
+    if (page >= 1 && page <= this.totalPagesEquipos) {
+      this.currentPageEquipos = page;
+    }
+  }
+
+  getPageNumbersEquipos(): number[] {
+    const pages: number[] = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, this.currentPageEquipos - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(this.totalPagesEquipos, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  }
+
+  hasPreviousPageEquipos(): boolean {
+    return this.currentPageEquipos > 1;
+  }
+
+  hasNextPageEquipos(): boolean {
+    return this.currentPageEquipos < this.totalPagesEquipos;
+  }
+
+  getCurrentPageEndIndexEquipos(): number {
+    return Math.min(this.currentPageEquipos * this.itemsPerPageEquipos, this.equiposFiltrados.length);
+  }
+
+  buscarAplicacionesAsignacion(){
+
+this.aplicacionesFiltradas = this.aplicaciones.filter(item =>
+      item.name.toLowerCase().trim().includes(this.aplicacionesAsignacion.toLowerCase()) ||
+      item.description.toLowerCase().includes(this.aplicacionesAsignacion.toLowerCase()) ||
+      item.url.toLowerCase().includes(this.aplicacionesAsignacion.toLowerCase())
+    );
+  }
+
+  buscarUsuariosAsignacion(){
+    this.usuariosFiltrados = this.usuarios.filter(item =>
+      item.userName.toLowerCase().trim().includes(this.usuariosAsignacion.toLowerCase()) ||
+      item.name.toLowerCase().includes(this.usuariosAsignacion.toLowerCase()) ||
+      item.email.toLowerCase().includes(this.usuariosAsignacion.toLowerCase())
+    );
+  }
+
 }
