@@ -19,51 +19,76 @@
             </div>
         </div>
 
+
         <!-- ========== NAVIGATION TABS ========== -->
-        <div class="mb-8 border-b border-gray-200 dark:border-gray-700">
-            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                <!-- Tab Usuarios -->
-                <button (click)="setActiveTab('usuarios')"
-                    [class]="activeTab === 'usuarios' ?
-                    'border-b-2 border-blue-500 py-2 px-1 text-sm font-medium text-blue-600 dark:text-blue-400' :
-                    'border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300'">
-                    <div class="flex items-center space-x-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-.5a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                        <span>Usuarios</span>
-                    </div>
-                </button>
 
-                <!-- Tab Roles -->
-                <button (click)="setActiveTab('roles')"
-                    [class]="activeTab === 'roles' ?
-                    'border-b-2 border-blue-500 py-2 px-1 text-sm font-medium text-blue-600 dark:text-blue-400' :
-                    'border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300'">
-                    <div class="flex items-center space-x-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                        <span>Roles</span>
-                    </div>
-                </button>
 
-                <!-- Tab Aplicaciones -->
-                <button (click)="setActiveTab('aplicaciones')"
-                    [class]="activeTab === 'aplicaciones' ?
-                    'border-b-2 border-blue-500 py-2 px-1 text-sm font-medium text-blue-600 dark:text-blue-400' :
-                    'border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300'">
-                    <div class="flex items-center space-x-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                        </svg>
-                        <span>Aplicaciones</span>
-                    </div>
-                </button>
-            </nav>
+        <div class="mb-6 sm:mb-8 border-b border-gray-200 dark:border-gray-700">
+            <!-- Wrapper con scroll horizontal en móvil -->
+            <div class="overflow-x-auto sm:overflow-x-visible scrollbar-hide">
+                <nav class="-mb-px flex space-x-1 sm:space-x-8 min-w-max px-2 sm:px-0" aria-label="Tabs">
+                    <!-- Tab Usuarios -->
+                    <button (click)="setActiveTab('usuarios')"
+                        [class]="activeTab === 'usuarios' ?
+                'border-b-2 border-blue-500 py-3 px-3 sm:px-1 text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-400 whitespace-nowrap flex-shrink-0' :
+                'border-b-2 border-transparent py-3 px-3 sm:px-1 text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 whitespace-nowrap flex-shrink-0'">
+                        <div class="flex items-center space-x-1 sm:space-x-2">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-.5a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            <span>Usuarios</span>
+                        </div>
+                    </button>
+
+                    <!-- Tab Roles -->
+                    <button (click)="setActiveTab('roles')"
+                        [class]="activeTab === 'roles' ?
+                'border-b-2 border-blue-500 py-3 px-3 sm:px-1 text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-400 whitespace-nowrap flex-shrink-0' :
+                'border-b-2 border-transparent py-3 px-3 sm:px-1 text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 whitespace-nowrap flex-shrink-0'">
+                        <div class="flex items-center space-x-1 sm:space-x-2">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                            <span>Roles</span>
+                        </div>
+                    </button>
+
+                    <!-- Tab Aplicaciones -->
+                    <button (click)="setActiveTab('aplicaciones')"
+                        [class]="activeTab === 'aplicaciones' ?
+                'border-b-2 border-blue-500 py-3 px-3 sm:px-1 text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-400 whitespace-nowrap flex-shrink-0' :
+                'border-b-2 border-transparent py-3 px-3 sm:px-1 text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 whitespace-nowrap flex-shrink-0'">
+                        <div class="flex items-center space-x-1 sm:space-x-2">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                            <span>Aplicaciones</span>
+                        </div>
+                    </button>
+
+                    <!-- Tab Equipos -->
+                    <button (click)="setActiveTab('equipos')"
+                        [class]="activeTab === 'equipos' ?
+                'border-b-2 border-blue-500 py-3 px-3 sm:px-1 text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-400 whitespace-nowrap flex-shrink-0' :
+                'border-b-2 border-transparent py-3 px-3 sm:px-1 text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 whitespace-nowrap flex-shrink-0'">
+                        <div class="flex items-center space-x-1 sm:space-x-2">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <span>Equipos</span>
+                        </div>
+                    </button>
+                </nav>
+            </div>
+
         </div>
 
         <!-- ========== USUARIOS TAB CONTENT ========== -->
@@ -76,7 +101,7 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Administra los usuarios del sistema</p>
                 </div>
                 <a (click)="scrollToElement('formulario1')"
-                    class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
+                    class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center space-x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -117,11 +142,11 @@
                                     Usuario</th>
                                 <th
                                     class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                   Nombre</th>
+                                    Nombre</th>
                                 <th
                                     class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Apellidos</th>
-                                    <th
+                                <th
                                     class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Empresa</th>
 
@@ -155,10 +180,15 @@
                                         </div>
                                     </div>
                                 </td>
-                                 <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ usuario.name }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ usuario.lastname}}</td>
 
-                                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ usuario.empresa }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ usuario.name }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ usuario.lastname}}
+                                </td>
+
+                                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ usuario.empresa }}
+                                </td>
+
+
                                 <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ usuario.email }}</td>
                                 <td class="px-6 py-4">
                                     <span
@@ -194,7 +224,7 @@
                                         }
 
                                         }
-                                        <button (click)="abrirModalAsignacion(i)"
+                                        <button (click)="abrirModalAsignacion(usuario.id)"
                                             class="group w-8 h-8 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
                                                 class="text-white" stroke="currentColor" stroke-width="2.5"
@@ -265,6 +295,9 @@
                             <input type="text" formControlName="name"
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Ingrese el nombre">
+                            @if(addUser.get('name')?.touched && addUser.get('name')?.invalid){
+                            <span class="text-red-600">El apellido del usuario no debe de estar vacío</span>
+                            }
                         </div>
 
                         <!-- Apellido -->
@@ -274,6 +307,9 @@
                             <input type="text" formControlName="lastName"
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Ingrese el apellido">
+                            @if(addUser.get('lastName')?.touched && addUser.get('lastName')?.invalid){
+                            <span class="text-red-600">El apellido del usuario no debe de estar vacío</span>
+                            }
                         </div>
 
                         <div>
@@ -356,7 +392,7 @@
                     </p>
                 </div>
                 <a (click)="scrollToElement('formulario-rol')"
-                    class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
+                    class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -574,7 +610,7 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Administra las aplicaciones del sistema</p>
                 </div>
                 <a (click)="scrollToElement('formulario-aplicacion')"
-                    class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
+                    class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center space-x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -894,6 +930,291 @@
             </div>
         </div>
         }
+        <!-- ========== EQUIPOS TAB CONTENT ========== -->
+        @if(activeTab=='equipos'){
+        <div class="equipos-tab">
+            <!-- Header con botón crear equipo -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 space-y-4 sm:space-y-0">
+                <div>
+                    <h2 class="text-2xl font-light text-gray-900 dark:text-white">Gestión de Equipos</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Administra los equipos del sistema</p>
+                </div>
+                <a (click)="scrollToElement('formulario-equipo')"
+                    class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <span>Nuevo Equipo</span>
+                </a>
+            </div>
+
+            <!-- Tabla de equipos -->
+            <div
+                class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
+                <!-- Header de la tabla -->
+                <div class="p-6 border-b border-gray-100 dark:border-gray-700">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Lista de Equipos</h3>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative">
+                                <input type="text" placeholder="Buscar equipos..." [(ngModel)]="bEquipos"
+                                    (input)="buscarEquipo()"
+                                    class="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenido de la tabla -->
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 dark:bg-gray-700/50">
+                            <tr>
+                                <th
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Equipo</th>
+                                <th
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Jefe de Equipo</th>
+                                <th
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Empresa</th>
+                                <th
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Miembros</th>
+                                <th
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Acciones</th>
+                                <th
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Asignar Usuarios</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            @for(equipo of getPaginatedEquipos(); track equipo.id; let i=$index){
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-3">
+                                        <div
+                                            class="w-10 h-10 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full flex items-center justify-center">
+                                            <span
+                                                class="text-white font-semibold text-sm">{{equipo.nombre.substring(0,2).toUpperCase()}}</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-medium text-gray-900 dark:text-white">{{equipo.nombre}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{equipo.nombreJefe}}
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{equipo.empresa}}</td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2">
+                                        <span
+                                            class="text-sm font-medium text-gray-900 dark:text-white">{{buscarUsuariosEquipos(equipo.id)}}</span>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400">usuarios</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2">
+                                        <button (click)="showModalEditEquipos(equipo.id)"
+                                            class="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                        </button>
+                                        <button (click)="showModalDeleteEquipos(equipo.id)"
+                                            class="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex justify-start items-center gap-2">
+                                        @for(usuario of usuariosFiltrados; track usuario.id){
+                                        @if(usuario.equipoId==equipo.id){
+                                        <div class="relative group">
+                                            <div
+                                                class="w-8 h-8 bg-gradient-to-r from-pink-400 to-pink-600 rounded-full flex items-center justify-center text-white text-xs font-semibold shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200">
+                                                {{usuario.name.substring(0,2).toUpperCase()}}
+                                            </div>
+                                            <div
+                                                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                                                {{usuario.name +' '+usuario.lastname}}
+                                            </div>
+                                        </div>
+                                        }
+                                        }
+
+                                        <button (click)="equiposUsuarios(equipo.id)"
+                                            class="group w-8 h-8 bg-gradient-to-r from-orange-400 to-orange-600 hover:from-orange-500 hover:to-orange-700 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
+                                                class="text-white" stroke="currentColor" stroke-width="2.5"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <line x1="8" y1="3" x2="8" y2="13" />
+                                                <line x1="3" y1="8" x2="13" y2="8" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginación -->
+                <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            Mostrando {{(currentPageEquipos - 1) * itemsPerPageEquipos + 1}} -
+                            {{getCurrentPageEndIndexEquipos()}} de {{equiposFiltrados.length}} equipos
+                        </div>
+
+                        <div class="flex items-center space-x-2">
+                            <button (click)="previousPageEquipos()" [disabled]="!hasPreviousPageEquipos()"
+                                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700">
+                                Anterior
+                            </button>
+
+                            <div class="flex space-x-1">
+                                @for(page of getPageNumbersEquipos(); track page) {
+                                <button (click)="goToPageEquipos(page)"
+                                    [class]="page === currentPageEquipos ?
+              'px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-md hover:bg-blue-700' :
+              'px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700'">
+                                    {{ page }}
+                                </button>
+                                }
+                            </div>
+
+                            <button (click)="nextPageEquipos()" [disabled]="!hasNextPageEquipos()"
+                                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700">
+                                Siguiente
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== FORMULARIO EQUIPO ========== -->
+            <div id="formulario-equipo"
+                class="mt-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50">
+                <div class="p-6 border-b border-gray-100 dark:border-gray-700">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Nuevo Equipo</h3>
+                        <button class="p-2 text-gray-400 hover:text-gray-600 rounded-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <form class="grid grid-cols-1 md:grid-cols-2 gap-6" [formGroup]="addEquipos"
+                        (submit)="crearEquipo()">
+                        <!-- Nombre del Equipo -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nombre del
+                                Equipo</label>
+                            <input type="text" formControlName="nombre"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Ingrese el nombre del equipo">
+                        </div>
+
+                        <!-- Jefe de Equipo -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Jefe de
+                                Equipo</label>
+                            <ng-select class="w-full
+          [&_.ng-select-container]:px-4
+       [&_.ng-select-container]:py-3
+       [&_.ng-select-container]:border
+       [&_.ng-select-container]:border-gray-300
+       [&_.ng-select-container]:dark:border-gray-600
+       [&_.ng-select-container]:rounded-lg
+       [&_.ng-select-container]:bg-white
+       [&_.ng-select-container]:dark:bg-gray-700
+       [&_.ng-select-container]:text-gray-900
+       [&_.ng-select-container]:dark:text-white
+       [&_.ng-select-container]:min-h-[48px]
+       [&_.ng-select-container]:flex
+       [&_.ng-select-container]:items-center
+       [&_.ng-value-container]:flex-1
+       [&_.ng-value-container]:flex
+       [&_.ng-value-container]:items-center
+       [&_.ng-input]:flex
+       [&_.ng-input]:items-center
+       [&_.ng-input>input]:flex
+       [&_.ng-input>input]:items-center
+       [&_.ng-input>input]:text-left
+       [&_.ng-placeholder]:text-gray-500
+       [&_.ng-placeholder]:dark:text-gray-400
+       [&.ng-select-focused_.ng-select-container]:ring-2
+       [&.ng-select-focused_.ng-select-container]:ring-blue-500" formControlName="jefeEquipo" bindValue="id"
+                                placeholder="Seleccione un jefe de equipo">
+                                <ng-option *ngFor="let user of usuariosFiltrados" [value]="user.id">
+                                    <div class="flex items-center space-x-3">
+                                        <div
+                                            class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-semibold">
+                                            {{user.name.substring(0,2).toUpperCase()}}
+                                        </div>
+
+                                        <div>
+                                            <div class="font-medium text-gray-900 dark:text-white">{{user.name}}
+                                                {{user.lastname}}</div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400">{{user.email}} -
+                                                {{user.roles}}</div>
+                                        </div>
+                                    </div>
+                                </ng-option>
+                            </ng-select>
+                        </div>
+
+                        <!-- Empresa -->
+                        <div class="md:col-span-2">
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Empresa</label>
+                            <select formControlName="empresa"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Seleccione una empresa</option>
+                                <option value="Techsolutions">TechSolutions S.A.</option>
+                                <option value="Creativemedia">CreativeMedia Corp</option>
+                                <option value="Datapro">DataPro Inc.</option>
+                                <option value="Ecoinver">Ecoinver</option>
+                                <option value="Ecoinver-bio">Ecoinver Bio</option>
+                                <option value="Duniagro">DuniAgro</option>
+                            </select>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="md:col-span-2 flex justify-end space-x-4 mt-6">
+                            <button type="button"
+                                class="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                Cancelar
+                            </button>
+                            <button type="submit" [disabled]="addEquipos.invalid"
+                                class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                Guardar Equipo
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        }
 
     </div>
 
@@ -901,7 +1222,7 @@
     @if(showEditModal) {
     <div class="fixed inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <div
-            class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-2xl max-w-2xl w-full mx-4 transform transition-all border border-gray-200/50 dark:border-gray-700/50">
+            class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-2xl max-w-2xl max-h-[90dvh] overflow-y-auto w-full mx-4 transform transition-all border border-gray-200/50 dark:border-gray-700/50">
             <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
@@ -937,7 +1258,8 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nombre</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nombre</label>
                             <input formControlName="name" type="text"
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Ingrese el usuario">
@@ -946,7 +1268,8 @@
                             }
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Apellidos</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Apellidos</label>
                             <input formControlName="lastName" type="text"
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Ingrese el usuario">
@@ -983,7 +1306,8 @@
                                 placeholder="Dejar vacío para mantener la actual">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Empresa</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Empresa</label>
                             <select formControlName="empresa"
                                 class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="" selected>Seleccione una empresa</option>
@@ -1030,7 +1354,7 @@
     @if(showEditModalRol) {
     <div class="fixed inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <div
-            class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-2xl max-w-2xl w-full mx-4 transform transition-all border border-gray-200/50 dark:border-gray-700/50">
+            class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-2xl max-w-2xl max-h-[90dvh] overflow-y-auto w-full mx-4 transform transition-all border border-gray-200/50 dark:border-gray-700/50">
             <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
@@ -1245,6 +1569,141 @@
         </div>
     </div>
     }
+    <!-- MODAL EDITAR ROL -->
+    @if(showEditModalEquipo) {
+    <div class="fixed inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div
+            class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-2xl max-w-2xl w-full mx-4 transform transition-all border border-gray-200/50 dark:border-gray-700/50">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div
+                            class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Editar Equipo</h3>
+                    </div>
+                    <button (click)="closeEditEquipos()"
+                        class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6">
+                <form [formGroup]="editEquipos" (submit)="updateEquipos()" class="space-y-6">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div
+                            class="w-10 h-10 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-semibold text-sm">{{nombreIcono()}}</span>
+
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-900 dark:text-white">hola mudndo</h4>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nombre del
+                                Equipo</label>
+                            <input formControlName="nombre" type="text" name="nombre"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Ingrese el nombre del equipo">
+                            @if(editEquipos.get('nombre')?.touched && editEquipos.get('nombre')?.invalid) {
+                            <span class="text-red-600 text-sm mt-1">El nombre del equipo no debe estar vacío</span>
+                            }
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Responsable
+                                de equipo</label>
+                            <ng-select class="w-full
+              [&_.ng-select-container]:px-4
+           [&_.ng-select-container]:py-3
+           [&_.ng-select-container]:border
+           [&_.ng-select-container]:border-gray-300
+           [&_.ng-select-container]:dark:border-gray-600
+           [&_.ng-select-container]:rounded-lg
+           [&_.ng-select-container]:bg-white
+           [&_.ng-select-container]:dark:bg-gray-700
+           [&_.ng-select-container]:text-gray-900
+           [&_.ng-select-container]:dark:text-white
+           [&_.ng-select-container]:min-h-[48px]
+           [&_.ng-select-container]:flex
+           [&_.ng-select-container]:items-center
+           [&_.ng-value-container]:flex-1
+           [&_.ng-value-container]:flex
+           [&_.ng-value-container]:items-center
+           [&_.ng-input]:flex
+           [&_.ng-input]:items-center
+           [&_.ng-input>input]:flex
+           [&_.ng-input>input]:items-center
+           [&_.ng-input>input]:text-left
+           [&_.ng-placeholder]:text-gray-500
+           [&_.ng-placeholder]:dark:text-gray-400
+           [&.ng-select-focused_.ng-select-container]:ring-2
+           [&.ng-select-focused_.ng-select-container]:ring-blue-500" formControlName="jefeEquipo" name="jefe"
+                                bindValue="id" placeholder="Seleccione un jefe de equipo">
+                                <ng-option *ngFor="let user of usuariosFiltrados" [value]="user.id">
+                                    <div class="flex items-center space-x-3">
+                                        <div
+                                            class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-semibold">
+                                            {{user.name.substring(0,2).toUpperCase()}}
+                                        </div>
+
+                                        <div>
+                                            <div class="font-medium text-gray-900 dark:text-white">{{user.name}}
+                                                {{user.lastname}}</div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400">{{user.email}} -
+                                                {{user.roles}}</div>
+                                        </div>
+                                    </div>
+                                </ng-option>
+
+                            </ng-select>
+                            @if(editEquipos.get('jefeEquipo')?.touched && editEquipos.get('jefeEquipo')?.invalid) {
+                            <span class="text-red-600 text-sm mt-1">Debe seleccionar un nivel</span>
+                            }
+                        </div>
+                        <div class="md:col-span-2">
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Descripción</label>
+                            <select formControlName="empresa" name="empresa"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Seleccione una empresa</option>
+                                <option value="Techsolutions">TechSolutions S.A.</option>
+                                <option value="Creativemedia">CreativeMedia Corp</option>
+                                <option value="Datapro">DataPro Inc.</option>
+                                <option value="Ecoinver">Ecoinver</option>
+                                <option value="Ecoinver-bio">Ecoinver Bio</option>
+                                <option value="Duniagro">DuniAgro</option>
+                            </select>
+                            @if(editEquipos.get('empresa')?.touched && editEquipos.get('empresa')?.invalid) {
+                            <span class="text-red-600 text-sm mt-1">El campo empresa no debe de estar vacío</span>
+                            }
+                        </div>
+                    </div>
+                    <div
+                        class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
+                        <button (click)="closeEditEquipos()" type="button"
+                            class="px-6 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                            Cancelar
+                        </button>
+                        <button [disabled]="editEquipos.invalid" type="submit"
+                            class="px-6 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            Guardar cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    }
 
     <!-- MODAL ELIMINAR USUARIO -->
     @if(showDeleteModal) {
@@ -1450,7 +1909,8 @@
             <div class="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
                 <div class="mb-6">
                     <div class="relative">
-                        <input type="text" placeholder="Buscar aplicaciones..."
+                        <input type="text" placeholder="Buscar aplicaciones..." (input)="buscarAplicacionesAsignacion()"
+                            [(ngModel)]="aplicacionesAsignacion"
                             class="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <svg class="w-5 h-5 text-gray-400 absolute left-3 top-4" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
@@ -1462,7 +1922,7 @@
                 <div class="space-y-4">
                     <h4 class="text-md font-medium text-gray-900 dark:text-white">Aplicaciones Disponibles</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto">
-                        @for(aplicacion of aplicaciones; track aplicacion.id){
+                        @for(aplicacion of aplicacionesFiltradas; track aplicacion.id){
                         <div
                             class="flex items-center p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700/50">
                             <div class="flex items-center space-x-3 flex-1">
@@ -1513,6 +1973,53 @@
     }
 </div>
 
+<!-- MODAL ELIMINAR USUARIO -->
+@if(showDeleteModalEquipos) {
+<div class="fixed inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full mx-4 transform transition-all">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Confirmar eliminación</h3>
+                </div>
+                <button (click)="closeDeleteModalEquipos()"
+                    class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="p-6">
+            <p class="text-gray-600 dark:text-gray-400 mb-4">
+                ¿Estás seguro de que deseas eliminar el usuario?
+            </p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+                Esta acción no se puede deshacer y se perderán todos los datos asociados a este usuario.
+            </p>
+        </div>
+        <div class="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-end space-x-3">
+            <button (click)="closeDeleteModalEquipos()"
+                class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                Cancelar
+            </button>
+            <button (click)="borrarEquipo()"
+                class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                Eliminar usuario
+            </button>
+        </div>
+    </div>
+</div>
+}
+
 <!-- Overlay del Modal -->
 @if(showUsuarios){
 <div class="fixed inset-0 backdrop-blur-sm bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50"
@@ -1545,15 +2052,19 @@
                 <table class="w-full text-sm">
                     <thead class="bg-gray-100 dark:bg-gray-800 sticky top-0">
                         <tr>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                            <th
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                 Usuario</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                            <th
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                 Email</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                            <th
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                 Rol</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700" id="tablaUsuarios">
+                    <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700"
+                        id="tablaUsuarios">
 
                         @for(usuario of usuariosAplicacionesFiltros;track usuario.id){
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
@@ -1564,7 +2075,8 @@
                                         {{usuario.userName.substring(0,2).toUpperCase()}}
                                     </div>
                                     <div>
-                                        <div class="font-medium text-gray-900 dark:text-white text-sm">{{usuario.userName}}</div>
+                                        <div class="font-medium text-gray-900 dark:text-white text-sm">
+                                            {{usuario.userName}}</div>
                                     </div>
                                 </div>
                             </td>
@@ -1585,7 +2097,8 @@
                 @if(usuariosAplicaciones.length==0){
                 <div class="text-center py-8" id="sinResultados">
                     <i class="fas fa-users text-gray-400 dark:text-gray-600 text-4xl mb-3"></i>
-                    <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">No se encontraron usuarios</h3>
+                    <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">No se encontraron usuarios
+                    </h3>
                     <p class="text-xs text-gray-500 dark:text-gray-500">Intenta con otros términos de búsqueda</p>
                 </div>
                 }
@@ -1594,7 +2107,8 @@
         </div>
 
         <!-- Footer -->
-        <div class="bg-gray-50 dark:bg-gray-800 px-6 py-3 flex justify-end border-t border-gray-200 dark:border-gray-700">
+        <div
+            class="bg-gray-50 dark:bg-gray-800 px-6 py-3 flex justify-end border-t border-gray-200 dark:border-gray-700">
             <button type="button" (click)="cerrarUsuarios()"
                 class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white px-4 py-2 rounded text-sm font-medium transition-colors border border-gray-300 dark:border-gray-600">
                 Cerrar
@@ -1603,3 +2117,105 @@
     </div>
 </div>
 }
+
+<!-- Overlay del Modal -->
+@if(showEquipos){
+<div class="fixed inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div
+        class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-2xl max-w-4xl w-full mx-4 transform transition-all border border-gray-200/50 dark:border-gray-700/50 max-h-[90vh] overflow-hidden">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div
+                        class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Asignar Usuarios</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Equipos: {{equiposFiltrados[id].nombre}}</p>
+                    </div>
+                </div>
+                <button (click)="cerrarModalAsignacionEquipos()"
+                    class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+            <div class="mb-6">
+                <div class="relative">
+                    <input type="text" placeholder="Buscar aplicaciones..." [(ngModel)]="usuariosAsignacion" (input)="buscarUsuariosAsignacion()"
+                        class="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-4" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+            <div class="space-y-4">
+                <h4 class="text-md font-medium text-gray-900 dark:text-white">Usuarios Disponibles</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto">
+                    @for(usuario of usuariosFiltrados; track usuario.id){
+                    @if (comp(equiposFiltrados[id].id,usuario.id)) {
+                    <div
+                        class="flex items-center p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                        <div class="flex items-center space-x-3 flex-1">
+
+                            @if(comprobarEquipos(equiposFiltrados[id].id,usuario.id)){
+                            <input type="checkbox" [value]="usuario.id" checked
+                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            }
+                            @else {
+                            <input type="checkbox" [value]="usuario.id"
+                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            }
+
+
+                            <div
+                                class="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
+                                <span
+                                    class="text-white font-semibold text-lg">{{usuario.userName.substring(0,2).toUpperCase()}}</span>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="font-medium text-gray-900 dark:text-white truncate">{{usuario.userName}}
+                                </div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400 truncate">
+                                    {{usuario.email}}</div>
+                                <div class="text-xs text-blue-600 dark:text-blue-400 truncate">{{usuario.empresa}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                    }
+                </div>
+            </div>
+            <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <h5 class="text-sm font-medium text-blue-900 dark:text-blue-200 mb-2">Resumen de Asignación</h5>
+                <p class="text-sm text-blue-700 dark:text-blue-300">
+                    Usuarios disponibles para asignar
+                </p>
+            </div>
+        </div>
+        <div class="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-end space-x-3">
+            <button type="button" (click)="cerrarModalAsignacionEquipos()"
+                class="px-6 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                Cancelar
+            </button>
+            <button type="button" (click)="guardarUsuariosEquipos(equiposFiltrados[id].id)"
+                class="px-6 py-3 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                Guardar Asignaciones
+            </button>
+        </div>
+    </div>
+</div>
+}
+

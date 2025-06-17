@@ -26,6 +26,7 @@ export class UsuarioService {
   delete(id:number){
     return this.http.delete(this.url+'/'+id);
   }
+
   put(id:number,usuario:UsuarioPost){
     const body={
       userName:usuario.userName,
@@ -39,6 +40,10 @@ export class UsuarioService {
     }
     
     return this.http.put(this.url+'/'+id,body);
+  }
+
+  patch(id:number,equipoId:number|null):Observable<Usuario>{
+    return this.http.patch<Usuario>(this.url+'/'+id,equipoId);
   }
   
 }

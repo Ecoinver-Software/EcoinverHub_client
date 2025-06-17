@@ -1,0 +1,163 @@
+button{
+    cursor: pointer;
+}
+/* CSS para el dropdown del ng-select */
+
+/* Panel principal del dropdown */
+::ng-deep .ng-dropdown-panel {
+  background-color: white;
+  border: 1px solid #e5e7eb; /* border-gray-200 */
+  border-radius: 0.5rem; /* rounded-lg */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+  margin-top: 0.25rem; /* mt-1 */
+  max-height: 15rem; /* max-h-60 */
+  overflow-y: auto;
+  z-index: 1000;
+  min-width: 100%;
+}
+
+/* Opciones del dropdown */
+::ng-deep .ng-dropdown-panel .ng-option {
+  padding: 0.5rem 1rem; /* py-2 px-4 */
+  color: #111827; /* text-gray-900 */
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+  border-bottom: 1px solid #f3f4f6; /* subtle separator */
+}
+
+/* Remover borde de la última opción */
+::ng-deep .ng-dropdown-panel .ng-option:last-child {
+  border-bottom: none;
+}
+
+/* Hover en las opciones */
+::ng-deep .ng-dropdown-panel .ng-option:hover {
+  background-color: #f3f4f6; /* hover:bg-gray-100 */
+}
+
+/* Opción resaltada (navegación con teclado) */
+::ng-deep .ng-dropdown-panel .ng-option.ng-option-highlighted {
+  background-color: #3b82f6; /* bg-blue-500 */
+  color: white;
+}
+
+/* Opción actualmente seleccionada */
+::ng-deep .ng-dropdown-panel .ng-option.ng-option-selected {
+  background-color: #dbeafe; /* bg-blue-100 */
+  color: #1e40af; /* text-blue-800 */
+  font-weight: 500;
+}
+
+/* Cuando una opción está seleccionada Y resaltada */
+::ng-deep .ng-dropdown-panel .ng-option.ng-option-selected.ng-option-highlighted {
+  background-color: #3b82f6; /* bg-blue-500 */
+  color: white;
+}
+
+/* Opciones deshabilitadas */
+::ng-deep .ng-dropdown-panel .ng-option.ng-option-disabled {
+  color: #9ca3af; /* text-gray-400 */
+  cursor: not-allowed;
+  background-color: #f9fafb; /* bg-gray-50 */
+}
+
+/* Mensaje cuando no hay resultados */
+::ng-deep .ng-dropdown-panel .ng-option-tmp {
+  padding: 1rem;
+  color: #6b7280; /* text-gray-500 */
+  font-style: italic;
+  text-align: center;
+  background-color: #f9fafb; /* bg-gray-50 */
+}
+
+/* Scrollbar personalizada */
+::ng-deep .ng-dropdown-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+::ng-deep .ng-dropdown-panel::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+::ng-deep .ng-dropdown-panel::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::ng-deep .ng-dropdown-panel::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* MODO OSCURO */
+@media (prefers-color-scheme: dark) {
+  /* Panel en modo oscuro */
+  ::ng-deep .ng-dropdown-panel {
+    background-color: #374151; /* dark:bg-gray-700 */
+    border-color: #4b5563; /* dark:border-gray-600 */
+  }
+
+  /* Opciones en modo oscuro */
+  ::ng-deep .ng-dropdown-panel .ng-option {
+    color: white; /* dark:text-white */
+    border-bottom-color: #4b5563; /* dark:border-gray-600 */
+  }
+
+  /* Hover en modo oscuro */
+  ::ng-deep .ng-dropdown-panel .ng-option:hover {
+    background-color: #4b5563; /* dark:hover:bg-gray-600 */
+  }
+
+  /* Opción seleccionada en modo oscuro */
+  ::ng-deep .ng-dropdown-panel .ng-option.ng-option-selected {
+    background-color: #1e3a8a; /* dark:bg-blue-900 */
+    color: #93c5fd; /* dark:text-blue-100 */
+  }
+
+  /* Opción resaltada en modo oscuro (igual que modo claro) */
+  ::ng-deep .ng-dropdown-panel .ng-option.ng-option-highlighted {
+    background-color: #3b82f6; /* bg-blue-500 */
+    color: white;
+  }
+
+  /* Opciones deshabilitadas en modo oscuro */
+  ::ng-deep .ng-dropdown-panel .ng-option.ng-option-disabled {
+    color: #6b7280; /* dark:text-gray-400 */
+    background-color: #374151; /* dark:bg-gray-700 */
+  }
+
+  /* Mensaje sin resultados en modo oscuro */
+  ::ng-deep .ng-dropdown-panel .ng-option-tmp {
+    color: #9ca3af; /* dark:text-gray-400 */
+    background-color: #374151; /* dark:bg-gray-700 */
+  }
+
+  /* Scrollbar en modo oscuro */
+  ::ng-deep .ng-dropdown-panel::-webkit-scrollbar-track {
+    background: #4b5563;
+  }
+
+  ::ng-deep .ng-dropdown-panel::-webkit-scrollbar-thumb {
+    background: #6b7280;
+  }
+
+  ::ng-deep .ng-dropdown-panel::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+}
+
+/* Animación de entrada del dropdown */
+::ng-deep .ng-dropdown-panel {
+  animation: dropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
