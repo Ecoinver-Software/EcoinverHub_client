@@ -1013,12 +1013,19 @@ export class AdminitracionComponent implements OnInit {
       return false;
     }
   }
+  
   comp(idEquipo: Number, idUsuario: number) {//Para comprobar que el usuario aparezca si no pertenece a ningun equipo.
     const encontrado = this.usuarios.find(item => item.id == idUsuario && item.equipoId == idEquipo);
     const encontrar = this.usuarios.find(item => item.id == idUsuario && item.equipoId == null);
-
-    console.log(encontrar);
-    if (encontrado !== undefined || encontrar !== undefined) {
+    const nombreUsuario = this.usuarios.find(item => item.id == idUsuario)?.name;
+    console.log(encontrado);
+    const jefeEquipo = this.equipos.find(item => item.nombreJefe == nombreUsuario);
+    
+    
+    if(jefeEquipo!==undefined){
+      return false;
+    }
+    if (encontrado !== undefined || encontrar !== undefined ) {
       return true;
     }
     else {
