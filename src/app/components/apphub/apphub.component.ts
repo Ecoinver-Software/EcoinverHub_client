@@ -6,6 +6,9 @@ import { Aplicacion } from '../../types/aplicacion';
 import { AsignarAplicacionesService } from '../../services/asignarAplicaciones.service';
 import { AuthServiceService } from '../../services/auth.service';
 import { environment } from '../../environment/environment';
+import { JwtSyncService } from '../../services/JwtSyncService';
+
+
 
 // // Interfaces
 // interface Aplicacion {
@@ -40,7 +43,8 @@ export class AppHubComponent implements OnInit {
   constructor(
     private aplicacionesService: AplicacionesService,
     private asignarAplicacionesService: AsignarAplicacionesService,
-    private authService: AuthServiceService
+    private authService: AuthServiceService,
+    private jwtSyncService: JwtSyncService
   ) { }
 
   @Input() configuracion: ConfiguracionHub = {
@@ -140,13 +144,19 @@ export class AppHubComponent implements OnInit {
     this.aplicacionSeleccionada.emit(aplicacion);
   }
 
+  //abre la app seleccionada con JWT
+  abrirAppConJwt(url:string):void {
+    this.jwtSyncService.openApp(url);
+  }
+
   // Maneja el acceso a una aplicación
   alAccederAplicacion(aplicacion: Aplicacion) {
     if (aplicacion.estado === 'produccion' || aplicacion.estado === 'desarrollo') {
       this.aplicacionAccedida.emit(aplicacion);
       // Si tiene URL, navegar directamente
       if (aplicacion.url) {
-        window.open(aplicacion.url, '_blank');
+        this.abrirAppConJwt(aplicacion.url);
+        //window.open(aplicacion.url, '_blank');
       }
     }
   }
