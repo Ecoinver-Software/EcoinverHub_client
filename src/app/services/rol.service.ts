@@ -23,8 +23,8 @@ export class RolService {
     }
     return this.http.post<Rol>(this.url+'/create',body);
   }
-  delete(id:number){
-    return this.http.delete(this.url+'/'+id);
+  delete(id:number):Observable<{message:string}>{
+    return this.http.delete<{message:string}>(this.url+'/'+id);
   }
   put(id:number,rol:Rol):Observable<Rol>{
     const body={

@@ -41,6 +41,8 @@ export class AdminitracionComponent implements OnInit {
   showEquipos: boolean = false;
   showUsuarios: boolean = false;
   busquedaUsuarios: string = '';
+  modalErrores: boolean = false;
+  errorMessage: string = '';
   // Propiedades para la paginación de usuarios
   currentPage: number = 1;
   itemsPerPage: number = 5;
@@ -81,8 +83,8 @@ export class AdminitracionComponent implements OnInit {
   addEquipos: FormGroup;
   editEquipos: FormGroup;
   showDeleteModalEquipos: boolean = false;
-  aplicacionesAsignacion:string='';
-  usuariosAsignacion:string='';
+  aplicacionesAsignacion: string = '';
+  usuariosAsignacion: string = '';
 
   constructor(private userService: UsuarioService, private rolService: RolService, private aplicacionService: AplicacionesService, private rolesAplicacionesService: AsignarAplicacionesService, private equipoService: EquiposService) {
     this.addUser = new FormGroup({//Para añadir un nuevo usuario.
@@ -448,6 +450,8 @@ export class AdminitracionComponent implements OnInit {
       },
       (error) => {
         console.log(error);
+         this.errorMessage=error.status+' - '+error.error.message;
+        this.modalErrores = true;
       }
     )
   }
@@ -457,10 +461,9 @@ export class AdminitracionComponent implements OnInit {
       (data) => {
         console.log(data);
         const pos = this.usuarios.findIndex(item => item.id == this.id);
-        const posFiltrado = this.usuariosFiltrados.findIndex(item => item.id == this.id);
 
         this.usuarios.splice(pos, 1);
-        this.usuariosFiltrados.splice(posFiltrado, 1);
+
         this.showDeleteModal = false;
         this.calculateTotalPages();
 
@@ -474,6 +477,8 @@ export class AdminitracionComponent implements OnInit {
         }
       },
       (error) => {
+        this.modalErrores = true;
+         this.errorMessage=error.status+' - '+error.error.message;
         console.log(error);
       }
     );
@@ -508,6 +513,8 @@ export class AdminitracionComponent implements OnInit {
         this.addRol.reset();
       },
       (error) => {
+        this.modalErrores = true;
+         this.errorMessage=error.status+' - '+error.error.message;
         console.log(error);
       }
     );
@@ -518,10 +525,9 @@ export class AdminitracionComponent implements OnInit {
       (data) => {
         console.log(data);
         const pos = this.roles.findIndex(item => item.id == this.id);
-        const posFiltrado = this.rolesFiltrados.findIndex(item => item.id == this.id);
 
         this.roles.splice(pos, 1);
-        this.rolesFiltrados.splice(posFiltrado, 1);
+        this.rolesFiltrados=this.roles;
         this.showDeleteModalRol = false;
         this.calculateTotalPagesRoles();
 
@@ -535,6 +541,8 @@ export class AdminitracionComponent implements OnInit {
         }
       },
       (error) => {
+        this.modalErrores = true;
+        this.errorMessage = error.status + ' - ' + error.error.message;
         console.log(error);
       }
     );
@@ -567,6 +575,8 @@ export class AdminitracionComponent implements OnInit {
         this.editRol.reset();
       },
       (error) => {
+        this.modalErrores = true;
+        this.errorMessage = error.status + ' - ' + error.error.message;
         console.log(error);
       }
     );
@@ -641,6 +651,8 @@ export class AdminitracionComponent implements OnInit {
         this.exito = true;
       },
       (error) => {
+        this.modalErrores = true;
+        this.errorMessage = error.status + ' - ' + error.error.message;
         console.log(error);
       }
     )
@@ -771,6 +783,8 @@ export class AdminitracionComponent implements OnInit {
         this.selectedFile = null;
       },
       (error) => {
+        this.modalErrores = true;
+        this.errorMessage = error.status + ' - ' + error.error.message;
         console.log(error);
       }
     );
@@ -785,10 +799,10 @@ export class AdminitracionComponent implements OnInit {
       (data) => {
         console.log(data);
         const pos = this.aplicaciones.findIndex(item => item.id == this.id);
-        const posFiltrado = this.aplicacionesFiltradas.findIndex(item => item.id == this.id);
+
 
         this.aplicaciones.splice(pos, 1);
-        this.aplicacionesFiltradas.splice(posFiltrado, 1);
+
         this.showDeleteModalAplicacion = false;
         this.calculateTotalPagesAplicaciones();
 
@@ -802,6 +816,8 @@ export class AdminitracionComponent implements OnInit {
         }
       },
       (error) => {
+        this.modalErrores = true;
+        this.errorMessage = error.status + ' - ' + error.error.message;
         console.log(error);
       }
     )
@@ -825,15 +841,15 @@ export class AdminitracionComponent implements OnInit {
   }
 
   cerrarModalAsignacion() {
-    this.aplicacionesFiltradas=this.aplicaciones;
-    this.aplicacionesAsignacion='';
+    this.aplicacionesFiltradas = this.aplicaciones;
+    this.aplicacionesAsignacion = '';
     this.showModalAsignacion = false;
   }
   cerrarModalAsignacionEquipos() {
     this.showEquipos = false;
-    this.usuariosAsignacion='';
-    this.usuariosFiltrados=this.usuarios;
-    
+    this.usuariosAsignacion = '';
+    this.usuariosFiltrados = this.usuarios;
+
   }
 
   guardarRolesAplicaciones(idUsuario: number) {
@@ -882,6 +898,8 @@ export class AdminitracionComponent implements OnInit {
               console.log(this.rolesAplicaciones);
             },
             (error) => {
+              this.modalErrores = true;
+              this.errorMessage = error.status + ' - ' + error.error.message;
               console.log(error);
             }
           );
@@ -903,6 +921,8 @@ export class AdminitracionComponent implements OnInit {
               }
             },
             (error) => {
+              this.modalErrores = true;
+              this.errorMessage = error.status + ' - ' + error.error.message;
               console.log(error);
             }
           );
@@ -949,6 +969,8 @@ export class AdminitracionComponent implements OnInit {
               console.log(this.usuarios);
             },
             (error) => {
+              this.modalErrores = true;
+               this.errorMessage=error.status+' - '+error.error.message;
               console.log(error);
             }
           );
@@ -970,6 +992,8 @@ export class AdminitracionComponent implements OnInit {
               }
             },
             (error) => {
+              this.modalErrores = true;
+               this.errorMessage=error.status+' - '+error.error.message;
               console.log(error);
             }
           );
@@ -997,19 +1021,19 @@ export class AdminitracionComponent implements OnInit {
       return false;
     }
   }
-  
+
   comp(idEquipo: Number, idUsuario: number) {//Para comprobar que el usuario aparezca si no pertenece a ningun equipo.
     const encontrado = this.usuarios.find(item => item.id == idUsuario && item.equipoId == idEquipo);
     const encontrar = this.usuarios.find(item => item.id == idUsuario && item.equipoId == null);
     const nombreUsuario = this.usuarios.find(item => item.id == idUsuario)?.name;
     console.log(encontrado);
     const jefeEquipo = this.equipos.find(item => item.nombreJefe == nombreUsuario);
-    
-    
-    if(jefeEquipo!==undefined){
+
+
+    if (jefeEquipo !== undefined) {
       return false;
     }
-    if (encontrado !== undefined || encontrar !== undefined ) {
+    if (encontrado !== undefined || encontrar !== undefined) {
       return true;
     }
     else {
@@ -1109,6 +1133,8 @@ export class AdminitracionComponent implements OnInit {
 
       },
       (error) => {
+        this.modalErrores = true;
+         this.errorMessage=error.status+' - '+error.error.message;
         console.log(error);
       }
     )
@@ -1161,6 +1187,8 @@ export class AdminitracionComponent implements OnInit {
         this.addEquipos.reset();
       },
       (error) => {
+        this.modalErrores = true;
+         this.errorMessage=error.status+' - '+error.error.message;
         console.log(error);
       }
     );
@@ -1181,10 +1209,10 @@ export class AdminitracionComponent implements OnInit {
       (data) => {
         console.log(data);
         const pos = this.equipos.findIndex(item => item.id == this.id);
-        const posFiltrado = this.equiposFiltrados.findIndex(item => item.id == this.id);
+        const pos2=this.equiposFiltrados.findIndex(item=>item.id==this.id);
 
         this.equipos.splice(pos, 1);
-        this.equiposFiltrados.splice(posFiltrado, 1);
+        this.equiposFiltrados.splice(pos2,1);
         this.showDeleteModalEquipos = false;
         this.calculateTotalPagesEquipos();
 
@@ -1199,6 +1227,8 @@ export class AdminitracionComponent implements OnInit {
         }
       },
       (error) => {
+        this.modalErrores = true;
+         this.errorMessage=error.status+' - '+error.error.message;
         console.log(error);
       }
     );
@@ -1255,6 +1285,8 @@ export class AdminitracionComponent implements OnInit {
         this.showEditModalEquipo = false;
       },
       (error) => {
+        this.modalErrores = true;
+         this.errorMessage=error.status+' - '+error.error.message;
         console.log(error);
       }
     );
@@ -1333,21 +1365,25 @@ export class AdminitracionComponent implements OnInit {
     return Math.min(this.currentPageEquipos * this.itemsPerPageEquipos, this.equiposFiltrados.length);
   }
 
-  buscarAplicacionesAsignacion(){
+  buscarAplicacionesAsignacion() {
 
-this.aplicacionesFiltradas = this.aplicaciones.filter(item =>
+    this.aplicacionesFiltradas = this.aplicaciones.filter(item =>
       item.name.toLowerCase().trim().includes(this.aplicacionesAsignacion.toLowerCase()) ||
       item.description.toLowerCase().includes(this.aplicacionesAsignacion.toLowerCase()) ||
       item.url.toLowerCase().includes(this.aplicacionesAsignacion.toLowerCase())
     );
   }
 
-  buscarUsuariosAsignacion(){
+  buscarUsuariosAsignacion() {
     this.usuariosFiltrados = this.usuarios.filter(item =>
       item.userName.toLowerCase().trim().includes(this.usuariosAsignacion.toLowerCase()) ||
       item.name.toLowerCase().includes(this.usuariosAsignacion.toLowerCase()) ||
       item.email.toLowerCase().includes(this.usuariosAsignacion.toLowerCase())
     );
+  }
+
+  cerrarModalErrores() {
+    this.modalErrores = false;
   }
 
 }
